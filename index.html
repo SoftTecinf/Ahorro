@@ -398,8 +398,17 @@
             <input type="tel" id="input-celular-modal" placeholder="Ej. 6441234567" maxlength="10" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" class="w-full px-4 py-3 border rounded-xl mb-4 focus:outline-none">
             
             <div class="flex gap-2">
-                <button onclick="document.getElementById('modal-invitacion-directa').classList.add('hidden')" class="flex-1 py-2 bg-gray-200 text-gray-700 rounded-xl font-medium text-xs cursor-pointer">Cancelar</button>
-                <button onclick="enviarInvitacionWhatsApp()" class="flex-1 py-2 bg-green-600 text-white rounded-xl font-bold text-xs cursor-pointer">Enviar Link</button>
+                <button onclick="document.getElementById('modal-invitacion-directa').classList.add('hidden')" 
+                        class="flex-1 py-2 bg-gray-200 text-gray-700 rounded-xl font-medium text-xs cursor-pointer">
+                    Cancelar
+                </button>
+                
+                <a id="btn-whatsapp-link" 
+                   onclick="enviarInvitacionWhatsApp(event)" 
+                   target="_blank" 
+                   class="flex-1 py-2 bg-green-600 text-white rounded-xl font-bold text-xs cursor-pointer text-center block">
+                    Enviar Link
+                </a>
             </div>
         </div>
     </div>
@@ -1024,24 +1033,31 @@
             document.getElementById('modal-invitacion-directa').classList.remove('hidden');
         }
 
-        function enviarInvitacionWhatsApp() {
+        function enviarInvitacionWhatsApp(event) {
             const idProy = document.getElementById('invitacion-id-proyecto-actual').value;
             const celularInput = document.getElementById('input-celular-modal');
-            if (!celularInput) return;
-
+            const btnWhatsapp = document.getElementById('btn-whatsapp-link');
+            
+            if (!celularInput || !btnWhatsapp) return;
+        
             let celular = celularInput.value.trim();
             const regexCelular = /^[0-9]{10}$/;
-
+        
+            // VALIDACIÓN DE 10 DÍGITOS
             if (!regexCelular.test(celular)) {
+                event.preventDefault(); // Evita que intente abrir WhatsApp si está mal el número
                 alert("❌ El número de celular debe contener exactamente 10 dígitos numéricos.");
                 celularInput.focus();
                 return;
             }
-
+        
             const p = proyectos.find(x => x.id == idProy);
-            if(!p) return;
-
-            // NUEVO: Guardar la invitación en la base de datos interna indexada por celular
+            if(!p) {
+                event.preventDefault();
+                return;
+            }
+        
+            // Guardar la invitación interna indexada por celular
             const nuevaInvitacion = {
                 id: Date.now(),
                 proyectoId: p.id,
@@ -1050,21 +1066,29 @@
                 creador: currentUser
             };
             
-            // Evitar duplicados exactos
             if (!invitacionesPendientes.some(i => i.proyectoId === p.id && i.celularInvitado === celular)) {
                 invitacionesPendientes.push(nuevaInvitacion);
                 localStorage.setItem('app_invitaciones', JSON.stringify(invitacionesPendientes));
             }
-
-            const baseUri = "https://ctrlfinanciero.my.canva.site/ahorrofamiliar";
+        
+            // TU LIGA DE CANVA
+            const baseUri = "https://softtecinf.github.io/Ahorro/";
             const linkCompleto = `${baseUri}?proyecto=${p.id}`;
             const mensaje = `¡Hola! 👋 ${usuarioActual} te invita a nuestra app de 'Ahorro Familiar' para organizar nuestras metas juntos.
                             \n\nTe invito especialmente a participar en el proyecto: *${nombreProyecto}*. 💎
                             \n\nDa Clic en el siguiente enlace: ${linkCompleto}`;
+
+            
+            // CONSTRUIR API WHATSAPP CON EL PREFIJO 52 AUTOMÁTICO
             const apiWhatsapp = `https://api.whatsapp.com/send?phone=52${celular}&text=${encodeURIComponent(mensaje)}`;
             
-            document.getElementById('modal-invitacion-directa').classList.add('hidden');
-            window.open(apiWhatsapp, '_blank');
+            // ASIGNAR EL ENLACE DIRECTO (Forma nativa que Canva no puede bloquear)
+            btnWhatsapp.href = apiWhatsapp;
+        
+            // Ocultar el modal después de una pequeña fracción de segundo para no interrumpir el clic
+            setTimeout(() => {
+                document.getElementById('modal-invitacion-directa').classList.add('hidden');
+            }, 300);
         }
 
         // CORREGIDO: Ahora busca y le notifica en tiempo real al usuario logueado
