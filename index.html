@@ -415,14 +415,40 @@
 
     <script>
         // ==========================================
-        // VARIABLES GLOBALES Y CONFIGURACIÓN ESTÁTICA
+        // VARIABLES GLOBALES (Ahora se llenarán desde la nube)
         // ==========================================
-        let familiares = JSON.parse(localStorage.getItem('app_familiares')) || [];
-        let proyectos = JSON.parse(localStorage.getItem('app_proyectos')) || [];
-        let cuentasBancarias = JSON.parse(localStorage.getItem('app_cuentas_bancarias')) || [];
-        let invitacionesPendientes = JSON.parse(localStorage.getItem('app_invitaciones')) || [];
+        let familiares = [];
+        let proyectos = [];
+        let cuentasBancarias = [];
+        let invitacionesPendientes = [];
         let currentUser = localStorage.getItem('app_currentUser') || '';
 
+        // URL de tu Sheety (la que te dieron en la pantalla anterior)
+        const URL_SHEETY = 'https://api.sheety.co/TU_ID_DE_SHEETY/ahorroFamiliar';
+
+        // Función para cargar todo al abrir la app
+        async function cargarDatosDesdeLaNube() {
+            try {
+                const respuesta = await fetch(URL_SHEETY);
+                const datos = await respuesta.json();
+                
+                // Asignamos los datos que vienen de las hojas de Google
+                familiares = datos.familiares;
+                proyectos = datos.proyectos;
+                cuentasBancarias = datos.cuentasBancarias;
+                invitacionesPendientes = datos.invitaciones;
+
+                console.log("Datos sincronizados con la nube:", { familiares, proyectos });
+                // AQUÍ DEBERÍAS LLAMAR A TU FUNCIÓN QUE PINTA LA PANTALLA
+                // Ejemplo: actualizarInterfaz(); 
+            } catch (error) {
+                console.error("Error al conectar con la nube:", error);
+            }
+        }
+
+        // Llamamos a la función al iniciar
+        cargarDatosDesdeLaNube();
+        
         // ==========================================
         // CONTROL DE NAVEGACIÓN ENTRE SECCIONES
         // ==========================================
