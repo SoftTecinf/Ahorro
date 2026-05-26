@@ -1222,7 +1222,7 @@ const listaUsuarios = data.usuarios || data.hoja1 || Object.values(data)[0];
                 const usuarioEncontrado = listaUsuarios.find(u => 
                     // IMPORTANTE: Asegúrate que tus columnas en Google Sheets se llamen exactamente 'nombre' y 'pin'
                     u.nombre.toLowerCase() === nombreIngresado.toLowerCase() && 
-                    u.pin.toString() === pinIngresado.toString()
+                    u.Pin.toString() === pinIngresado.toString()
                 );
 
                 if (usuarioEncontrado) {
