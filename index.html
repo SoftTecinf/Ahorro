@@ -1196,17 +1196,16 @@
         }
 
         async function confirmarIdentidad(nombreIngresado, pinIngresado) {
-            alert(nombreIngresado.toString()+" "+pinIngresado.toString());
-            /*try {
+            try {
                 // 1. Descargamos la lista de usuarios desde la nube
-                const respuesta = await fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/familiares');
+                const respuesta = await fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios');
                 const data = await respuesta.json();
-                const listaUsuarios = data.Familiares;
+                const listaUsuarios = data.usuarios;
 
                 // 2. Buscamos si existe alguien que coincida
                 const usuarioEncontrado = listaUsuarios.find(u => 
-                    u.Nombre.toLowerCase() === nombreIngresado.toLowerCase() && 
-                    u.Contraseña.toString() === pinIngresado.toString()
+                    u.nombre.toLowerCase() === nombreIngresado.toLowerCase() && 
+                    u.pin.toString() === pinIngresado.toString()
                    
                 ); 
                 
@@ -1222,7 +1221,7 @@
             } catch (error) {
                 console.error("Error al conectar con la base de datos:", error);
                 alert("No pudimos conectar con el servidor, intenta más tarde.");
-            }*/
+            }
         }
 
         function procesarRegistro() {
