@@ -1234,6 +1234,8 @@
             const celularInput = document.getElementById('reg-celular');
             const password = document.getElementById('reg-pass').value;
 
+            const listaFamiliares = window.familiares || [];
+
             if(!celularInput) return;
             const celular = celularInput.value.trim();
             const regexCelular = /^[0-9]{10}$/;
@@ -1249,7 +1251,7 @@
             }
 
             // 1. Validar duplicados localmente antes de enviar
-            if(familiares.some(f => f.nombre.toLowerCase() === nombre.toLowerCase())) {
+            if(listaFamiliares.some(f => f.nombre.toLowerCase() === nombre.toLowerCase())) {
                 return alert("Este nombre ya se encuentra registrado.");
             }
 
