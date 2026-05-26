@@ -1221,9 +1221,15 @@
                 if (usuarioEncontrado) {
                     localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
                     alert("¡Bienvenido/a, " + usuarioEncontrado.nombre + "!");
-                    window.location.href = "principal.html"; 
+                    
+                    // OCULTAMOS EL LOGIN
+                    document.getElementById('vista-login').classList.add('hidden');
+                    
+                    // MOSTRAMOS LA VISTA PRINCIPAL (asegúrate de que tenga el id="vista-principal")
+                    document.getElementById('vista-principal').classList.remove('hidden');
+                    
                 } else {
-                    alert("Usuario o PIN incorrecto. Revisa que los datos coincidan exactamente con tu hoja.");
+                    alert("Usuario o PIN incorrecto.");
                 }
             } catch (error) {
                 console.error("Error al conectar:", error);
