@@ -1213,15 +1213,16 @@
 
                 if (usuarioEncontrado) {
                     localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
-    alert("¡Bienvenido/a, " + usuarioEncontrado.nombre + "!");
-    
-    console.log("Intentando cambiar vista..."); // <--- AGREGA ESTO
-    
-    document.getElementById('vista-login').classList.add('hidden');
-    document.getElementById('vista-principal').classList.remove('hidden');
-    
-    console.log("Cambio de vista ejecutado."); // <--- AGREGA ESTO
-    return;
+                    
+                    // Ocultar login
+                    const loginDiv = document.getElementById('vista-login');
+                    const principalDiv = document.getElementById('vista-principal');
+                    
+                    loginDiv.style.display = 'none'; // Forzamos ocultar
+                    principalDiv.classList.remove('hidden'); // Mostramos la principal
+                    
+                    alert("¡Bienvenido/a, " + usuarioEncontrado.nombre + "!");
+                    return; // Detenemos la ejecución aquí mismo
                 } else {
                     alert("Usuario o PIN incorrecto.");
                 }
