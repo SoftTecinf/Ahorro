@@ -1196,7 +1196,7 @@
         }
 
         async function confirmarIdentidad(nombreIngresado, pinIngresado) {
-            try {
+           // try {
                 // 1. Descargamos la lista de usuarios desde la nube
                 const respuesta = await fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/familiares');
                 const data = await respuesta.json();
@@ -1208,8 +1208,9 @@
                     u.Contraseña.toString() === pinIngresado.toString()
                    
                 ); 
-
-                if (usuarioEncontrado) {
+                
+                alert(nombreIngresado+" "+pinIngresado+" "+usuarioEncontrado);
+               /* if (usuarioEncontrado) {
                     // 3. Si coincide, guardamos la sesión localmente
                     localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
                     alert("¡Bienvenido, " + usuarioEncontrado.nombre + "!");
@@ -1220,9 +1221,8 @@
                 }
             } catch (error) {
                 console.error("Error al conectar con la base de datos:", error);
-                //alert("No pudimos conectar con el servidor, intenta más tarde.");
-                alert(nombreIngresado+" "+pinIngresado+" "+usuarioEncontrado);
-            }
+                alert("No pudimos conectar con el servidor, intenta más tarde.");
+            }*/
         }
 
         function procesarRegistro() {
