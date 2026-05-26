@@ -1229,7 +1229,7 @@
             }
         }
 
-        function procesarRegistro() {
+        async function procesarRegistro() {
             const nombre = document.getElementById('reg-nombre').value.trim();
             const celularInput = document.getElementById('reg-celular');
             const password = document.getElementById('reg-pass').value;
@@ -1248,26 +1248,55 @@
                 return;
             }
 
+            // 1. Validar duplicados localmente antes de enviar
             if(familiares.some(f => f.nombre.toLowerCase() === nombre.toLowerCase())) {
                 return alert("Este nombre ya se encuentra registrado.");
             }
 
-            const nuevoFamiliar = { nombre, celular, password };
-            familiares.push(nuevoFamiliar);
-            localStorage.setItem('app_familiares', JSON.stringify(familiares));
+            // 2. Preparar los datos para Sheety
+            // Asegúrate de que "usuario" coincida con el nombre de tu hoja en Google Sheets
+            const datosASubir = {
+                usuario: {
+                    nombre: nombre,
+                    celular: celular,
+                    pin: password // O 'password', según el nombre exacto de tu columna en Sheets
+                }
+            };
 
-            localStorage.setItem('app_currentUser', nombre);
-            currentUser = nombre;
+            try {
+                const URL_USUARIOS = 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios';
+                
+                const respuesta = await fetch(URL_USUARIOS, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(datosASubir)
+                });
 
-            document.getElementById('reg-nombre').value = "";
-            celularInput.value = "";
-            document.getElementById('reg-pass').value = "";
+                if (!respuesta.ok) throw new Error("Error al guardar en la base de datos.");
 
-            document.getElementById('modal-identidad').classList.add('hidden');
-            actualizarLabelUsuario();
-            procesarInvitacionPendiente();
-            navegarA('sec-inicio');
-            mostrarModal(`¡Bienvenido(a) a la familia, ${nombre}! ✨`);
+                // 3. Si la subida fue exitosa, guardamos localmente
+                const nuevoFamiliar = { nombre, celular, password };
+                familiares.push(nuevoFamiliar);
+                localStorage.setItem('app_familiares', JSON.stringify(familiares));
+
+                localStorage.setItem('app_currentUser', nombre);
+                currentUser = nombre;
+
+                // Limpiar formulario
+                document.getElementById('reg-nombre').value = "";
+                celularInput.value = "";
+                document.getElementById('reg-pass').value = "";
+
+                document.getElementById('modal-identidad').classList.add('hidden');
+                actualizarLabelUsuario();
+                procesarInvitacionPendiente();
+                navegarA('sec-inicio');
+                mostrarModal(`¡Bienvenido(a) a la familia, ${nombre}! ✨`);
+
+            } catch (error) {
+                console.error("Error completo:", error);
+                alert("Hubo un problema al registrarte en el servidor. Intenta de nuevo.");
+            }
         }
 
         function cerrarSesion() {
