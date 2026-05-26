@@ -1209,21 +1209,19 @@
                 const data = await respuesta.json();
                 
                 // Sheety devuelve los datos en una propiedad con el nombre de la hoja (en minúsculas)
-                //const listaUsuarios = data.usuarios; 
+                const listaUsuarios = data.usuarios; 
 
+               // Reemplaza toda la línea del .find por esta versión blindada:
+const usuarioEncontrado = listaUsuarios.find(u => {
+    // Convertimos ambos a string y quitamos espacios por si acaso
+    const nombreEnHoja = String(u.nombre).trim().toLowerCase();
+    const pinEnHoja = String(u.pin).trim();
+    
+    const nombreInput = String(nombreIngresado).trim().toLowerCase();
+    const pinInput = String(pinIngresado).trim();
 
-// AGREGA ESTA LÍNEA PARA DEPURAR
-console.log("Lo que Sheety me responde:", data); 
-
-// Y temporalmente, intenta esto para ver si el nombre es diferente
-const listaUsuarios = data.usuarios || data.hoja1 || Object.values(data)[0];
-
-                // Verificamos si existe el usuario
-                const usuarioEncontrado = listaUsuarios.find(u => 
-                    // IMPORTANTE: Asegúrate que tus columnas en Google Sheets se llamen exactamente 'nombre' y 'pin'
-                    u.nombre.toLowerCase() === nombreIngresado.toLowerCase() && 
-                    u.Pin.toString() === pinIngresado.toString()
-                );
+    return nombreEnHoja === nombreInput && pinEnHoja === pinInput;
+});
 
                 if (usuarioEncontrado) {
                     localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
