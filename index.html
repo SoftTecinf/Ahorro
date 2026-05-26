@@ -423,31 +423,27 @@
         let invitacionesPendientes = [];
         let currentUser = localStorage.getItem('app_currentUser') || '';
 
-        // URL de tu Sheety (la que te dieron en la pantalla anterior)
-        const URL_SHEETY = 'https://api.sheety.co/TU_ID_DE_SHEETY/ahorroFamiliar';
+        // Ahora (La nueva forma de obtener datos)
+        const SHEETY_URL = 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/familiares'; 
 
-        // Función para cargar todo al abrir la app
-        async function cargarDatosDesdeLaNube() {
+        async function cargarDatos() {
             try {
-                const respuesta = await fetch(URL_SHEETY);
+                const respuesta = await fetch(SHEETY_URL);
                 const datos = await respuesta.json();
                 
-                // Asignamos los datos que vienen de las hojas de Google
-                familiares = datos.familiares;
-                proyectos = datos.proyectos;
-                cuentasBancarias = datos.cuentasBancarias;
-                invitacionesPendientes = datos.invitaciones;
-
-                console.log("Datos sincronizados con la nube:", { familiares, proyectos });
-                // AQUÍ DEBERÍAS LLAMAR A TU FUNCIÓN QUE PINTA LA PANTALLA
-                // Ejemplo: actualizarInterfaz(); 
+                // Asumiendo que tu hoja se llama "hoja1"
+                familiares = datos.hoja1; 
+                
+                // ¡IMPORTANTE! Aquí debes llamar a la función que actualiza tu HTML
+                // Ejemplo: renderizarTabla(); 
+                console.log("Datos cargados:", familiares);
             } catch (error) {
                 console.error("Error al conectar con la nube:", error);
             }
         }
+        // Llamamos a la función al cargar la página
+        cargarDatos();
 
-        // Llamamos a la función al iniciar
-        cargarDatosDesdeLaNube();
         
         // ==========================================
         // CONTROL DE NAVEGACIÓN ENTRE SECCIONES
