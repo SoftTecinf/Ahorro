@@ -1209,7 +1209,14 @@
                 const data = await respuesta.json();
                 
                 // Sheety devuelve los datos en una propiedad con el nombre de la hoja (en minúsculas)
-                const listaUsuarios = data.usuarios; 
+                //const listaUsuarios = data.usuarios; 
+
+
+// AGREGA ESTA LÍNEA PARA DEPURAR
+console.log("Lo que Sheety me responde:", data); 
+
+// Y temporalmente, intenta esto para ver si el nombre es diferente
+const listaUsuarios = data.usuarios || data.hoja1 || Object.values(data)[0];
 
                 // Verificamos si existe el usuario
                 const usuarioEncontrado = listaUsuarios.find(u => 
