@@ -1198,7 +1198,7 @@
         async function confirmarIdentidad(nombreIngresado, pinIngresado) {
             try {
                 // 1. Descargamos la lista de usuarios desde la nube
-                const respuesta = await fetch('TU_URL_DE_SHEETY_PARA_USUARIOS');
+                const respuesta = await fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios');
                 const data = await respuesta.json();
                 const listaUsuarios = data.usuarios; // Asegúrate que tu pestaña se llame "usuarios"
 
