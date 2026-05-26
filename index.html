@@ -419,7 +419,7 @@
         // ==========================================
         // VARIABLES GLOBALES (Ahora se llenarán desde la nube)
         // ==========================================
-        let familiares = [];
+        let familiares = JSON.parse(localStorage.getItem('app_familiares')) || [];
         let proyectos = [];
         let cuentasBancarias = [];
         let invitacionesPendientes = [];
