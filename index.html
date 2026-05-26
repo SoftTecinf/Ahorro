@@ -1196,7 +1196,8 @@
         }
 
         async function confirmarIdentidad(nombreIngresado, pinIngresado) {
-           // try {
+            alert(nombreIngresado+" "+pinIngresado);
+            /*try {
                 // 1. Descargamos la lista de usuarios desde la nube
                 const respuesta = await fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/familiares');
                 const data = await respuesta.json();
@@ -1209,8 +1210,7 @@
                    
                 ); 
                 
-                alert(nombreIngresado+" "+pinIngresado);
-               /* if (usuarioEncontrado) {
+                if (usuarioEncontrado) {
                     // 3. Si coincide, guardamos la sesión localmente
                     localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
                     alert("¡Bienvenido, " + usuarioEncontrado.nombre + "!");
