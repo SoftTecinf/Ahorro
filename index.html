@@ -1200,13 +1200,14 @@
                 // 1. Descargamos la lista de usuarios desde la nube
                 const respuesta = await fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/familiares');
                 const data = await respuesta.json();
-                const listaUsuarios = data.familiares; // Asegúrate que tu pestaña se llame "usuarios"
+                const listaUsuarios = data.familiares;
 
                 // 2. Buscamos si existe alguien que coincida
                 const usuarioEncontrado = listaUsuarios.find(u => 
                     u.nombre.toLowerCase() === nombreIngresado.toLowerCase() && 
                     u.pin.toString() === pinIngresado.toString()
-                );
+                   
+                ); alert(nombreIngresado.toLowerCase()+pinIngresado.toString());
 
                 if (usuarioEncontrado) {
                     // 3. Si coincide, guardamos la sesión localmente
