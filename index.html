@@ -1207,7 +1207,7 @@
                     u.nombre.toLowerCase() === nombreIngresado.toLowerCase() && 
                     u.pin.toString() === pinIngresado.toString()
                 );
-
+                alert(usuarioEncontrado);
                 if (usuarioEncontrado) {
                     // 3. Si coincide, guardamos la sesión localmente
                     localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
