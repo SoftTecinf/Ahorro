@@ -368,7 +368,7 @@
                     <input type="password" id="input-password-inicial" placeholder="••••••••" class="w-full px-4 py-3 border rounded-xl focus:outline-none bg-gray-50 font-mono">
                     <button type="button" onclick="togglePassword('input-password-inicial')" class="absolute right-3 top-9 text-gray-400 hover:text-gray-600">👁️</button>
                 </div>
-                <button onclick="confirmarIdentidad(input-usuario-login, input-password-inicial)" class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold cursor-pointer transition-all shadow-sm">Entrar a Ahorros 🔮</button>
+                <button onclick="confirmarIdentidad()" class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold cursor-pointer transition-all shadow-sm">Entrar a Ahorros 🔮</button>
             </div>
 
             <div id="vista-registro" class="space-y-4 hidden">
@@ -1195,7 +1195,7 @@
             if(input) input.type = input.type === 'password' ? 'text' : 'password';
         }
 
-        async function confirmarIdentidad(nombreIngresado, pinIngresado) {
+        async function confirmarIdentidad() {
             const URL_USUARIOS = 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios';
             
             try {
