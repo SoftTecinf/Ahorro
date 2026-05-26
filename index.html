@@ -434,9 +434,6 @@
                 // Asumiendo que tu hoja se llama "hoja1"
                 familiares = datos.hoja1; 
                 
-                // ¡IMPORTANTE! Aquí debes llamar a la función que actualiza tu HTML
-                // Ejemplo: renderizarTabla(); 
-                //console.log("Datos cargados:", familiares);
             } catch (error) {
                 console.error("Error al conectar con la nube:", error);
             }
@@ -1216,7 +1213,7 @@
                     
                     // Ocultar login
                     const loginDiv = document.getElementById('vista-login');
-                    const principalDiv = document.getElementById('vista-principal');
+                    const principalDiv = document.getElementById('sec-inicio');
                     
                     loginDiv.style.display = 'none'; // Forzamos ocultar
                     principalDiv.classList.remove('hidden'); // Mostramos la principal
