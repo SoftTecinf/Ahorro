@@ -1196,43 +1196,34 @@
         }
 
         async function confirmarIdentidad(nombreIngresado, pinIngresado) {
-            // Usamos la URL exacta que te dio Sheety
             const URL_USUARIOS = 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios';
             
             try {
                 const respuesta = await fetch(URL_USUARIOS);
-                
-                if (!respuesta.ok) {
-                    throw new Error('No se pudo conectar a la base de datos');
-                }
-                
                 const data = await respuesta.json();
                 
-                // Sheety devuelve los datos en una propiedad con el nombre de la hoja (en minúsculas)
+                // Vemos qué es lo que llega de Sheety
+                console.log("Datos recibidos:", data);
+                
                 const listaUsuarios = data.usuarios; 
 
-               // Reemplaza toda la línea del .find por esta versión blindada:
-const usuarioEncontrado = listaUsuarios.find(u => {
-    // Convertimos ambos a string y quitamos espacios por si acaso
-    const nombreEnHoja = String(u.nombre).trim().toLowerCase();
-    const pinEnHoja = String(u.pin).trim();
-    
-    const nombreInput = String(nombreIngresado).trim().toLowerCase();
-    const pinInput = String(pinIngresado).trim();
-
-    return nombreEnHoja === nombreInput && pinEnHoja === pinInput;
-});
+                // Verificación paso a paso
+                const usuarioEncontrado = listaUsuarios.find(u => {
+                    console.log("Comparando:", u.nombre, "con", nombreIngresado, "y pin:", u.pin, "con", pinIngresado);
+                    return String(u.nombre).trim().toLowerCase() === String(nombreIngresado).trim().toLowerCase() && 
+                        String(u.pin).trim() === String(pinIngresado).trim();
+                });
 
                 if (usuarioEncontrado) {
                     localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
                     alert("¡Bienvenido/a, " + usuarioEncontrado.nombre + "!");
                     window.location.href = "principal.html"; 
                 } else {
-                    alert("Usuario o PIN incorrecto.");
+                    alert("Usuario o PIN incorrecto. Revisa que los datos coincidan exactamente con tu hoja.");
                 }
             } catch (error) {
-                console.error("Error completo:", error);
-                alert("Ocurrió un error al intentar iniciar sesión. Revisa tu conexión.");
+                console.error("Error al conectar:", error);
+                alert("Ocurrió un error. Revisa la consola (F12).");
             }
         }
 
