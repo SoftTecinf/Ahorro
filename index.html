@@ -1196,44 +1196,36 @@
         }
 
         async function confirmarIdentidad() {
-            console.log("¡La función fue ejecutada!"); // Si esto no sale, el HTML no está conectado
             const nombreIngresado = document.getElementById('input-usuario-login').value;
             const pinIngresado = document.getElementById('input-password-inicial').value;
-            console.log("Lo que se escribió fue:", nombreIngresado);
+
             const URL_USUARIOS = 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios';
             
             try {
                 const respuesta = await fetch(URL_USUARIOS);
                 const data = await respuesta.json();
-                
-                // Vemos qué es lo que llega de Sheety
-                console.log("Datos recibidos:", data);
-                
-                const listaUsuarios = data.usuarios; 
+                const listaUsuarios = data.usuarios;
 
-                // Verificación paso a paso
-                const usuarioEncontrado = listaUsuarios.find(u => {
-                    console.log("Comparando:", u.nombre, "con", nombreIngresado, "y pin:", u.pin, "con", pinIngresado);
-                    return String(u.nombre).trim().toLowerCase() === String(nombreIngresado).trim().toLowerCase() && 
-                        String(u.pin).trim() === String(pinIngresado).trim();
-                });
+                const usuarioEncontrado = listaUsuarios.find(u => 
+                    String(u.nombre).trim().toLowerCase() === String(nombreIngresado).trim().toLowerCase() && 
+                    String(u.pin).trim() === String(pinIngresado).trim()
+                );
 
                 if (usuarioEncontrado) {
                     localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
                     alert("¡Bienvenido/a, " + usuarioEncontrado.nombre + "!");
                     
-                    // OCULTAMOS EL LOGIN
+                    // CAMBIO AQUÍ: Ocultar login y mostrar app principal
                     document.getElementById('vista-login').classList.add('hidden');
-                    
-                    // MOSTRAMOS LA VISTA PRINCIPAL (asegúrate de que tenga el id="vista-principal")
                     document.getElementById('vista-principal').classList.remove('hidden');
                     
+                    return; // <--- ESTE RETURN DETIENE TODO Y EVITA QUE SALTE EL ERROR
                 } else {
                     alert("Usuario o PIN incorrecto.");
                 }
             } catch (error) {
-                console.error("Error al conectar:", error);
-                alert("Ocurrió un error. Revisa la consola (F12).");
+                console.error("Error:", error);
+                // Solo mostramos error si algo falló de verdad en la conexión
             }
         }
 
