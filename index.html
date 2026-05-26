@@ -1212,13 +1212,11 @@
 
                 if (usuarioEncontrado) {
                     localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
-                    
-                    // Ocultar login
-                    const loginDiv = document.getElementById('vista-login');
-                    const principalDiv = document.getElementById('vista-principal');
-                    
-                    loginDiv.style.display = 'none'; // Forzamos ocultar
-                    principalDiv.classList.remove('hidden'); // Mostramos la principal
+                    localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
+    
+                    // Ahora sí, el código encontrará los elementos y funcionará
+                    document.getElementById('vista-login').classList.add('hidden');
+                    document.getElementById('vista-principal').classList.remove('hidden');
                     
                     alert("¡Bienvenido/a, " + usuarioEncontrado.nombre + "!");
                     return; // Detenemos la ejecución aquí mismo
