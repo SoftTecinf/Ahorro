@@ -368,7 +368,7 @@
                     <input type="password" id="input-password-inicial" placeholder="••••••••" class="w-full px-4 py-3 border rounded-xl focus:outline-none bg-gray-50 font-mono">
                     <button type="button" onclick="togglePassword('input-password-inicial')" class="absolute right-3 top-9 text-gray-400 hover:text-gray-600">👁️</button>
                 </div>
-                <button onclick="confirmarIdentidad()" class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold cursor-pointer transition-all shadow-sm">Entrar a Ahorros 🔮</button>
+                <button onclick="confirmarIdentidad('input-usuario-login','input-password-inicial')" class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold cursor-pointer transition-all shadow-sm">Entrar a Ahorros 🔮</button>
             </div>
 
             <div id="vista-registro" class="space-y-4 hidden">
@@ -1195,35 +1195,32 @@
             if(input) input.type = input.type === 'password' ? 'text' : 'password';
         }
 
-        function confirmarIdentidad() {
-            const nombre = document.getElementById('input-usuario-login').value.trim();
-            const passwordIngresada = document.getElementById('input-password-inicial').value;
-            
-            if (!nombre) return alert("Por favor, escribe tu nombre de usuario.");
+        async function confirmarIdentidad(nombreIngresado, pinIngresado) {
+            try {
+                // 1. Descargamos la lista de usuarios desde la nube
+                const respuesta = await fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/familiares');
+                const data = await respuesta.json();
+                const listaUsuarios = data.usuarios; // Asegúrate que tu pestaña se llame "usuarios"
 
-            const familiar = familiares.find(f => f.nombre.toLowerCase() === nombre.toLowerCase());
+                // 2. Buscamos si existe alguien que coincida
+                const usuarioEncontrado = listaUsuarios.find(u => 
+                    u.nombre.toLowerCase() === nombreIngresado.toLowerCase() && 
+                    u.pin.toString() === pinIngresado.toString()
+                );
 
-            if (!familiar) {
-                alert("Usuario no encontrado en los registros. Si eres nuevo, por favor regístrate en la pestaña de al lado.");
-                cambiarVista('registro'); 
-                document.getElementById('reg-nombre').value = nombre;
-                return;
+                if (usuarioEncontrado) {
+                    // 3. Si coincide, guardamos la sesión localmente
+                    localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
+                    alert("¡Bienvenido, " + usuarioEncontrado.nombre + "!");
+                    // Aquí rediriges a tu pantalla principal
+                    window.location.href = "principal.html"; 
+                } else {
+                    alert("Usuario o PIN incorrecto.");
+                }
+            } catch (error) {
+                console.error("Error al conectar con la base de datos:", error);
+                alert("No pudimos conectar con el servidor, intenta más tarde.");
             }
-
-            if (familiar.password && familiar.password !== passwordIngresada) {
-                return alert("❌ Contraseña incorrecta.");
-            }
-
-            localStorage.setItem('app_currentUser', familiar.nombre);
-            currentUser = familiar.nombre;
-            
-            document.getElementById('modal-identidad').classList.add('hidden');
-            document.getElementById('input-usuario-login').value = "";
-            document.getElementById('input-password-inicial').value = "";
-            
-            actualizarLabelUsuario();
-            procesarInvitacionPendiente();
-            navegarA('sec-inicio');
         }
 
         function procesarRegistro() {
