@@ -1229,77 +1229,62 @@
             }
         }
 
-        async function procesarRegistro() {
-            const nombre = document.getElementById('reg-nombre').value.trim();
-            const celularInput = document.getElementById('reg-celular');
-            const password = document.getElementById('reg-pass').value;
+async function procesarRegistro() {
+    // 1. Protección contra el error de "undefined"
+    if (typeof familiares === 'undefined') {
+        window.familiares = JSON.parse(localStorage.getItem('app_familiares')) || [];
+    }
+    const lista = window.familiares || [];
 
-            const listaFamiliares = window.familiares || [];
+    const nombre = document.getElementById('reg-nombre').value.trim();
+    const celularInput = document.getElementById('reg-celular');
+    const password = document.getElementById('reg-pass').value;
 
-            if(!celularInput) return;
-            const celular = celularInput.value.trim();
-            const regexCelular = /^[0-9]{10}$/;
+    if(!celularInput) return;
+    const celular = celularInput.value.trim();
+    const regexCelular = /^[0-9]{10}$/;
 
-            if(!nombre || password.length < 4) {
-                return alert("Rellena todos los campos. La contraseña debe tener al menos 4 caracteres.");
-            }
+    if(!nombre || password.length < 4) {
+        return alert("Rellena todos los campos. La contraseña debe tener al menos 4 caracteres.");
+    }
 
-            if (!regexCelular.test(celular)) {
-                alert("❌ El número de celular debe contener exactamente 10 dígitos numéricos.");
-                celularInput.focus();
-                return;
-            }
+    if (!regexCelular.test(celular)) {
+        alert("❌ El número de celular debe contener exactamente 10 dígitos numéricos.");
+        return;
+    }
 
-            // 1. Validar duplicados localmente antes de enviar
-            if(listaFamiliares.some(f => f.nombre.toLowerCase() === nombre.toLowerCase())) {
-                return alert("Este nombre ya se encuentra registrado.");
-            }
+    // 2. Validación usando la lista segura
+    if(lista.some(f => f.nombre.toLowerCase() === nombre.toLowerCase())) {
+        return alert("Este nombre ya se encuentra registrado.");
+    }
 
-            // 2. Preparar los datos para Sheety
-            // Asegúrate de que "usuario" coincida con el nombre de tu hoja en Google Sheets
-            const datosASubir = {
-                usuario: {
-                    nombre: nombre,
-                    celular: celular,
-                    pin: password // O 'password', según el nombre exacto de tu columna en Sheets
-                }
-            };
+    // 3. Registro en Sheety (API)
+    try {
+        const URL_USUARIOS = 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios';
+        const nuevoFamiliar = { usuario: { nombre, celular, pin: password } };
 
-            try {
-                const URL_USUARIOS = 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios';
-                
-                const respuesta = await fetch(URL_USUARIOS, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(datosASubir)
-                });
+        const res = await fetch(URL_USUARIOS, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(nuevoFamiliar)
+        });
 
-                if (!respuesta.ok) throw new Error("Error al guardar en la base de datos.");
+        if (!res.ok) throw new Error("Error en servidor");
 
-                // 3. Si la subida fue exitosa, guardamos localmente
-                const nuevoFamiliar = { nombre, celular, password };
-                familiares.push(nuevoFamiliar);
-                localStorage.setItem('app_familiares', JSON.stringify(familiares));
-
-                localStorage.setItem('app_currentUser', nombre);
-                currentUser = nombre;
-
-                // Limpiar formulario
-                document.getElementById('reg-nombre').value = "";
-                celularInput.value = "";
-                document.getElementById('reg-pass').value = "";
-
-                document.getElementById('modal-identidad').classList.add('hidden');
-                actualizarLabelUsuario();
-                procesarInvitacionPendiente();
-                navegarA('sec-inicio');
-                mostrarModal(`¡Bienvenido(a) a la familia, ${nombre}! ✨`);
-
-            } catch (error) {
-                console.error("Error completo:", error);
-                alert("Hubo un problema al registrarte en el servidor. Intenta de nuevo.");
-            }
-        }
+        // 4. Guardar localmente solo si el servidor respondió bien
+        lista.push({ nombre, celular, password });
+        window.familiares = lista;
+        localStorage.setItem('app_familiares', JSON.stringify(lista));
+        
+        // ... (resto de tu lógica de éxito)
+        alert(`¡Bienvenido(a), ${nombre}! ✨`);
+        document.getElementById('modal-identidad').classList.add('hidden');
+        
+    } catch (err) {
+        console.error(err);
+        alert("Error al conectar con la base de datos.");
+    }
+}
 
         function cerrarSesion() {
             if (confirm("¿Estás seguro de que deseas cerrar la sesión del perfil actual?")) {
