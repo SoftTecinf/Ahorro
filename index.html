@@ -1196,6 +1196,10 @@
         }
 
         async function confirmarIdentidad() {
+            console.log("¡La función fue ejecutada!"); // Si esto no sale, el HTML no está conectado
+            const nombreIngresado = document.getElementById('input-usuario-login').value;
+            const pinIngresado = document.getElementById('input-password-inicial').value;
+            console.log("Lo que se escribió fue:", nombreIngresado);
             const URL_USUARIOS = 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios';
             
             try {
