@@ -1196,29 +1196,38 @@
         }
 
         async function confirmarIdentidad(nombreIngresado, pinIngresado) {
+            // Usamos la URL exacta que te dio Sheety
+            const URL_USUARIOS = 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios';
+            
             try {
-                // 1. Descargamos la lista de usuarios desde la nube
-                const respuesta = await fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios');
+                const respuesta = await fetch(URL_USUARIOS);
+                
+                if (!respuesta.ok) {
+                    throw new Error('No se pudo conectar a la base de datos');
+                }
+                
                 const data = await respuesta.json();
-                const listaUsuarios = data.usuarios; // Asegúrate que tu pestaña se llame "usuarios"
+                
+                // Sheety devuelve los datos en una propiedad con el nombre de la hoja (en minúsculas)
+                const listaUsuarios = data.usuarios; 
 
-                // 2. Buscamos si existe alguien que coincida
+                // Verificamos si existe el usuario
                 const usuarioEncontrado = listaUsuarios.find(u => 
+                    // IMPORTANTE: Asegúrate que tus columnas en Google Sheets se llamen exactamente 'nombre' y 'pin'
                     u.nombre.toLowerCase() === nombreIngresado.toLowerCase() && 
                     u.pin.toString() === pinIngresado.toString()
                 );
+
                 if (usuarioEncontrado) {
-                    // 3. Si coincide, guardamos la sesión localmente
                     localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
-                    alert("¡Bienvenido, " + usuarioEncontrado.nombre + "!");
-                    // Aquí rediriges a tu pantalla principal
+                    alert("¡Bienvenido/a, " + usuarioEncontrado.nombre + "!");
                     window.location.href = "principal.html"; 
                 } else {
                     alert("Usuario o PIN incorrecto.");
                 }
             } catch (error) {
-                console.error("Error al conectar con la base de datos:", error);
-                alert("No pudimos conectar con el servidor, intenta más tarde.");
+                console.error("Error completo:", error);
+                alert("Ocurrió un error al intentar iniciar sesión. Revisa tu conexión.");
             }
         }
 
