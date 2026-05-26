@@ -1204,8 +1204,8 @@
 
                 // 2. Buscamos si existe alguien que coincida
                 const usuarioEncontrado = listaUsuarios.find(u => 
-                    u.Nombre.toLowerCase() === nombreIngresado.toLowerCase() && 
-                    u.Pin.toString() === pinIngresado.toString()
+                    u.nombre.toLowerCase() === nombreIngresado.toLowerCase() && 
+                    u.pin.toString() === pinIngresado.toString()
                 );
                 alert(usuarioEncontrado);
                 if (usuarioEncontrado) {
