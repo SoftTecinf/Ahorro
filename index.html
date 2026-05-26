@@ -1261,7 +1261,14 @@ async function procesarRegistro() {
     // 3. Registro en Sheety (API)
     try {
         const URL_USUARIOS = 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios';
-        const nuevoFamiliar = { usuario: { nombre, celular, pin: password } };
+        // Asegúrate de que el objeto interno coincida con tus columnas:
+        const nuevoFamiliar = {
+            usuario: { 
+                nombre: nombre,  // Debe ser igual a tu columna 'nombre'
+                pin: password,   // Debe ser igual a tu columna 'pin'
+                celular: celular // Debe ser igual a tu columna 'celular'
+            }
+        };
 
         const res = await fetch(URL_USUARIOS, {
             method: 'POST',
