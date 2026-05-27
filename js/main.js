@@ -91,5 +91,13 @@ async function cargarVista(nombreVista) {
     }
 }
 
-// Al final de tu archivo js/main.js
-document.addEventListener("DOMContentLoaded", inicializarApp);
+// Pon esto en tu archivo main.js (fuera de cualquier función)
+document.addEventListener('click', (e) => {
+    // Verificamos si el elemento clicado tiene el atributo data-vista
+    const boton = e.target.closest('[data-vista]');
+    
+    if (boton) {
+        const vista = boton.dataset.vista;
+        cargarVista(vista);
+    }
+});
