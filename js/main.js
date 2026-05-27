@@ -81,3 +81,5 @@ document.querySelectorAll('nav button').forEach(btn => {
     });
 });
 
+// Al final de tu archivo js/main.js
+document.addEventListener("DOMContentLoaded", inicializarApp);
