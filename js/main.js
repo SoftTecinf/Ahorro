@@ -92,7 +92,12 @@ async function cargarVista(nombreVista) {
 }
 
 // Pon esto en tu archivo main.js (fuera de cualquier función)
-// Al cargar la página, carga automáticamente la vista de inicio
-document.addEventListener("DOMContentLoaded", () => {
-    cargarVista('inicio'); 
+document.addEventListener('click', (e) => {
+    // Verificamos si el elemento clicado tiene el atributo data-vista
+    const boton = e.target.closest('[data-vista]');
+    
+    if (boton) {
+        const vista = boton.dataset.vista;
+        cargarVista(vista);
+    }
 });
