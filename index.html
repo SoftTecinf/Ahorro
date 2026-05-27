@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ahorro Familiar ✨</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght=300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="min-h-screen pb-16">
+    
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/projects.js"></script>
+    <script src="js/main.js"></script>
+    
+    <div id="status-bar"
+        class="mb-6 bg-white p-3 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <span class="text-[10px] uppercase font-bold text-gray-400">Sesión activa:</span>
+            <span id="label-usuario-actual"
+                class="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-md">Cargando...</span>
+        </div>
+        <button onclick="cerrarSesion()" class="text-xs text-red-500 hover:text-red-700 bg-red-50 px-3 py-1 rounded-lg">
+            Cerrar sesión / Cambiar perfil
+        </button>
+    </div>
+
+    <header class="py-6 text-center">
+        <h1 class="text-3xl font-extrabold text-gray-950 tracking-wide">
+            Nuestro <span
+                class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500">Ahorro</span> 🔮
+        </h1>
+    </header>
+
+    <nav class="max-w-md mx-auto mb-8 px-4">
+        <div class="bg-white p-1.5 rounded-2xl shadow-sm flex justify-between gap-1 border border-purple-50">
+            <button onclick="navegarA('sec-inicio')" id="btn-inicio"
+                class="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all cursor-pointer bg-gradient-to-r from-purple-600 to-blue-500 text-white shadow-sm">
+                🔮 Inicio
+            </button>
+            <button onclick="navegarA('sec-datos')" id="btn-datos"
+                class="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all cursor-pointer text-gray-500 hover:bg-purple-50/50">
+                📝 Datos
+            </button>
+            <button onclick="navegarA('sec-configuracion')" id="btn-configuracion"
+                class="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all cursor-pointer text-gray-500 hover:bg-purple-50/50">
+                ⚙️ Configurar
+            </button>
+        </div>
+    </nav>
+
+    <div id="vista-principal" class="hidden">
+        <main class="container mx-auto px-4 max-w-5xl">
+            <link rel="stylesheet" href="style.css">
+            <script src="main.js"></script>
+        </main>
+    </div>
+
+    <div id="modal-deposito-familiar"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center hidden z-40 p-4">
+        <div
+            class="bg-white w-full max-w-md rounded-3xl shadow-xl overflow-hidden flex flex-col max-h-[90vh] border border-purple-100">
+            <div class="bg-gradient-to-r from-purple-600 to-blue-500 p-4 text-white flex justify-between items-center">
+                <div>
+                    <h3 id="modal-titulo-nombre" class="font-bold text-lg">Historial de Ahorro</h3>
+                    <p id="modal-subtitulo-proyecto" class="text-xs text-purple-100 font-light"></p>
+                </div>
+                <button onclick="cerrarModalDeposito()"
+                    class="text-white hover:text-gray-200 text-2xl font-bold p-1 cursor-pointer">&times;</button>
+            </div>
+
+            <div class="p-6 overflow-y-auto space-y-5 custom-scrollbar flex-1">
+                <div
+                    class="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 p-3.5 rounded-2xl flex items-center justify-between">
+                    <div>
+                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Tu Cuota del Plazo:</p>
+                        <p id="modal-cuota-fija-texto" class="text-lg font-black text-purple-950">$0.00 MXN</p>
+                    </div>
+                    <span
+                        class="text-xs bg-white text-purple-700 px-3 py-1 rounded-xl font-semibold border border-purple-100 shadow-2xs">💵
+                        Pago Fijo</span>
+                </div>
+
+                <form id="form-nuevo-deposito" onsubmit="guardarAbonoIntegrante(event)"
+                    class="space-y-3 bg-purple-50/30 p-4 rounded-2xl border border-purple-100">
+                    <h4 class="text-xs font-bold text-purple-700 uppercase tracking-wide">📥 Registrar Nueva Aportación
+                    </h4>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Fecha de
+                                Pago</label>
+                            <input type="date" id="deposito-fecha"
+                                class="w-full px-3 py-2 text-xs border rounded-xl focus:outline-none" required>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-semibold text-purple-700 uppercase mb-1">¿Cuántos
+                                abonos cubres?</label>
+                            <select id="deposito-cantidad-abonos" onchange="calcularMontoPorAbonos()"
+                                class="w-full px-3 py-2 text-xs border rounded-xl focus:outline-none bg-white font-bold text-purple-950">
+                                <option value="1" selected>1 Abono</option>
+                                <option value="2">2 Abonos</option>
+                                <option value="3">3 Abonos</option>
+                                <option value="4">4 Abonos</option>
+                                <option value="5">5 Abonos</option>
+                                <option value="6">6 Abonos</option>
+                                <option value="8">8 Abonos</option>
+                                <option value="10">10 Abonos</option>
+                                <option value="manual">Otro monto (Manual)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Monto definitivo ($
+                            MXN)</label>
+                        <input type="number" id="deposito-monto" step="0.01" placeholder="0.00"
+                            class="w-full px-3 py-2 text-xs border rounded-xl focus:outline-none font-bold" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Método de
+                            Pago</label>
+                        <select id="deposito-metodo"
+                            class="w-full px-3 py-2 text-xs border rounded-xl focus:outline-none bg-white">
+                            <option value="Transferencia" selected>📱 Transferencia Bancaria</option>
+                            <option value="Efectivo">💵 Efectivo</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Foto del Depósito /
+                            Comprobante</label>
+                        <input type="file" id="deposito-foto" accept="image/*" capture="environment"
+                            class="w-full text-xs text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-purple-100 file:text-purple-700 hover:file:bg-purple-200 cursor-pointer">
+                    </div>
+                    <button type="submit"
+                        class="w-full text-white py-2 rounded-xl text-xs font-bold bg-purple-600 hover:bg-purple-700 cursor-pointer shadow-xs transition-all">
+                        ✨ Adjuntar y Guardar Ahorro
+                    </button>
+                </form>
+                <div class="space-y-2">
+                    <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest">📋 Comprobantes Entregados
+                    </h4>
+                    <div id="modal-lista-abonos" class="space-y-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-viewer-foto"
+        class="fixed inset-0 bg-black/80 backdrop-blur-xs flex items-center justify-center hidden z-50 p-4"
+        onclick="this.classList.add('hidden')">
+        <div class="max-w-full max-h-[85vh] relative">
+            <img id="img-viewer-src" src="" alt="Comprobante de depósito"
+                class="rounded-xl max-h-[80vh] mx-auto object-contain shadow-2xl">
+            <p class="text-white text-center text-xs mt-3 font-light italic">Haz clic en cualquier parte para cerrar 🚪
+            </p>
+        </div>
+    </div>
+
+    <div id="success-modal"
+        class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center hidden z-50">
+        <div class="bg-white p-8 rounded-3xl shadow-xl text-center max-w-sm space-y-4 border border-purple-100 mx-4">
+            <div class="text-5xl">🔮</div>
+            <p id="success-message" class="text-gray-600 font-light text-sm"></p>
+            <button onclick="cerrarModal()"
+                class="w-full bg-gray-900 hover:bg-gray-700 text-white py-2.5 rounded-xl font-semibold cursor-pointer">¡Entendido!
+                ✨</button>
+        </div>
+    </div>
+
+    <div id="modal-identidad"
+        class="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+        <div class="bg-white p-6 sm:p-8 rounded-3xl max-w-sm w-full shadow-2xl border border-purple-100">
+            <div class="text-center mb-6">
+                <span class="text-4xl">🔐</span>
+                <h3 class="text-xl font-black text-gray-900 mt-2">Identidad Familiar</h3>
+                <p class="text-xs text-gray-400 mt-1">Ingresa a tu perfil para entrar al sistema</p>
+            </div>
+
+            <div class="flex border-b border-gray-100 mb-4 text-sm font-semibold">
+                <button onclick="cambiarVista('login')" id="tab-login"
+                    class="flex-1 pb-2 text-center text-purple-600 border-b-2 border-purple-600">Ingresar</button>
+                <button onclick="cambiarVista('registro')" id="tab-registro"
+                    class="flex-1 pb-2 text-center text-gray-400 border-b-2 border-transparent">Registrarse</button>
+            </div>
+
+            <div id="vista-login" class="space-y-4">
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Nombre de Integrante</label>
+                    <input type="text" id="input-usuario-login" placeholder="Escribe tu nombre de usuario..."
+                        class="w-full px-4 py-3 border rounded-xl focus:outline-none bg-gray-50 font-medium">
+                </div>
+                <div class="relative">
+                    <label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Contraseña</label>
+                    <input type="password" id="input-password-inicial" placeholder="••••••••"
+                        class="w-full px-4 py-3 border rounded-xl focus:outline-none bg-gray-50 font-mono">
+                    <button type="button" onclick="togglePassword('input-password-inicial')"
+                        class="absolute right-3 top-9 text-gray-400 hover:text-gray-600">👁️</button>
+                </div>
+                <button onclick="confirmarIdentidad()"
+                    class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold cursor-pointer transition-all shadow-sm">Entrar
+                    a Ahorros 🔮</button>
+            </div>
+
+            <div id="vista-registro" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Tu Nombre Completo</label>
+                    <input type="text" id="reg-nombre" placeholder="Ej. Mamá, Juan, Tía Maria"
+                        class="w-full px-4 py-3 border rounded-xl focus:outline-none bg-gray-50">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Celular (10 dígitos)</label>
+                    <input type="tel" id="reg-celular" placeholder="Ej. 5512345678" maxlength="10" inputmode="numeric"
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                        class="w-full px-4 py-3 border rounded-xl focus:outline-none bg-gray-50">
+                </div>
+                <div class="relative">
+                    <label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Crea una Contraseña</label>
+                    <input type="password" id="reg-pass" placeholder="Mínimo 4 caracteres"
+                        class="w-full px-4 py-3 border rounded-xl focus:outline-none bg-gray-50">
+                    <button type="button" onclick="togglePassword('reg-pass')"
+                        class="absolute right-3 top-9 text-gray-400 hover:text-gray-600">👁️</button>
+                </div>
+                <button onclick="procesarRegistro()"
+                    class="w-full py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold cursor-pointer transition-all">Registrarse</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-invitacion-directa"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-xl max-w-xs w-full">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">Invitar Familiar 📩</h3>
+            <input type="hidden" id="invitacion-id-proyecto-actual">
+            <p class="text-xs text-gray-500 mb-4">Ingresa los 10 dígitos del celular (El código 52 se agregará en
+                automático)</p>
+            <input type="tel" id="input-celular-modal" placeholder="Ej. 6441234567" maxlength="10" inputmode="numeric"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                class="w-full px-4 py-3 border rounded-xl mb-4 focus:outline-none">
+
+            <div class="flex gap-2">
+                <button onclick="document.getElementById('modal-invitacion-directa').classList.add('hidden')"
+                    class="flex-1 py-2 bg-gray-200 text-gray-700 rounded-xl font-medium text-xs cursor-pointer">
+                    Cancelar
+                </button>
+
+                <a id="btn-whatsapp-link" onclick="enviarInvitacionWhatsApp(event)" target="_blank"
+                    class="flex-1 py-2 bg-green-600 text-white rounded-xl font-bold text-xs cursor-pointer text-center block">
+                    Enviar Link
+                </a>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

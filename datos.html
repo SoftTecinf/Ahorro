@@ -1,0 +1,146 @@
+<section id="sec-datos" class="space-y-10 hidden">
+
+    <div class="space-y-4">
+        <div class="bg-white p-6 rounded-3xl neon-card space-y-4">
+            <h2 id="titulo-form-proyecto"
+                class="text-lg font-bold text-gray-800 flex items-center gap-2 border-b border-purple-50 pb-2">
+                <span class="text-purple-500">✨</span> 1. Registrar Nuevo Proyecto
+            </h2>
+            <form id="form-proyectos" onsubmit="guardarProyecto(event)" class="space-y-4">
+                <input type="hidden" id="datos-proyecto-id">
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="sm:col-span-1">
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Nombre del
+                            Proyecto</label>
+                        <input type="text" id="datos-nombre-proyecto" placeholder="Ej. Viaje Familiar 🏖️"
+                            class="w-full px-4 py-2.5 border rounded-xl focus:outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-purple-700 uppercase mb-1">Fecha de
+                            Inicio</label>
+                        <input type="date" id="datos-fecha-inicio"
+                            class="w-full px-4 py-2.5 border rounded-xl focus:outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Frecuencia
+                            de Pagos</label>
+                        <select id="datos-frecuencia"
+                            class="w-full px-4 py-2.5 border rounded-xl bg-white focus:outline-none">
+                            <option value="Semanal">Semanal</option>
+                            <option value="Quincenal" selected>Quincenal</option>
+                            <option value="Mensual">Mensual</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Ahorro Total
+                            (MXN)</label>
+                        <input type="number" id="datos-monto" step="0.01" placeholder="$0.00 MXN"
+                            class="w-full px-4 py-2.5 border rounded-xl focus:outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Número de
+                            Plazos</label>
+                        <input type="number" id="datos-plazos" value="10"
+                            class="w-full px-4 py-2.5 border rounded-xl focus:outline-none" required>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button type="submit" id="btn-guardar-proyecto"
+                        class="flex-1 text-white py-2.5 rounded-xl font-bold btn-gradient cursor-pointer shadow-xs mt-2">
+                        💾 Guardar Proyecto
+                    </button>
+                    <button type="button" id="btn-cancelar-proyecto" onclick="cancelarEdicionProyecto()"
+                        class="hidden bg-gray-200 hover:bg-gray-300 text-gray-700 py-2.5 px-4 rounded-xl font-bold mt-2 cursor-pointer">
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl neon-card overflow-hidden">
+            <h3 class="text-xs font-bold text-purple-900 uppercase tracking-widest mb-3">📋 Proyectos
+                Guardados</h3>
+            <div class="overflow-x-auto custom-scrollbar border border-purple-100 rounded-2xl">
+                <table class="w-full text-left border-collapse min-w-[700px]">
+                    <thead>
+                        <tr
+                            class="bg-purple-50/80 border-b border-purple-100 text-[11px] font-bold text-purple-950 uppercase tracking-wider">
+                            <th class="p-3">Proyecto</th>
+                            <th class="p-3">Inicio</th>
+                            <th class="p-3">Pagos (Frecuencia)</th>
+                            <th class="p-3">Ahorro Total (MXN)</th>
+                            <th class="p-3 text-center">Plazos</th>
+                            <th class="p-3 text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="datos-tabla-proyectos-body" class="divide-y divide-purple-50 text-xs text-gray-700">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-4">
+        <div class="bg-white p-6 rounded-3xl neon-card space-y-4">
+            <h2 id="titulo-form-cuenta"
+                class="text-lg font-bold text-gray-800 flex items-center gap-2 border-b border-purple-50 pb-2">
+                <span class="text-blue-600">💳</span> 2. Registro de Cuentas Bancarias
+            </h2>
+            <form id="form-cuentas" onsubmit="guardarCuentaBancaria(event)" class="space-y-4">
+                <input type="hidden" id="cuenta-id">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Banco</label>
+                        <input type="text" id="cuenta-banco" placeholder="Ej. BBVA, Banorte"
+                            class="w-full px-4 py-2.5 border rounded-xl focus:outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Titular de
+                            la Cuenta</label>
+                        <input type="text" id="cuenta-titular" placeholder="Nombre del titular"
+                            class="w-full px-4 py-2.5 border rounded-xl focus:outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Cuenta o
+                            CLABE</label>
+                        <input type="text" id="cuenta-clabe" placeholder="Número o 18 dígitos"
+                            class="w-full px-4 py-2.5 border rounded-xl focus:outline-none" required>
+                    </div>
+                </div>
+                <div class="flex gap-2 justify-end">
+                    <button type="button" id="btn-cancelar-cuenta" onclick="cancelarEdicionCuenta()"
+                        class="hidden bg-gray-200 hover:bg-gray-300 text-gray-700 py-2.5 px-4 rounded-xl font-bold cursor-pointer">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="btn-guardar-cuenta"
+                        class="text-white py-2.5 px-6 rounded-xl font-bold bg-gray-900 hover:bg-gray-800 cursor-pointer shadow-xs">
+                        ➕ Agregar Cuenta
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl neon-card overflow-hidden">
+            <h3 class="text-xs font-bold text-blue-900 uppercase tracking-widest mb-3">💳 Catálogo de
+                Cuentas Bancarias</h3>
+            <div class="overflow-x-auto custom-scrollbar border border-blue-100 rounded-2xl">
+                <table class="w-full text-left border-collapse min-w-[600px]">
+                    <thead>
+                        <tr
+                            class="bg-blue-50/80 border-b border-blue-100 text-[11px] font-bold text-blue-950 uppercase tracking-wider">
+                            <th class="p-3">Banco</th>
+                            <th class="p-3">Titular</th>
+                            <th class="p-3">Cuenta o Clave</th>
+                            <th class="p-3 text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="datos-tabla-cuentas-body" class="divide-y divide-blue-50 text-xs text-gray-700"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
