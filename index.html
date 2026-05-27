@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es-MX">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,70 +8,48 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght=300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght=300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        }
-        .neon-card {
-            box-shadow: 0 10px 20px -3px rgba(107, 33, 168, 0.05), 0 4px 6px -2px rgba(59, 130, 246, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(10px);
-        }
-        .btn-gradient {
-            background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn-gradient:hover {
-            transform: scale(1.02);
-            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.3);
-        }
-        input, select {
-            background-color: rgba(255, 255, 255, 0.85) !important;
-            border-color: #e9d5ff !important;
-        }
-        input:focus, select:focus {
-            border-color: #3b82f6 !important;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            height: 6px;
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #e9d5ff;
-            border-radius: 10px;
-        }
-    </style>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/projects.js"></script>
+    <script src="js/main.js"></script>
+
 </head>
+
 <body class="min-h-screen pb-16">
-    <div id="status-bar" class="mb-6 bg-white p-3 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
+    <div id="status-bar"
+        class="mb-6 bg-white p-3 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
         <div class="flex items-center gap-2">
             <span class="text-[10px] uppercase font-bold text-gray-400">Sesión activa:</span>
-            <span id="label-usuario-actual" class="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-md">Cargando...</span>
+            <span id="label-usuario-actual"
+                class="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-md">Cargando...</span>
         </div>
         <button onclick="cerrarSesion()" class="text-xs text-red-500 hover:text-red-700 bg-red-50 px-3 py-1 rounded-lg">
             Cerrar sesión / Cambiar perfil
-        </button> 
-     </div>
+        </button>
+    </div>
 
     <header class="py-6 text-center">
         <h1 class="text-3xl font-extrabold text-gray-950 tracking-wide">
-            Nuestro <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500">Ahorro</span> 🔮
+            Nuestro <span
+                class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500">Ahorro</span> 🔮
         </h1>
     </header>
 
     <nav class="max-w-md mx-auto mb-8 px-4">
         <div class="bg-white p-1.5 rounded-2xl shadow-sm flex justify-between gap-1 border border-purple-50">
-            <button onclick="navegarA('sec-inicio')" id="btn-inicio" class="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all cursor-pointer bg-gradient-to-r from-purple-600 to-blue-500 text-white shadow-sm">
+            <button onclick="navegarA('sec-inicio')" id="btn-inicio"
+                class="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all cursor-pointer bg-gradient-to-r from-purple-600 to-blue-500 text-white shadow-sm">
                 🔮 Inicio
             </button>
-            <button onclick="navegarA('sec-datos')" id="btn-datos" class="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all cursor-pointer text-gray-500 hover:bg-purple-50/50">
+            <button onclick="navegarA('sec-datos')" id="btn-datos"
+                class="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all cursor-pointer text-gray-500 hover:bg-purple-50/50">
                 📝 Datos
             </button>
-            <button onclick="navegarA('sec-configuracion')" id="btn-configuracion" class="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all cursor-pointer text-gray-500 hover:bg-purple-50/50">
+            <button onclick="navegarA('sec-configuracion')" id="btn-configuracion"
+                class="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all cursor-pointer text-gray-500 hover:bg-purple-50/50">
                 ⚙️ Configurar
             </button>
         </div>
@@ -78,220 +57,52 @@
 
     <div id="vista-principal" class="hidden">
         <main class="container mx-auto px-4 max-w-5xl">
-
-            <section id="sec-inicio" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        
-                <div class="md:col-span-1 space-y-6">
-                    <div class="bg-white p-6 rounded-3xl neon-card">
-                        <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                            <span class="text-purple-500">💎</span> Tus Planes de Ahorro
-                        </h2>
-                        <div id="inicio-lista-proyectos" class="grid grid-cols-1 gap-3"></div>
-                    </div>
-
-                    <div id="contenedor-invitaciones" class="bg-white p-6 rounded-3xl neon-card hidden border border-yellow-200 bg-yellow-50/20">
-                        <h2 class="text-base font-bold text-yellow-800 mb-3 flex items-center gap-2">
-                            <span>📩</span> Invitaciones Pendientes
-                        </h2>
-                        <div id="lista-invitaciones" class="space-y-3"></div>
-                    </div>
-                </div>
-
-                <div class="md:col-span-2">
-                    <div id="inicio-resumen-proyecto" class="bg-white p-6 rounded-3xl neon-card hidden relative border border-purple-100">
-                        <div id="resumen-contenido"></div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="sec-datos" class="space-y-10 hidden">
-                
-                <div class="space-y-4">
-                    <div class="bg-white p-6 rounded-3xl neon-card space-y-4">
-                        <h2 id="titulo-form-proyecto" class="text-lg font-bold text-gray-800 flex items-center gap-2 border-b border-purple-50 pb-2">
-                            <span class="text-purple-500">✨</span> 1. Registrar Nuevo Proyecto
-                        </h2>
-                        <form id="form-proyectos" onsubmit="guardarProyecto(event)" class="space-y-4">
-                            <input type="hidden" id="datos-proyecto-id">
-                            
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                <div class="sm:col-span-1">
-                                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Nombre del Proyecto</label>
-                                    <input type="text" id="datos-nombre-proyecto" placeholder="Ej. Viaje Familiar 🏖️" class="w-full px-4 py-2.5 border rounded-xl focus:outline-none" required>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-purple-700 uppercase mb-1">Fecha de Inicio</label>
-                                    <input type="date" id="datos-fecha-inicio" class="w-full px-4 py-2.5 border rounded-xl focus:outline-none" required>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Frecuencia de Pagos</label>
-                                    <select id="datos-frecuencia" class="w-full px-4 py-2.5 border rounded-xl bg-white focus:outline-none">
-                                        <option value="Semanal">Semanal</option>
-                                        <option value="Quincenal" selected>Quincenal</option>
-                                        <option value="Mensual">Mensual</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Ahorro Total (MXN)</label>
-                                    <input type="number" id="datos-monto" step="0.01" placeholder="$0.00 MXN" class="w-full px-4 py-2.5 border rounded-xl focus:outline-none" required>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Número de Plazos</label>
-                                    <input type="number" id="datos-plazos" value="10" class="w-full px-4 py-2.5 border rounded-xl focus:outline-none" required>
-                                </div>
-                            </div>
-                            <div class="flex gap-2">
-                                <button type="submit" id="btn-guardar-proyecto" class="flex-1 text-white py-2.5 rounded-xl font-bold btn-gradient cursor-pointer shadow-xs mt-2">
-                                    💾 Guardar Proyecto
-                                </button>
-                                <button type="button" id="btn-cancelar-proyecto" onclick="cancelarEdicionProyecto()" class="hidden bg-gray-200 hover:bg-gray-300 text-gray-700 py-2.5 px-4 rounded-xl font-bold mt-2 cursor-pointer">
-                                    Cancelar
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-3xl neon-card overflow-hidden">
-                        <h3 class="text-xs font-bold text-purple-900 uppercase tracking-widest mb-3">📋 Proyectos Guardados</h3>
-                        <div class="overflow-x-auto custom-scrollbar border border-purple-100 rounded-2xl">
-                            <table class="w-full text-left border-collapse min-w-[700px]">
-                                <thead>
-                                    <tr class="bg-purple-50/80 border-b border-purple-100 text-[11px] font-bold text-purple-950 uppercase tracking-wider">
-                                        <th class="p-3">Proyecto</th>
-                                        <th class="p-3">Inicio</th>
-                                        <th class="p-3">Pagos (Frecuencia)</th>
-                                        <th class="p-3">Ahorro Total (MXN)</th>
-                                        <th class="p-3 text-center">Plazos</th>
-                                        <th class="p-3 text-center">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="datos-tabla-proyectos-body" class="divide-y divide-purple-50 text-xs text-gray-700"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-4">
-                    <div class="bg-white p-6 rounded-3xl neon-card space-y-4">
-                        <h2 id="titulo-form-cuenta" class="text-lg font-bold text-gray-800 flex items-center gap-2 border-b border-purple-50 pb-2">
-                            <span class="text-blue-600">💳</span> 2. Registro de Cuentas Bancarias
-                        </h2>
-                        <form id="form-cuentas" onsubmit="guardarCuentaBancaria(event)" class="space-y-4">
-                            <input type="hidden" id="cuenta-id">
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Banco</label>
-                                    <input type="text" id="cuenta-banco" placeholder="Ej. BBVA, Banorte" class="w-full px-4 py-2.5 border rounded-xl focus:outline-none" required>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Titular de la Cuenta</label>
-                                    <input type="text" id="cuenta-titular" placeholder="Nombre del titular" class="w-full px-4 py-2.5 border rounded-xl focus:outline-none" required>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Cuenta o CLABE</label>
-                                    <input type="text" id="cuenta-clabe" placeholder="Número o 18 dígitos" class="w-full px-4 py-2.5 border rounded-xl focus:outline-none" required>
-                                </div>
-                            </div>
-                            <div class="flex gap-2 justify-end">
-                                <button type="button" id="btn-cancelar-cuenta" onclick="cancelarEdicionCuenta()" class="hidden bg-gray-200 hover:bg-gray-300 text-gray-700 py-2.5 px-4 rounded-xl font-bold cursor-pointer">
-                                    Cancelar
-                                </button>
-                                <button type="submit" id="btn-guardar-cuenta" class="text-white py-2.5 px-6 rounded-xl font-bold bg-gray-900 hover:bg-gray-800 cursor-pointer shadow-xs">
-                                    ➕ Agregar Cuenta
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-3xl neon-card overflow-hidden">
-                        <h3 class="text-xs font-bold text-blue-900 uppercase tracking-widest mb-3">💳 Catálogo de Cuentas Bancarias</h3>
-                        <div class="overflow-x-auto custom-scrollbar border border-blue-100 rounded-2xl">
-                            <table class="w-full text-left border-collapse min-w-[600px]">
-                                <thead>
-                                    <tr class="bg-blue-50/80 border-b border-blue-100 text-[11px] font-bold text-blue-950 uppercase tracking-wider">
-                                        <th class="p-3">Banco</th>
-                                        <th class="p-3">Titular</th>
-                                        <th class="p-3">Cuenta o Clave</th>
-                                        <th class="p-3 text-center">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="datos-tabla-cuentas-body" class="divide-y divide-blue-50 text-xs text-gray-700"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="sec-configuracion" class="max-w-2xl mx-auto space-y-6 hidden">
-                <div class="bg-white p-6 rounded-3xl neon-card">
-                    <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
-                        <span class="text-purple-500">🛠️</span> Configurar y Vincular Asignaciones
-                    </h2>
-                    <p class="text-xs text-gray-400 mb-6 font-light">Configura de manera exclusiva qué cuenta bancaria y qué integrantes participan en cada proyecto.</p>
-                    
-                    <form onsubmit="guardarConfiguracionProyecto(event)" class="space-y-6">
-                        <div class="bg-purple-50/30 p-4 rounded-2xl border border-purple-100">
-                            <label class="block text-xs font-bold text-purple-950 uppercase mb-1.5">1. Selecciona el Proyecto a Configurar</label>
-                            <select id="config-select-proyecto" class="w-full px-4 py-2.5 border rounded-xl bg-white focus:outline-none" required>
-                                <option value="">Selecciona un proyecto...</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5">2. Asignar Cuenta Bancaria para Depósitos</label>
-                            <select id="config-select-cuenta" class="w-full px-4 py-2.5 border rounded-xl bg-white focus:outline-none">
-                                <option value="">Ninguna cuenta vinculada (vacío)</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5">Participantes activos:</label>
-                            <div id="config-checkboxes-familiares" class="space-y-2 max-h-48 overflow-y-auto p-3 bg-purple-50/10 rounded-xl border border-purple-50"></div>
-                        </div>
-
-                        <button type="submit" class="w-full text-white py-3 rounded-xl font-bold tracking-wide btn-gradient cursor-pointer shadow-md mt-4">
-                            ✨ Aplicar y Guardar Vínculos del Plan
-                        </button>
-                    </form>
-                </div>
-            </section>
-
+            <script src="main.js"></script>
         </main>
     </div>
 
-    <div id="modal-deposito-familiar" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center hidden z-40 p-4">
-        <div class="bg-white w-full max-w-md rounded-3xl shadow-xl overflow-hidden flex flex-col max-h-[90vh] border border-purple-100">
+    <div id="modal-deposito-familiar"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center hidden z-40 p-4">
+        <div
+            class="bg-white w-full max-w-md rounded-3xl shadow-xl overflow-hidden flex flex-col max-h-[90vh] border border-purple-100">
             <div class="bg-gradient-to-r from-purple-600 to-blue-500 p-4 text-white flex justify-between items-center">
                 <div>
                     <h3 id="modal-titulo-nombre" class="font-bold text-lg">Historial de Ahorro</h3>
                     <p id="modal-subtitulo-proyecto" class="text-xs text-purple-100 font-light"></p>
                 </div>
-                <button onclick="cerrarModalDeposito()" class="text-white hover:text-gray-200 text-2xl font-bold p-1 cursor-pointer">&times;</button>
+                <button onclick="cerrarModalDeposito()"
+                    class="text-white hover:text-gray-200 text-2xl font-bold p-1 cursor-pointer">&times;</button>
             </div>
-            
+
             <div class="p-6 overflow-y-auto space-y-5 custom-scrollbar flex-1">
-                <div class="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 p-3.5 rounded-2xl flex items-center justify-between">
+                <div
+                    class="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 p-3.5 rounded-2xl flex items-center justify-between">
                     <div>
                         <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Tu Cuota del Plazo:</p>
                         <p id="modal-cuota-fija-texto" class="text-lg font-black text-purple-950">$0.00 MXN</p>
                     </div>
-                    <span class="text-xs bg-white text-purple-700 px-3 py-1 rounded-xl font-semibold border border-purple-100 shadow-2xs">💵 Pago Fijo</span>
+                    <span
+                        class="text-xs bg-white text-purple-700 px-3 py-1 rounded-xl font-semibold border border-purple-100 shadow-2xs">💵
+                        Pago Fijo</span>
                 </div>
 
-                <form id="form-nuevo-deposito" onsubmit="guardarAbonoIntegrante(event)" class="space-y-3 bg-purple-50/30 p-4 rounded-2xl border border-purple-100">
-                    <h4 class="text-xs font-bold text-purple-700 uppercase tracking-wide">📥 Registrar Nueva Aportación</h4>
-                    
+                <form id="form-nuevo-deposito" onsubmit="guardarAbonoIntegrante(event)"
+                    class="space-y-3 bg-purple-50/30 p-4 rounded-2xl border border-purple-100">
+                    <h4 class="text-xs font-bold text-purple-700 uppercase tracking-wide">📥 Registrar Nueva Aportación
+                    </h4>
+
                     <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Fecha de Pago</label>
-                            <input type="date" id="deposito-fecha" class="w-full px-3 py-2 text-xs border rounded-xl focus:outline-none" required>
+                            <label class="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Fecha de
+                                Pago</label>
+                            <input type="date" id="deposito-fecha"
+                                class="w-full px-3 py-2 text-xs border rounded-xl focus:outline-none" required>
                         </div>
                         <div>
-                            <label class="block text-[10px] font-semibold text-purple-700 uppercase mb-1">¿Cuántos abonos cubres?</label>
-                            <select id="deposito-cantidad-abonos" onchange="calcularMontoPorAbonos()" class="w-full px-3 py-2 text-xs border rounded-xl focus:outline-none bg-white font-bold text-purple-950">
+                            <label class="block text-[10px] font-semibold text-purple-700 uppercase mb-1">¿Cuántos
+                                abonos cubres?</label>
+                            <select id="deposito-cantidad-abonos" onchange="calcularMontoPorAbonos()"
+                                class="w-full px-3 py-2 text-xs border rounded-xl focus:outline-none bg-white font-bold text-purple-950">
                                 <option value="1" selected>1 Abono</option>
                                 <option value="2">2 Abonos</option>
                                 <option value="3">3 Abonos</option>
@@ -306,116 +117,148 @@
                     </div>
 
                     <div>
-                        <label class="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Monto definitivo ($ MXN)</label>
-                        <input type="number" id="deposito-monto" step="0.01" placeholder="0.00" class="w-full px-3 py-2 text-xs border rounded-xl focus:outline-none font-bold" required>
+                        <label class="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Monto definitivo ($
+                            MXN)</label>
+                        <input type="number" id="deposito-monto" step="0.01" placeholder="0.00"
+                            class="w-full px-3 py-2 text-xs border rounded-xl focus:outline-none font-bold" required>
                     </div>
 
                     <div>
-                        <label class="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Método de Pago</label>
-                        <select id="deposito-metodo" class="w-full px-3 py-2 text-xs border rounded-xl focus:outline-none bg-white">
+                        <label class="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Método de
+                            Pago</label>
+                        <select id="deposito-metodo"
+                            class="w-full px-3 py-2 text-xs border rounded-xl focus:outline-none bg-white">
                             <option value="Transferencia" selected>📱 Transferencia Bancaria</option>
                             <option value="Efectivo">💵 Efectivo</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Foto del Depósito / Comprobante</label>
-                        <input type="file" id="deposito-foto" accept="image/*" capture="environment" class="w-full text-xs text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-purple-100 file:text-purple-700 hover:file:bg-purple-200 cursor-pointer">
+                        <label class="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Foto del Depósito /
+                            Comprobante</label>
+                        <input type="file" id="deposito-foto" accept="image/*" capture="environment"
+                            class="w-full text-xs text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-purple-100 file:text-purple-700 hover:file:bg-purple-200 cursor-pointer">
                     </div>
-                    <button type="submit" class="w-full text-white py-2 rounded-xl text-xs font-bold bg-purple-600 hover:bg-purple-700 cursor-pointer shadow-xs transition-all">
+                    <button type="submit"
+                        class="w-full text-white py-2 rounded-xl text-xs font-bold bg-purple-600 hover:bg-purple-700 cursor-pointer shadow-xs transition-all">
                         ✨ Adjuntar y Guardar Ahorro
                     </button>
                 </form>
                 <div class="space-y-2">
-                    <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest">📋 Comprobantes Entregados</h4>
+                    <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest">📋 Comprobantes Entregados
+                    </h4>
                     <div id="modal-lista-abonos" class="space-y-2"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="modal-viewer-foto" class="fixed inset-0 bg-black/80 backdrop-blur-xs flex items-center justify-center hidden z-50 p-4" onclick="this.classList.add('hidden')">
+    <div id="modal-viewer-foto"
+        class="fixed inset-0 bg-black/80 backdrop-blur-xs flex items-center justify-center hidden z-50 p-4"
+        onclick="this.classList.add('hidden')">
         <div class="max-w-full max-h-[85vh] relative">
-            <img id="img-viewer-src" src="" alt="Comprobante de depósito" class="rounded-xl max-h-[80vh] mx-auto object-contain shadow-2xl">
-            <p class="text-white text-center text-xs mt-3 font-light italic">Haz clic en cualquier parte para cerrar 🚪</p>
+            <img id="img-viewer-src" src="" alt="Comprobante de depósito"
+                class="rounded-xl max-h-[80vh] mx-auto object-contain shadow-2xl">
+            <p class="text-white text-center text-xs mt-3 font-light italic">Haz clic en cualquier parte para cerrar 🚪
+            </p>
         </div>
     </div>
 
-    <div id="success-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center hidden z-50">
+    <div id="success-modal"
+        class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center hidden z-50">
         <div class="bg-white p-8 rounded-3xl shadow-xl text-center max-w-sm space-y-4 border border-purple-100 mx-4">
             <div class="text-5xl">🔮</div>
             <p id="success-message" class="text-gray-600 font-light text-sm"></p>
-            <button onclick="cerrarModal()" class="w-full bg-gray-900 hover:bg-gray-700 text-white py-2.5 rounded-xl font-semibold cursor-pointer">¡Entendido! ✨</button>
+            <button onclick="cerrarModal()"
+                class="w-full bg-gray-900 hover:bg-gray-700 text-white py-2.5 rounded-xl font-semibold cursor-pointer">¡Entendido!
+                ✨</button>
         </div>
     </div>
 
-    <div id="modal-identidad" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+    <div id="modal-identidad"
+        class="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
         <div class="bg-white p-6 sm:p-8 rounded-3xl max-w-sm w-full shadow-2xl border border-purple-100">
             <div class="text-center mb-6">
                 <span class="text-4xl">🔐</span>
                 <h3 class="text-xl font-black text-gray-900 mt-2">Identidad Familiar</h3>
                 <p class="text-xs text-gray-400 mt-1">Ingresa a tu perfil para entrar al sistema</p>
             </div>
-            
+
             <div class="flex border-b border-gray-100 mb-4 text-sm font-semibold">
-                <button onclick="cambiarVista('login')" id="tab-login" class="flex-1 pb-2 text-center text-purple-600 border-b-2 border-purple-600">Ingresar</button>
-                <button onclick="cambiarVista('registro')" id="tab-registro" class="flex-1 pb-2 text-center text-gray-400 border-b-2 border-transparent">Registrarse</button>
+                <button onclick="cambiarVista('login')" id="tab-login"
+                    class="flex-1 pb-2 text-center text-purple-600 border-b-2 border-purple-600">Ingresar</button>
+                <button onclick="cambiarVista('registro')" id="tab-registro"
+                    class="flex-1 pb-2 text-center text-gray-400 border-b-2 border-transparent">Registrarse</button>
             </div>
 
             <div id="vista-login" class="space-y-4">
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Nombre de Integrante</label>
-                    <input type="text" id="input-usuario-login" placeholder="Escribe tu nombre de usuario..." class="w-full px-4 py-3 border rounded-xl focus:outline-none bg-gray-50 font-medium">
+                    <input type="text" id="input-usuario-login" placeholder="Escribe tu nombre de usuario..."
+                        class="w-full px-4 py-3 border rounded-xl focus:outline-none bg-gray-50 font-medium">
                 </div>
                 <div class="relative">
                     <label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Contraseña</label>
-                    <input type="password" id="input-password-inicial" placeholder="••••••••" class="w-full px-4 py-3 border rounded-xl focus:outline-none bg-gray-50 font-mono">
-                    <button type="button" onclick="togglePassword('input-password-inicial')" class="absolute right-3 top-9 text-gray-400 hover:text-gray-600">👁️</button>
+                    <input type="password" id="input-password-inicial" placeholder="••••••••"
+                        class="w-full px-4 py-3 border rounded-xl focus:outline-none bg-gray-50 font-mono">
+                    <button type="button" onclick="togglePassword('input-password-inicial')"
+                        class="absolute right-3 top-9 text-gray-400 hover:text-gray-600">👁️</button>
                 </div>
-                <button onclick="confirmarIdentidad()" class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold cursor-pointer transition-all shadow-sm">Entrar a Ahorros 🔮</button>
+                <button onclick="confirmarIdentidad()"
+                    class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold cursor-pointer transition-all shadow-sm">Entrar
+                    a Ahorros 🔮</button>
             </div>
 
             <div id="vista-registro" class="space-y-4 hidden">
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Tu Nombre Completo</label>
-                    <input type="text" id="reg-nombre" placeholder="Ej. Mamá, Juan, Tía Maria" class="w-full px-4 py-3 border rounded-xl focus:outline-none bg-gray-50">
+                    <input type="text" id="reg-nombre" placeholder="Ej. Mamá, Juan, Tía Maria"
+                        class="w-full px-4 py-3 border rounded-xl focus:outline-none bg-gray-50">
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Celular (10 dígitos)</label>
-                    <input type="tel" id="reg-celular" placeholder="Ej. 5512345678" maxlength="10" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" class="w-full px-4 py-3 border rounded-xl focus:outline-none bg-gray-50">
+                    <input type="tel" id="reg-celular" placeholder="Ej. 5512345678" maxlength="10" inputmode="numeric"
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                        class="w-full px-4 py-3 border rounded-xl focus:outline-none bg-gray-50">
                 </div>
                 <div class="relative">
                     <label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Crea una Contraseña</label>
-                    <input type="password" id="reg-pass" placeholder="Mínimo 4 caracteres" class="w-full px-4 py-3 border rounded-xl focus:outline-none bg-gray-50">
-                    <button type="button" onclick="togglePassword('reg-pass')" class="absolute right-3 top-9 text-gray-400 hover:text-gray-600">👁️</button>
+                    <input type="password" id="reg-pass" placeholder="Mínimo 4 caracteres"
+                        class="w-full px-4 py-3 border rounded-xl focus:outline-none bg-gray-50">
+                    <button type="button" onclick="togglePassword('reg-pass')"
+                        class="absolute right-3 top-9 text-gray-400 hover:text-gray-600">👁️</button>
                 </div>
-                <button onclick="procesarRegistro()" class="w-full py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold cursor-pointer transition-all">Registrarse</button>
+                <button onclick="procesarRegistro()"
+                    class="w-full py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold cursor-pointer transition-all">Registrarse</button>
             </div>
         </div>
     </div>
 
-    <div id="modal-invitacion-directa" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-4">
+    <div id="modal-invitacion-directa"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-4">
         <div class="bg-white p-6 rounded-3xl shadow-xl max-w-xs w-full">
             <h3 class="text-lg font-bold text-gray-800 mb-4">Invitar Familiar 📩</h3>
             <input type="hidden" id="invitacion-id-proyecto-actual">
-            <p class="text-xs text-gray-500 mb-4">Ingresa los 10 dígitos del celular (El código 52 se agregará en automático)</p>
-            <input type="tel" id="input-celular-modal" placeholder="Ej. 6441234567" maxlength="10" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" class="w-full px-4 py-3 border rounded-xl mb-4 focus:outline-none">
-            
+            <p class="text-xs text-gray-500 mb-4">Ingresa los 10 dígitos del celular (El código 52 se agregará en
+                automático)</p>
+            <input type="tel" id="input-celular-modal" placeholder="Ej. 6441234567" maxlength="10" inputmode="numeric"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                class="w-full px-4 py-3 border rounded-xl mb-4 focus:outline-none">
+
             <div class="flex gap-2">
-                <button onclick="document.getElementById('modal-invitacion-directa').classList.add('hidden')" 
-                        class="flex-1 py-2 bg-gray-200 text-gray-700 rounded-xl font-medium text-xs cursor-pointer">
+                <button onclick="document.getElementById('modal-invitacion-directa').classList.add('hidden')"
+                    class="flex-1 py-2 bg-gray-200 text-gray-700 rounded-xl font-medium text-xs cursor-pointer">
                     Cancelar
                 </button>
-                
-                <a id="btn-whatsapp-link" 
-                   onclick="enviarInvitacionWhatsApp(event)" 
-                   target="_blank" 
-                   class="flex-1 py-2 bg-green-600 text-white rounded-xl font-bold text-xs cursor-pointer text-center block">
+
+                <a id="btn-whatsapp-link" onclick="enviarInvitacionWhatsApp(event)" target="_blank"
+                    class="flex-1 py-2 bg-green-600 text-white rounded-xl font-bold text-xs cursor-pointer text-center block">
                     Enviar Link
                 </a>
             </div>
         </div>
     </div>
 
-    
+
 </body>
+
 </html>
