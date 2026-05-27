@@ -10,28 +10,35 @@ let currentUser = localStorage.getItem('app_currentUser') || '';
 // ==========================================
 // CONTROL DE NAVEGACIÓN ENTRE SECCIONES
 // ==========================================
-function navegarA(idSeccion) {
-    // 1. Ocultar todas las secciones (usando una clase común si las tienes)
-    const secciones = ['sec-inicio', 'sec-datos', 'sec-configuracion'];
-    
-    secciones.forEach(secId => {
-        const elemento = document.getElementById(secId);
-        if (elemento) {
-            elemento.classList.add('hidden');
+// ==========================================
+// NUEVA NAVEGACIÓN DINÁMICA (Sustituye a navegarA)
+// ==========================================
+async function cargarVista(nombreVista) {
+    const contenedor = document.getElementById('contenedor-vistas');
+    if (!contenedor) return;
+
+    try {
+        // 1. Cargar el HTML externo
+        const respuesta = await fetch(`${nombreVista}.html`);
+        const html = await respuesta.text();
+        contenedor.innerHTML = html;
+
+        // 2. Actualizar estilos de los botones (estilo antiguo pero funcional)
+        document.querySelectorAll('nav button').forEach(btn => 
+            btn.classList.remove('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white')
+        );
+        const btnActivo = document.querySelector(`[data-vista="${nombreVista}"]`);
+        if (btnActivo) {
+            btnActivo.classList.add('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white');
         }
-    });
 
-    // 2. Mostrar la sección seleccionada
-    const seccionActiva = document.getElementById(idSeccion);
-    if (seccionActiva) {
-        seccionActiva.classList.remove('hidden');
-    }
-
-    // 3. (Opcional) Cambiar el estilo de los botones del menú
-    document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white'));
-    const btnActivo = document.getElementById('btn-' + idSeccion.replace('sec-', ''));
-    if (btnActivo) {
-        btnActivo.classList.add('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white');
+        // 3. RE-INICIALIZAR LÓGICA SEGÚN LA VISTA
+        actualizarLabelUsuario();
+        if (nombreVista === 'inicio') renderizarInicioProyectos();
+        if (nombreVista === 'datos') renderizarGridProyectos();
+        
+    } catch (error) {
+        console.error("Error cargando la vista:", error);
     }
 }
 
