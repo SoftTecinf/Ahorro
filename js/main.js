@@ -68,30 +68,28 @@ function inicializarApp() {
 // main.js
 async function cargarVista(nombreVista) {
     const contenedor = document.getElementById('contenedor-vistas');
+    if (!contenedor) return;
 
     try {
-        // Carga el archivo .html correspondiente
         const respuesta = await fetch(`${nombreVista}.html`);
+        if (!respuesta.ok) throw new Error("No se pudo cargar la vista");
+        
         const html = await respuesta.text();
-
-        // Inyecta el contenido en el contenedor
         contenedor.innerHTML = html;
 
-        // IMPORTANTE: Si la vista requiere lógica (ej. llenar tablas), 
-        // debes llamar a la función específica aquí
-        if (nombreVista === 'datos') inicializarTablaDatos();
+        // Pequeño delay de ejecución para asegurar que el navegador haya renderizado el HTML
+        setTimeout(() => {
+            if (nombreVista === 'datos') {
+                renderizarGridProyectos(); // Usando la función que ya tenías
+            } else if (nombreVista === 'inicio') {
+                renderizarInicioProyectos(); // Usando la función que ya tenías
+            }
+        }, 50); 
+
     } catch (error) {
         console.error("Error cargando la vista:", error);
     }
 }
-
-// Escucha los clicks del menú
-document.querySelectorAll('nav button').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        const vista = e.target.dataset.vista; // Asegúrate de poner data-vista="inicio" en tus botones
-        cargarVista(vista);
-    });
-});
 
 // Al final de tu archivo js/main.js
 document.addEventListener("DOMContentLoaded", inicializarApp);
