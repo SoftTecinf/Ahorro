@@ -10,16 +10,28 @@ let currentUser = localStorage.getItem('app_currentUser') || '';
 // ==========================================
 // CONTROL DE NAVEGACIÓN ENTRE SECCIONES
 // ==========================================
-function navegarA(vista) {
-    const login = document.getElementById('modal-identidad'); // o 'vista-login'
-    const principal = document.getElementById('vista-principal');
+function navegarA(idSeccion) {
+    // 1. Ocultar todas las secciones (usando una clase común si las tienes)
+    const secciones = ['sec-inicio', 'sec-datos', 'sec-configuracion'];
+    
+    secciones.forEach(secId => {
+        const elemento = document.getElementById(secId);
+        if (elemento) {
+            elemento.classList.add('hidden');
+        }
+    });
 
-    if (vista === 'login') {
-        login.classList.remove('hidden');
-        principal.classList.add('hidden');
-    } else {
-        login.classList.add('hidden');
-        principal.classList.remove('hidden');
+    // 2. Mostrar la sección seleccionada
+    const seccionActiva = document.getElementById(idSeccion);
+    if (seccionActiva) {
+        seccionActiva.classList.remove('hidden');
+    }
+
+    // 3. (Opcional) Cambiar el estilo de los botones del menú
+    document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white'));
+    const btnActivo = document.getElementById('btn-' + idSeccion.replace('sec-', ''));
+    if (btnActivo) {
+        btnActivo.classList.add('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white');
     }
 }
 
