@@ -66,38 +66,19 @@ function inicializarApp() {
 }
 
 // main.js
-async function cargarVista(nombreVista) {
-    const contenedor = document.getElementById('contenedor-vistas');
-    if (!contenedor) return;
-
-    try {
-        const respuesta = await fetch(`${nombreVista}.html`);
-        if (!respuesta.ok) throw new Error("No se pudo cargar la vista");
-        
-        const html = await respuesta.text();
-        contenedor.innerHTML = html;
-
-        // Pequeño delay de ejecución para asegurar que el navegador haya renderizado el HTML
-        setTimeout(() => {
-            if (nombreVista === 'datos') {
-                renderizarGridProyectos(); // Usando la función que ya tenías
-            } else if (nombreVista === 'inicio') {
-                renderizarInicioProyectos(); // Usando la función que ya tenías
-            }
-        }, 50); 
-
-    } catch (error) {
-        console.error("Error cargando la vista:", error);
-    }
-}
-
-// Pon esto en tu archivo main.js (fuera de cualquier función)
-document.addEventListener('click', (e) => {
-    // Verificamos si el elemento clicado tiene el atributo data-vista
-    const boton = e.target.closest('[data-vista]');
+// En js/main.js - Asegúrate de que esto esté fuera de cualquier función
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Cargamos el usuario primero
+    verificarSesion(); 
     
+    // 2. Cargamos la vista inicial
+    cargarVista('inicio');
+});
+
+// Listener de navegación
+document.addEventListener('click', (e) => {
+    const boton = e.target.closest('[data-vista]');
     if (boton) {
-        const vista = boton.dataset.vista;
-        cargarVista(vista);
+        cargarVista(boton.dataset.vista);
     }
 });
