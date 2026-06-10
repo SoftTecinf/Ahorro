@@ -24,32 +24,23 @@ function unirseAProyecto(proyectoId) {
 // ==========================================
 // PROYECTOS Y LOGICA DE RENDIMIENTO (DOM)
 // ==========================================
-function renderizarGridProyectos() {
-    const tbody = document.getElementById('datos-tabla-proyectos-body');
-    if (!tbody) return;
+async function renderizarGridProyectos() {
+    const grid = document.getElementById('grid-proyectos');
+    if (!grid) return;
 
-    const misProyectos = proyectos.filter(p => p.adminName === currentUser);
+    try {
+        const res = await fetch('https://api.sheety.co/TU_ID/ahorro/proyectos');
+        const { proyectos } = await res.json();
 
-    if (misProyectos.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-xs text-center text-gray-400 italic">No tienes proyectos creados por ti.</td></tr>`;
-        return;
+        grid.innerHTML = proyectos.map(p => `
+            <div class="p-4 border rounded-lg shadow-sm">
+                <h4 class="font-bold">${p.nombre}</h4>
+                <p class="text-sm">Estado: ${p.estatus}</p>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error("Error cargando datos:", error);
     }
-
-    const filasHTML = misProyectos.map(p => `
-<tr class="hover:bg-purple-50/30 transition-colors">
-<td class="p-3 font-bold text-gray-900">${p.nombre}</td>
-<td class="p-3 text-gray-600 font-medium">${revertirFechaMX(p.fechaInicio)}</td>
-<td class="p-3 font-medium text-purple-700">${p.frecuencia}</td>
-<td class="p-3 font-semibold text-gray-800">${formatearMXN(p.monto)}</td>
-<td class="p-3 text-center font-medium">${p.plazos}</td>
-<td class="p-3 text-center space-x-2">
-<button onclick="editarProyecto(${p.id})" class="text-xs bg-yellow-100 text-yellow-800 font-bold px-2.5 py-1 rounded-lg hover:bg-yellow-200 cursor-pointer">Editar</button>
-<button onclick="eliminarProyectoCompleto(${p.id})" class="text-xs bg-red-50 text-red-600 px-2.5 py-1 rounded-lg hover:bg-red-100 cursor-pointer">Eliminar</button>
-</td>
-</tr>
-`).join('');
-
-    tbody.innerHTML = filasHTML;
 }
 
 function guardarProyecto(event) {
@@ -135,27 +126,28 @@ function eliminarProyectoCompleto(id) {
 // ==========================================
 // VISTA PRINCIPAL (TARJETAS LATERALES DE PROYECTO)
 // ==========================================
-function renderizarInicioProyectos() {
-    const contenedor = document.getElementById('inicio-lista-proyectos');
+async function renderizarInicioProyectos() {
+    const contenedor = document.getElementById('inicio-container'); // Ajusta el ID según tu HTML
     if (!contenedor) return;
 
-    const proyectosParticipando = proyectos.filter(p => p.participantes && p.participantes.includes(currentUser));
+    try {
+        // Obtenemos los datos de proyectos
+        const res = await fetch('https://api.sheety.co/TU_ID/ahorro/proyectos');
+        const { proyectos } = await res.json();
+        
+        // Filtramos para el usuario actual
+        const misProyectos = proyectos.filter(p => p.adminName === currentUser);
 
-    if (proyectosParticipando.length === 0) {
-        contenedor.innerHTML = '<p class="text-xs text-gray-400 italic text-center py-4">No estás asignado a ningún proyecto activo actualmente.</p>';
-        document.getElementById('inicio-resumen-proyecto').classList.add('hidden');
-        return;
+        contenedor.innerHTML = misProyectos.map(p => `
+            <div class="card-proyecto">
+                <h3>${p.nombre}</h3>
+                <p>Meta: $${p.metaAhorro}</p>
+                <!-- Aquí puedes agregar más lógica -->
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error("Error cargando inicio:", error);
     }
-
-    contenedor.innerHTML = proyectosParticipando.map(p => `
-<button onclick="verResumenProyectoInmediato(${p.id})" class="w-full text-left p-4 rounded-2xl border border-purple-50 hover:border-purple-300 bg-purple-50/10 hover:bg-white transition-all cursor-pointer flex justify-between items-center group">
-<div>
-<h4 class="font-bold text-gray-900 group-hover:text-purple-700">${p.nombre}</h4>
-<p class="text-[11px] font-medium text-gray-400 mt-0.5">Meta: ${formatearMXN(p.monto)}</p>
-</div>
-<span class="text-xs font-bold text-purple-600 bg-white shadow-3xs px-2.5 py-1 rounded-lg group-hover:bg-purple-600 group-hover:text-white transition-all">Ver 🔮</span>
-</button>
-`).join('');
 }
 
 function verResumenProyectoInmediato(id) {
