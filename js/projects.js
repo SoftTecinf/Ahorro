@@ -127,26 +127,25 @@ function eliminarProyectoCompleto(id) {
 // VISTA PRINCIPAL (TARJETAS LATERALES DE PROYECTO)
 // ==========================================
 async function renderizarInicioProyectos() {
-    const contenedor = document.getElementById('inicio-container'); // Ajusta el ID según tu HTML
+    const contenedor = document.getElementById('inicio-container');
     if (!contenedor) return;
 
+    // PONEMOS UN MENSAJE POR DEFECTO PARA QUE EL USUARIO VEA ALGO
+    contenedor.innerHTML = '<p class="text-gray-400 p-4">No hay proyectos activos aún.</p>';
+
     try {
-        // Obtenemos los datos de proyectos
-        const res = await fetch('https://api.sheety.co/TU_ID/ahorro/proyectos');
-        const { proyectos } = await res.json();
-        
-        // Filtramos para el usuario actual
+        const res = await fetch('https://api.sheety.co/TU_URL/proyectos');
+        const data = await res.json();
+        const proyectos = data.proyectos || [];
+
         const misProyectos = proyectos.filter(p => p.adminName === currentUser);
 
-        contenedor.innerHTML = misProyectos.map(p => `
-            <div class="card-proyecto">
-                <h3>${p.nombre}</h3>
-                <p>Meta: $${p.metaAhorro}</p>
-                <!-- Aquí puedes agregar más lógica -->
-            </div>
-        `).join('');
+        if (misProyectos.length > 0) {
+            // SOLO SI HAY DATOS, REEMPLAZAMOS EL CONTENIDO
+            contenedor.innerHTML = misProyectos.map(p => `...tu html aquí...`).join('');
+        }
     } catch (error) {
-        console.error("Error cargando inicio:", error);
+        console.error("Error cargando:", error);
     }
 }
 
