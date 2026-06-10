@@ -15,39 +15,30 @@ let currentUser = localStorage.getItem('app_currentUser') || '';
 // ==========================================
 async function cargarVista(nombreVista) {
     const contenedor = document.getElementById('contenedor-vistas');
-    if (!contenedor) return;
-
+    
     try {
-        // 1. Cargar el HTML
+        // 1. CARGAR HTML
         const respuesta = await fetch(`${nombreVista}.html`);
+        if (!respuesta.ok) throw new Error(`No se pudo encontrar ${nombreVista}.html`);
         const html = await respuesta.text();
-        
-        // Inyectamos el contenido
         contenedor.innerHTML = html;
-
-        // --- FUERZA BRUTA: Eliminamos cualquier clase 'hidden' inmediatamente ---
-        const elementosOcultos = contenedor.querySelectorAll('.hidden');
-        elementosOcultos.forEach(el => el.classList.remove('hidden'));
-
-        // 2. Lógica de botones (navegación)
-        document.querySelectorAll('nav button').forEach(btn => 
-            btn.classList.remove('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white')
-        );
-        const btnActivo = document.querySelector(`[data-vista="${nombreVista}"]`);
-        if (btnActivo) btnActivo.classList.add('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white');
-
-        // 3. Renderizado de datos (Asegúrate de que esto no borre el diseño)
-        actualizarLabelUsuario();
         
-        // Pasamos a las funciones de renderizado
-        if (nombreVista === 'inicio') await renderizarInicioProyectos();
-        if (nombreVista === 'datos') await renderizarGridProyectos();
-        if (nombreVista === 'config') await actualizarSelectoresConfig();
-        
-    } catch (error) {
-    console.error("DETALLE DEL ERROR:", error); // Esto mostrará el error real en la consola F12
-    contenedor.innerHTML = `<p class="p-4 text-red-500">Error al cargar la sección: ${error.message}</p>`;
-}
+        // 2. MOSTRAR DISEÑO (Quitar hidden)
+        contenedor.querySelectorAll('.hidden').forEach(el => el.classList.remove('hidden'));
+
+        // 3. EJECUTAR LÓGICA (Separada en un try/catch propio)
+        try {
+            if (nombreVista === 'inicio') await renderizarInicioProyectos();
+            if (nombreVista === 'datos') await renderizarGridProyectos();
+            if (nombreVista === 'config') await actualizarSelectoresConfig();
+        } catch (logicError) {
+            console.error("Error en la lógica de la vista:", logicError);
+            // Aquí el HTML ya está cargado, así que el usuario ve el diseño aunque la API falle
+        }
+
+    } catch (fetchError) {
+        contenedor.innerHTML = `<p class="text-red-500">Error: ${fetchError.message}</p>`;
+    }
 }
 
 // ==========================================
