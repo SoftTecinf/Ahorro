@@ -36,6 +36,7 @@ async function cargarVista(nombreVista) {
         actualizarLabelUsuario();
         if (nombreVista === 'inicio') renderizarInicioProyectos();
         if (nombreVista === 'datos') renderizarGridProyectos();
+        if (nombreVista === 'config') actualizarSelectoresConfig();
         
     } catch (error) {
         console.error("Error cargando la vista:", error);
