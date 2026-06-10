@@ -29,7 +29,7 @@ async function renderizarGridProyectos() {
     if (!grid) return;
 
     try {
-        const res = await fetch('https://api.sheety.co/TU_ID/ahorro/proyectos');
+        const res = await fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/proyectos');
         const { proyectos } = await res.json();
 
         grid.innerHTML = proyectos.map(p => `
@@ -134,7 +134,7 @@ async function renderizarInicioProyectos() {
     contenedor.innerHTML = '<p class="text-gray-400 p-4">No hay proyectos activos aún.</p>';
 
     try {
-        const res = await fetch('https://api.sheety.co/TU_URL/proyectos');
+        const res = await fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/proyectos');
         const data = await res.json();
         const proyectos = data.proyectos || [];
 
@@ -319,68 +319,18 @@ function eliminarCuentaBancariaReal(id) {
 // ==========================================
 // CONFIGURACIÓN Y ASIGNACIONES
 // ==========================================
+
 async function actualizarSelectoresConfig() {
-    // 1. Obtener datos frescos de Sheety
-    // Cambia estas URLs por las de tu proyecto en Sheety
-    const [resProy, resCuentas] = await Promise.all([
-        fetch('https://api.sheety.co/TU_ID/ahorro/proyectos'),
-        fetch('https://api.sheety.co/TU_ID/ahorro/cuentas')
-    ]);
+    // 1. Aseguramos que los datos existan
+    if (!datosCargados) await cargarDatosGlobales();
 
-    const { proyectos } = await resProy.json();
-    const { cuentas } = await resCuentas.json();
-
-    // 2. Filtrar por el usuario actual (asumiendo que currentUser está definido)
-    const misProyectos = proyectos.filter(p => p.adminName === currentUser);
+    // 2. Ahora sí, hacemos el filtro con seguridad
+    const misProyectos = cacheProyectos.filter(p => p.adminName === currentUser);
 
     const selectProy = document.getElementById('config-select-proyecto');
-    const selectCta = document.getElementById('config-select-cuenta');
-
-    // 3. Llenar Selectores
-    let opcionesProyectos = '<option value="">Selecciona un proyecto...</option>';
-    misProyectos.forEach(p => {
-        opcionesProyectos += `<option value="${p.id}">${p.nombre}</option>`;
-    });
-    if (selectProy) selectProy.innerHTML = opcionesProyectos;
-
-    if (selectCta) {
-        selectCta.innerHTML = '<option value="">Ninguna cuenta vinculada</option>';
-        cuentas.forEach(c => {
-            // Asegúrate de que los campos coincidan con tus columnas en Google Sheets
-            selectCta.innerHTML += `<option value="${c.id}">${c.banco} - ${c.titular} (...${c.cuenta.slice(-4)})</option>`;
-        });
-    }
-
-    // 4. Lógica de cambio (onchange)
-    if (selectProy) {
-        selectProy.onchange = () => {
-            const idSeleccionado = selectProy.value;
-            const contenedor = document.getElementById('config-checkboxes-familiares');
-            
-            if (!idSeleccionado) {
-                contenedor.innerHTML = '<p class="text-xs text-gray-400 italic">Selecciona un proyecto.</p>';
-                return;
-            }
-
-            const proyecto = proyectos.find(p => p.id == idSeleccionado);
-            if (proyecto) {
-                // Vincular cuenta guardada previamente
-                selectCta.value = proyecto.idCuentaVinculada || "";
-
-                // Renderizar participantes (asumiendo que están en una columna separada por comas)
-                if (proyecto.participantes) {
-                    const lista = proyecto.participantes.split(','); 
-                    contenedor.innerHTML = lista.map(nombre => `
-                        <div class="flex items-center justify-between p-2 mb-2 bg-white rounded-lg border border-purple-100 shadow-sm">
-                            <span class="text-sm font-medium text-gray-700">${nombre.trim()}</span>
-                            <span class="text-[10px] bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full font-bold">Activo</span>
-                        </div>
-                    `).join('');
-                }
-            }
-        };
-    }
+    // ... resto de tu código de llenado de selectores ...
 }
+
 function guardarConfiguracionProyecto(event) {
     event.preventDefault();
     const idProy = document.getElementById('config-select-proyecto').value;
