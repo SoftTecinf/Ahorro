@@ -21,8 +21,8 @@ async function cargarDatosGlobales() {
 
     try {
         const [resP, resC] = await Promise.all([
-            fetch('https://api.sheety.co/TU_ID/ahorro/proyectos'),
-            fetch('https://api.sheety.co/TU_ID/ahorro/cuentas')
+            fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/proyectos'),
+            fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/cuentas')
         ]);
         
         const dataP = await resP.json();
