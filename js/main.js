@@ -6,6 +6,9 @@ let proyectos = [];
 let cuentasBancarias = [];
 let invitacionesPendientes = [];
 let currentUser = localStorage.getItem('app_currentUser') || '';
+let cacheProyectos = [];
+let cacheCuentas = [];
+let datosCargados = false;
 
 // ==========================================
 // CONTROL DE NAVEGACIÓN ENTRE SECCIONES
@@ -13,31 +16,64 @@ let currentUser = localStorage.getItem('app_currentUser') || '';
 // ==========================================
 // NUEVA NAVEGACIÓN DINÁMICA (Sustituye a navegarA)
 // ==========================================
+async function cargarDatosGlobales() {
+    if (datosCargados) return; // Si ya se cargaron, no vuelvas a pedir a Sheety
+
+    try {
+        const [resP, resC] = await Promise.all([
+            fetch('https://api.sheety.co/TU_ID/ahorro/proyectos'),
+            fetch('https://api.sheety.co/TU_ID/ahorro/cuentas')
+        ]);
+        
+        const dataP = await resP.json();
+        const dataC = await resC.json();
+        
+        cacheProyectos = dataP.proyectos || [];
+        cacheCuentas = dataC.cuentas || [];
+        datosCargados = true;
+        console.log("Datos cargados correctamente");
+    } catch (error) {
+        console.error("Error al cargar datos iniciales:", error);
+    }
+}
+
 async function cargarVista(nombreVista) {
     const contenedor = document.getElementById('contenedor-vistas');
-    
+    if (!contenedor) return;
+
     try {
-        // 1. CARGAR HTML
+        // 1. Intentar cargar el archivo HTML
         const respuesta = await fetch(`${nombreVista}.html`);
-        if (!respuesta.ok) throw new Error(`No se pudo encontrar ${nombreVista}.html`);
+        if (!respuesta.ok) throw new Error(`Archivo ${nombreVista}.html no encontrado`);
+        
         const html = await respuesta.text();
         contenedor.innerHTML = html;
-        
-        // 2. MOSTRAR DISEÑO (Quitar hidden)
-        contenedor.querySelectorAll('.hidden').forEach(el => el.classList.remove('hidden'));
 
-        // 3. EJECUTAR LÓGICA (Separada en un try/catch propio)
+        // 2. FORZAR VISIBILIDAD (Esto garantiza que el usuario vea el diseño)
+        const elementosOcultos = contenedor.querySelectorAll('.hidden');
+        elementosOcultos.forEach(el => el.classList.remove('hidden'));
+
+        // 3. ESTILOS DE NAVEGACIÓN
+        document.querySelectorAll('nav button').forEach(btn => 
+            btn.classList.remove('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white')
+        );
+        const btnActivo = document.querySelector(`[data-vista="${nombreVista}"]`);
+        if (btnActivo) btnActivo.classList.add('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white');
+
+        // 4. EJECUTAR LÓGICA (Try-Catch independiente para que no rompa el diseño)
         try {
+            actualizarLabelUsuario();
             if (nombreVista === 'inicio') await renderizarInicioProyectos();
             if (nombreVista === 'datos') await renderizarGridProyectos();
             if (nombreVista === 'config') await actualizarSelectoresConfig();
         } catch (logicError) {
-            console.error("Error en la lógica de la vista:", logicError);
-            // Aquí el HTML ya está cargado, así que el usuario ve el diseño aunque la API falle
+            console.error("Error en la lógica:", logicError);
+            // No hacemos nada aquí, el HTML ya se mostró
         }
-
+        
     } catch (fetchError) {
-        contenedor.innerHTML = `<p class="text-red-500">Error: ${fetchError.message}</p>`;
+        console.error("Error crítico:", fetchError);
+        contenedor.innerHTML = `<p class="p-4 text-red-500">Error al cargar la vista: ${fetchError.message}</p>`;
     }
 }
 
@@ -70,16 +106,11 @@ function inicializarApp() {
         cambiarVista('login');
     }
 }
-
-// main.js
-// En js/main.js - Asegúrate de que esto esté fuera de cualquier función
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Cargamos el usuario primero
-    verificarSesion(); 
-    
-    // 2. Cargamos la vista inicial
-    cargarVista('inicio');
+document.addEventListener('DOMContentLoaded', async () => {
+    await cargarDatosGlobales(); // Cargamos todo al arrancar
+    cargarVista('inicio');       // Cargamos la primera vista
 });
+
 
 // Listener de navegación
 document.addEventListener('click', (e) => {
