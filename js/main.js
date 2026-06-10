@@ -23,31 +23,27 @@ async function cargarVista(nombreVista) {
         const html = await respuesta.text();
         contenedor.innerHTML = html;
 
-        // 2. Actualizar estilos de los botones (estilo antiguo pero funcional)
-        document.querySelectorAll('nav button').forEach(btn => 
-            btn.classList.remove('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white')
-        );
-        const btnActivo = document.querySelector(`[data-vista="${nombreVista}"]`);
-        if (btnActivo) {
-            btnActivo.classList.add('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white');
-        }
+        // --- AQUÍ ESTÁ EL CAMBIO ---
+        // Quitamos la clase 'hidden' al cargar cualquier vista
+        const seccionActiva = contenedor.querySelector('.hidden');
+        if (seccionActiva) seccionActiva.classList.remove('hidden');
+
+        // 2. Actualizar estilos de los botones...
+        // (Tu lógica actual de clases de botones)
 
         // 3. RE-INICIALIZAR LÓGICA SEGÚN LA VISTA
         actualizarLabelUsuario();
+
         if (nombreVista === 'inicio') renderizarInicioProyectos();
         if (nombreVista === 'datos') renderizarGridProyectos();
-       if (nombreVista === 'config') {
-            // Quitamos el 'hidden' por si el HTML lo trae puesto
-            const seccion = document.getElementById('sec-configuracion');
-            if (seccion) seccion.classList.remove('hidden');
-            
-            // Llamamos a la función que llena los selects
-            await actualizarSelectoresConfig(); 
+        if (nombreVista === 'config') {
+            // Llamamos a la función que preparamos para Sheety
+            actualizarSelectoresConfig(); 
         }
         
     } catch (error) {
         console.error("Error cargando la vista:", error);
-    }
+    }   
 }
 
 // ==========================================
