@@ -18,32 +18,37 @@ async function cargarVista(nombreVista) {
     if (!contenedor) return;
 
     try {
-        // 1. Cargar el HTML externo
+        // 1. Cargar el HTML
         const respuesta = await fetch(`${nombreVista}.html`);
         const html = await respuesta.text();
         contenedor.innerHTML = html;
 
-        // --- AQUÍ ESTÁ EL CAMBIO ---
-        // Quitamos la clase 'hidden' al cargar cualquier vista
-        const seccionActiva = contenedor.querySelector('.hidden');
-        if (seccionActiva) seccionActiva.classList.remove('hidden');
+        // --- CORRECCIÓN CRÍTICA ---
+        // Buscamos cualquier elemento con 'hidden' dentro del nuevo HTML inyectado
+        // y se lo quitamos para asegurar que sea visible
+        const seccionesOcultas = contenedor.querySelectorAll('.hidden');
+        seccionesOcultas.forEach(el => el.classList.remove('hidden'));
 
-        // 2. Actualizar estilos de los botones...
-        // (Tu lógica actual de clases de botones)
-
-        // 3. RE-INICIALIZAR LÓGICA SEGÚN LA VISTA
-        actualizarLabelUsuario();
-
-        if (nombreVista === 'inicio') renderizarInicioProyectos();
-        if (nombreVista === 'datos') renderizarGridProyectos();
-        if (nombreVista === 'config') {
-            // Llamamos a la función que preparamos para Sheety
-            actualizarSelectoresConfig(); 
+        // 2. Estilos de navegación (tu lógica actual)
+        document.querySelectorAll('nav button').forEach(btn => 
+            btn.classList.remove('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white')
+        );
+        const btnActivo = document.querySelector(`[data-vista="${nombreVista}"]`);
+        if (btnActivo) {
+            btnActivo.classList.add('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white');
         }
+
+        // 3. Ejecución de lógica
+        actualizarLabelUsuario();
+        
+        if (nombreVista === 'inicio') await renderizarInicioProyectos();
+        if (nombreVista === 'datos') await renderizarGridProyectos();
+        if (nombreVista === 'config') await actualizarSelectoresConfig();
         
     } catch (error) {
-        console.error("Error cargando la vista:", error);
-    }   
+        console.error("Error al cargar la vista:", error);
+        contenedor.innerHTML = `<p class="p-4 text-red-500">Error al cargar la sección ${nombreVista}.</p>`;
+    }
 }
 
 // ==========================================
