@@ -328,12 +328,24 @@ function eliminarCuentaBancariaReal(id) {
 // ==========================================
 // CONFIGURACIÓN Y ASIGNACIONES
 // ==========================================
-function actualizarSelectoresConfig() {
+async function actualizarSelectoresConfig() {
+    // 1. Obtener datos frescos de Sheety
+    // Cambia estas URLs por las de tu proyecto en Sheety
+    const [resProy, resCuentas] = await Promise.all([
+        fetch('https://api.sheety.co/TU_ID/ahorro/proyectos'),
+        fetch('https://api.sheety.co/TU_ID/ahorro/cuentas')
+    ]);
+
+    const { proyectos } = await resProy.json();
+    const { cuentas } = await resCuentas.json();
+
+    // 2. Filtrar por el usuario actual (asumiendo que currentUser está definido)
     const misProyectos = proyectos.filter(p => p.adminName === currentUser);
 
     const selectProy = document.getElementById('config-select-proyecto');
     const selectCta = document.getElementById('config-select-cuenta');
 
+    // 3. Llenar Selectores
     let opcionesProyectos = '<option value="">Selecciona un proyecto...</option>';
     misProyectos.forEach(p => {
         opcionesProyectos += `<option value="${p.id}">${p.nombre}</option>`;
@@ -341,43 +353,43 @@ function actualizarSelectoresConfig() {
     if (selectProy) selectProy.innerHTML = opcionesProyectos;
 
     if (selectCta) {
-        selectCta.innerHTML = '<option value="">Ninguna cuenta vinculada (vacío)</option>';
-        cuentasBancarias.forEach(c => {
-            selectCta.innerHTML += `<option value="${c.id}">${c.banco} - ${c.titular} (${c.cuenta.slice(-4)})</option>`;
+        selectCta.innerHTML = '<option value="">Ninguna cuenta vinculada</option>';
+        cuentas.forEach(c => {
+            // Asegúrate de que los campos coincidan con tus columnas en Google Sheets
+            selectCta.innerHTML += `<option value="${c.id}">${c.banco} - ${c.titular} (...${c.cuenta.slice(-4)})</option>`;
         });
     }
 
+    // 4. Lógica de cambio (onchange)
     if (selectProy) {
         selectProy.onchange = () => {
             const idSeleccionado = selectProy.value;
             const contenedor = document.getElementById('config-checkboxes-familiares');
-            if (!contenedor) return;
-
+            
             if (!idSeleccionado) {
-                contenedor.innerHTML = '<p class="text-xs text-gray-400 italic">Selecciona un proyecto para ver sus participantes.</p>';
-                if (selectCta) selectCta.value = "";
+                contenedor.innerHTML = '<p class="text-xs text-gray-400 italic">Selecciona un proyecto.</p>';
                 return;
             }
 
             const proyecto = proyectos.find(p => p.id == idSeleccionado);
             if (proyecto) {
-                if (selectCta) selectCta.value = proyecto.idCuentaVinculada || "";
+                // Vincular cuenta guardada previamente
+                selectCta.value = proyecto.idCuentaVinculada || "";
 
-                if (proyecto.participantes && proyecto.participantes.length > 0) {
-                    contenedor.innerHTML = proyecto.participantes.map(nombre => `
-<div class="flex items-center justify-between p-2 mb-2 bg-white rounded-lg border border-purple-100 shadow-sm">
-<span class="text-sm font-medium text-gray-700">${nombre}</span>
-<span class="text-[10px] bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full font-bold">Activo</span>
-</div>
-`).join('');
-                } else {
-                    contenedor.innerHTML = '<p class="text-xs text-gray-400 italic">No hay participantes activos.</p>';
+                // Renderizar participantes (asumiendo que están en una columna separada por comas)
+                if (proyecto.participantes) {
+                    const lista = proyecto.participantes.split(','); 
+                    contenedor.innerHTML = lista.map(nombre => `
+                        <div class="flex items-center justify-between p-2 mb-2 bg-white rounded-lg border border-purple-100 shadow-sm">
+                            <span class="text-sm font-medium text-gray-700">${nombre.trim()}</span>
+                            <span class="text-[10px] bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full font-bold">Activo</span>
+                        </div>
+                    `).join('');
                 }
             }
         };
     }
 }
-
 function guardarConfiguracionProyecto(event) {
     event.preventDefault();
     const idProy = document.getElementById('config-select-proyecto').value;
