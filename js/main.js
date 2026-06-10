@@ -36,7 +36,14 @@ async function cargarVista(nombreVista) {
         actualizarLabelUsuario();
         if (nombreVista === 'inicio') renderizarInicioProyectos();
         if (nombreVista === 'datos') renderizarGridProyectos();
-        if (nombreVista === 'config') actualizarSelectoresConfig();
+       if (nombreVista === 'config') {
+            // Quitamos el 'hidden' por si el HTML lo trae puesto
+            const seccion = document.getElementById('sec-configuracion');
+            if (seccion) seccion.classList.remove('hidden');
+            
+            // Llamamos a la función que llena los selects
+            await actualizarSelectoresConfig(); 
+        }
         
     } catch (error) {
         console.error("Error cargando la vista:", error);
