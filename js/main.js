@@ -13,8 +13,6 @@ let datosCargados = false;
 // CONTROL DE NAVEGACIÓN ENTRE SECCIONES
 // ==========================================
 // ==========================================
-// NUEVA NAVEGACIÓN DINÁMICA (Sustituye a navegarA)
-// ==========================================
 async function cargarDatosGlobales() {
     if (datosCargados) return; // Si ya se cargaron, no vuelvas a pedir a Sheety
 
@@ -82,30 +80,28 @@ async function cargarVista(nombreVista) {
 // 1. Asegúrate de que esta función sea global y robusta
 function actualizarLabelUsuario() {
     const label = document.getElementById('user-label');
-    const usuarioActual = localStorage.getItem('app_currentUser');
     if (label) {
-        label.textContent = usuarioActual ? usuarioActual : "No identificado";
+        label.textContent = currentUser || "No identificado";
+    } else {
+        // Si el label no existe, reintenta en 500ms (útil para vistas dinámicas)
+        setTimeout(actualizarLabelUsuario, 500);
     }
 }
-
-// 2. Simplifica el inicio
+/// En js/main.js
 document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        await cargarDatosGlobales(); // Cargar datos primero
-        
-        // Verificamos sesión
-        const usuarioGuardado = localStorage.getItem('app_currentUser');
-        
-        if (usuarioGuardado) {
-            currentUser = usuarioGuardado;
-            actualizarLabelUsuario();
-            await cargarVista('inicio'); // Carga la vista de inicio
-        } else {
-            await cargarVista('login');  // Si no hay usuario, fuerza el login
-        }
-        
-    } catch (error) {
-        console.error("Error al iniciar la aplicación:", error);
+    // 1. Primero, obtenemos el usuario del localStorage (fuente de verdad)
+    const usuarioGuardado = localStorage.getItem('app_currentUser');
+    
+    // 2. Cargamos datos de la nube
+    await cargarDatosGlobales();
+    
+    // 3. Verificamos sesión
+    if (usuarioGuardado) {
+        currentUser = usuarioGuardado;
+        actualizarLabelUsuario(); // Actualiza el "Cargando..." por el nombre real
+        cargarVista('inicio');    // Carga la vista principal
+    } else {
+        cargarVista('login');     // Si no hay usuario, fuerza el login
     }
 });
 
