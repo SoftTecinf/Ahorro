@@ -46,7 +46,12 @@ async function confirmarIdentidad() {
             localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
 
             // Ahora sí, el código encontrará los elementos y funcionará
-            document.getElementById('modal-identidad').classList.add('hidden');
+            const modal = document.getElementById('modal-identidad');
+                if (modal) {
+                    modal.classList.add('hidden');
+                } else {
+                    console.error("No se encontró el elemento con ID 'modal-identidad'");
+                }
             document.getElementById('vista-principal').classList.remove('hidden');
             
             alert("¡Bienvenido/a, " + usuarioEncontrado.nombre + "!");
