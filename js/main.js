@@ -55,24 +55,40 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
+// Asegúrate de que esta función esté definida solo una vez en todo tu proyecto
 function cargarVista(nombre) {
-    console.log("Cambiando a vista:", nombre);
-    
-    // 1. Oculta todas las secciones que tengan la clase 'vista'
-    document.querySelectorAll('.vista').forEach(v => v.classList.add('hidden'));
-    
-    // 2. Muestra solo la solicitada
-    const vistaDestino = document.getElementById(`vista-${nombre}`);
-    if (vistaDestino) {
-        vistaDestino.classList.remove('hidden');
-        // Ejecuta la lógica correspondiente sin recargar
-        actualizarLabelUsuario();
-        if (nombre === 'inicio') renderizarInicioProyectos();
-        if (nombre === 'datos') renderizarGridProyectos();
-        if (nombre === 'config') actualizarSelectoresConfig();
-    }
-}
+    const contenedor = document.getElementById('contenedor-vistas');
+    if (!contenedor) return;
 
+    // 1. Ocultar todo lo que no sea el contenedor principal
+    // (Opcional: si tienes modales globales, ocúltalos aquí también)
+    
+    // 2. Cargar el contenido desde tu archivo HTML externo
+    fetch(`${nombre}.html`)
+        .then(response => {
+            if (!response.ok) throw new Error('No se pudo cargar la vista');
+            return response.text();
+        })
+        .then(html => {
+            // Inyectamos el nuevo contenido
+            contenedor.innerHTML = html;
+
+            // 3. Ejecutar la lógica específica para cada vista
+            // Esto es lo que mantiene tu app "viva" al cambiar de pantalla
+            if (nombre === 'inicio') {
+                renderizarInicioProyectos();
+            } else if (nombre === 'datos') {
+                renderizarGridProyectos();
+            } else if (nombre === 'config') {
+                actualizarSelectoresConfig();
+            }
+            
+            console.log(`Vista ${nombre} cargada correctamente.`);
+        })
+        .catch(err => {
+            console.error("Error al cargar la vista:", err);
+        });
+}
 // ==========================================
 // INICIALIZACIÓN UNIFICADA DE LA APP
 // ==========================================
