@@ -108,9 +108,28 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 // Listener de navegación
-document.addEventListener('click', (e) => {
-    const boton = e.target.closest('[data-vista]');
-    if (boton) {
-        cargarVista(boton.dataset.vista);
+// En js/main.js
+
+document.addEventListener('DOMContentLoaded', async () => {
+    // 1. Mostrar estado de carga en la UI (puedes poner un spinner o texto)
+    const label = document.getElementById('label-usuario-actual');
+    if (label) label.textContent = "Cargando...";
+
+    try {
+        // 2. BLOQUEO: La app no hace nada más hasta que esto termine
+        await cargarDatosGlobales();
+        
+        // 3. Verificamos sesión después de tener los datos
+        const usuarioGuardado = localStorage.getItem('app_currentUser');
+        
+        if (usuarioGuardado) {
+            currentUser = usuarioGuardado;
+            actualizarLabelUsuario();
+            await cargarVista('inicio'); 
+        } else {
+            await cargarVista('login');
+        }
+    } catch (error) {
+        console.error("Error crítico de inicialización:", error);
     }
 });
