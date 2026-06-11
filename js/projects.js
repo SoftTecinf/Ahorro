@@ -665,5 +665,4 @@ function cerrarModal() {
     document.getElementById('success-modal').classList.add('hidden');
 }
 
-document.addEventListener('DOMContentLoaded', inicializarApp);
 
