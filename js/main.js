@@ -106,9 +106,15 @@ function inicializarApp() {
         cambiarVista('login');
     }
 }
+// En js/main.js
 document.addEventListener('DOMContentLoaded', async () => {
-    await cargarDatosGlobales(); // Cargamos todo al arrancar
-    cargarVista('inicio');       // Cargamos la primera vista
+    try {
+        await cargarDatosGlobales(); // 1. Traer datos
+        inicializarApp();            // 2. Ejecutar la lógica de UI
+        cargarVista('inicio');       // 3. Renderizar la primera vista
+    } catch (error) {
+        console.error("Error al iniciar la aplicación:", error);
+    }
 });
 
 
