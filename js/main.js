@@ -55,24 +55,40 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
+// Asegúrate de que esta función esté definida solo una vez en todo tu proyecto
 function cargarVista(nombre) {
-    console.log("Cambiando a vista:", nombre);
-    
-    // 1. Oculta todas las secciones que tengan la clase 'vista'
-    document.querySelectorAll('.vista').forEach(v => v.classList.add('hidden'));
-    
-    // 2. Muestra solo la solicitada
-    const vistaDestino = document.getElementById(`vista-${nombre}`);
-    if (vistaDestino) {
-        vistaDestino.classList.remove('hidden');
-        // Ejecuta la lógica correspondiente sin recargar
-        actualizarLabelUsuario();
-        if (nombre === 'inicio') renderizarInicioProyectos();
-        if (nombre === 'datos') renderizarGridProyectos();
-        if (nombre === 'config') actualizarSelectoresConfig();
-    }
-}
+    const contenedor = document.getElementById('contenedor-vistas');
+    if (!contenedor) return;
 
+    // 1. Ocultar todo lo que no sea el contenedor principal
+    // (Opcional: si tienes modales globales, ocúltalos aquí también)
+    
+    // 2. Cargar el contenido desde tu archivo HTML externo
+    fetch(`${nombre}.html`)
+        .then(response => {
+            if (!response.ok) throw new Error('No se pudo cargar la vista');
+            return response.text();
+        })
+        .then(html => {
+            // Inyectamos el nuevo contenido
+            contenedor.innerHTML = html;
+
+            // 3. Ejecutar la lógica específica para cada vista
+            // Esto es lo que mantiene tu app "viva" al cambiar de pantalla
+            if (nombre === 'inicio') {
+                renderizarInicioProyectos();
+            } else if (nombre === 'datos') {
+                renderizarGridProyectos();
+            } else if (nombre === 'config') {
+                actualizarSelectoresConfig();
+            }
+            
+            console.log(`Vista ${nombre} cargada correctamente.`);
+        })
+        .catch(err => {
+            console.error("Error al cargar la vista:", err);
+        });
+}
 // ==========================================
 // INICIALIZACIÓN UNIFICADA DE LA APP
 // ==========================================
@@ -89,24 +105,18 @@ function actualizarLabelUsuario() {
 /// En js/main.js
 // js/main.js
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log("1. DOM cargado. Usuario en storage:", localStorage.getItem('app_currentUser'));
-
-    // Cargamos datos
+    // 1. Cargamos datos
     await cargarDatosGlobales();
-    console.log("2. Datos de Sheety cargados.");
-
-    // Verificamos sesión
+    
+    // 2. Verificamos sesión
     const usuario = localStorage.getItem('app_currentUser');
     
+    // 3. Decidimos qué vista mostrar
     if (usuario) {
-        console.log("3. Sesión detectada:", usuario);
         currentUser = usuario;
-        actualizarLabelUsuario();
-        await cargarVista('inicio');
-        console.log("4. Vista 'inicio' cargada.");
+        cargarVista('inicio'); // No uses 'await' aquí, ya no es fetch
     } else {
-        console.log("3. No hay usuario, cargando vista 'login'.");
-        await cargarVista('login');
+        cargarVista('login');
     }
 });
 
