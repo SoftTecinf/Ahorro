@@ -9,7 +9,7 @@ async function cargarDatos() {
         const datos = await respuesta.json();
         
         // Asumiendo que tu hoja se llama "hoja1"
-        usuarios = datos.hoja1; 
+        Usuarios = datos.hoja1; 
         
     } catch (error) {
         console.error("Error al conectar con la nube:", error);
