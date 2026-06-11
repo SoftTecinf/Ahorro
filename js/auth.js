@@ -43,25 +43,28 @@ async function confirmarIdentidad() {
 
         if (usuarioEncontrado) {
             localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
-            localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
 
-            // Ahora sí, el código encontrará los elementos y funcionará
+            // 1. OCULTAR MODAL (Con protección)
             const modal = document.getElementById('modal-identidad');
-                if (modal) {
-                    modal.classList.add('hidden');
-                } else {
-                    console.error("No se encontró el elemento con ID 'modal-identidad'");
-                }
-            document.getElementById('vista-principal').classList.remove('hidden');
+            if (modal) modal.classList.add('hidden');
+
+            // 2. MOSTRAR VISTA PRINCIPAL (Con protección)
+            const vistaPrincipal = document.getElementById('vista-principal');
+            if (vistaPrincipal) {
+                vistaPrincipal.classList.remove('hidden');
+            } else {
+                console.warn("Elemento 'vista-principal' no encontrado en el DOM actual.");
+            }
             
-            alert("¡Bienvenido/a, " + usuarioEncontrado.nombre + "!");
-            return; // Detenemos la ejecución aquí mismo
+            // 3. RECUPERAR DATOS Y REFRESCAR UI
+            window.location.reload(); // Recargar es la forma más segura de limpiar el estado
+            
         } else {
             alert("Usuario o PIN incorrecto.");
         }
     } catch (error) {
-        console.error("Error:", error);
-        // Solo mostramos error si algo falló de verdad en la conexión
+        console.error("Error al conectar con la base de datos:", error);
+        alert("Error de conexión. Intenta nuevamente.");
     }
 }
 
