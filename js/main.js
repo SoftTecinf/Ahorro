@@ -105,18 +105,29 @@ function actualizarLabelUsuario() {
 /// En js/main.js
 // js/main.js
 document.addEventListener('DOMContentLoaded', async () => {
-    // 1. Cargamos datos
+    // 1. Ocultar todo lo que no deba verse al principio
+    const modalIdentidad = document.getElementById('modal-identidad');
+    modalIdentidad.style.display = 'flex'; // Solo lo mostramos nosotros manualmente
+
+    // 2. Cargamos datos
     await cargarDatosGlobales();
     
-    // 2. Verificamos sesión
+    // 3. Verificamos sesión
     const usuario = localStorage.getItem('app_currentUser');
     
-    // 3. Decidimos qué vista mostrar
     if (usuario) {
+        // Si hay usuario, ocultamos el modal inmediatamente
+        console.log("Sesión activa, ocultando login...");
+        modalIdentidad.classList.add('hidden'); // O usa display: none
+        modalIdentidad.style.display = 'none';
+        
         currentUser = usuario;
-        cargarVista('inicio'); // No uses 'await' aquí, ya no es fetch
+        actualizarLabelUsuario();
+        cargarVista('inicio'); 
     } else {
-        cargarVista('login');
+        // Si no hay usuario, aseguramos que el modal se vea
+        modalIdentidad.classList.remove('hidden');
+        modalIdentidad.style.display = 'flex';
     }
 });
 
