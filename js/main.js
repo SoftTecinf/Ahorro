@@ -60,38 +60,48 @@ async function cargarVista(nombreVista) {
     if (!contenedor) return;
 
     try {
-        // 1. Intentar cargar el archivo HTML
+        // 1. BLINDAJE: Antes de cargar, bloqueamos la visibilidad del contenedor
+        contenedor.style.opacity = '0';
+        
         const respuesta = await fetch(`${nombreVista}.html`);
         if (!respuesta.ok) throw new Error(`Archivo ${nombreVista}.html no encontrado`);
         
         const html = await respuesta.text();
         contenedor.innerHTML = html;
 
-        // 2. FORZAR VISIBILIDAD (Esto garantiza que el usuario vea el diseño)
-        const elementosOcultos = contenedor.querySelectorAll('.hidden');
-        elementosOcultos.forEach(el => el.classList.remove('hidden'));
+        // 2. BLINDAJE: NO uses el forEach agresivo que quita todos los 'hidden'
+        // Eso rompe la lógica de tus modales y secciones ocultas.
+        // Solo quitamos la clase 'hidden' al contenedor principal de la vista si es necesario:
+        const vistaPrincipal = contenedor.querySelector('.vista-contenido');
+        if (vistaPrincipal) vistaPrincipal.classList.remove('hidden');
 
-        // 3. ESTILOS DE NAVEGACIÓN
+        // 3. Estilos de navegación (Esto está bien)
         document.querySelectorAll('nav button').forEach(btn => 
             btn.classList.remove('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white')
         );
         const btnActivo = document.querySelector(`[data-vista="${nombreVista}"]`);
         if (btnActivo) btnActivo.classList.add('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white');
 
-        // 4. EJECUTAR LÓGICA (Try-Catch independiente para que no rompa el diseño)
-        try {
-            actualizarLabelUsuario();
-            if (nombreVista === 'inicio') await renderizarInicioProyectos();
-            if (nombreVista === 'datos') await renderizarGridProyectos();
-            if (nombreVista === 'config') await actualizarSelectoresConfig();
-        } catch (logicError) {
-            console.error("Error en la lógica:", logicError);
-            // No hacemos nada aquí, el HTML ya se mostró
-        }
+        // 4. Lógica de renderizado
+        actualizarLabelUsuario();
+        
+        // Usamos una estructura de control más limpia
+        const acciones = {
+            'inicio': renderizarInicioProyectos,
+            'datos': renderizarGridProyectos,
+            'config': actualizarSelectoresConfig
+        };
+
+        if (acciones[nombreVista]) await acciones[nombreVista]();
+
+        // 5. BLINDAJE: Solo revelamos el contenido cuando ya está todo cargado
+        contenedor.style.transition = 'opacity 0.3s ease';
+        contenedor.style.opacity = '1';
         
     } catch (fetchError) {
         console.error("Error crítico:", fetchError);
-        contenedor.innerHTML = `<p class="p-4 text-red-500">Error al cargar la vista: ${fetchError.message}</p>`;
+        contenedor.innerHTML = `<p class="p-4 text-red-500">Error al cargar la vista.</p>`;
+        contenedor.style.opacity = '1';
     }
 }
 
