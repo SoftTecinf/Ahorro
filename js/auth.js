@@ -26,43 +26,25 @@ function togglePassword(idInput) {
 }
 
 async function confirmarIdentidad() {
-    const nombreIngresado = document.getElementById('input-usuario-login').value;
-    const pinIngresado = document.getElementById('input-password-inicial').value;
+    const usuario = document.getElementById('input-usuario-login').value;
+    // ... lógica para validar usuario ...
 
-    const URL_USUARIOS = 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios';
-
-    try {
-        const respuesta = await fetch(URL_USUARIOS);
-        const data = await respuesta.json();
-        const listaUsuarios = data.usuarios;
-
-        const usuarioEncontrado = listaUsuarios.find(u =>
-            String(u.nombre).trim().toLowerCase() === String(nombreIngresado).trim().toLowerCase() &&
-            String(u.pin).trim() === String(pinIngresado).trim()
-        );
-
-        if (usuarioEncontrado) {
-            localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
-
-            // 1. OCULTAR MODAL (Con protección)
-            // SOLUCIÓN: Busca el elemento y verifica si existe antes de usarlo
-            const modal = document.getElementById('modal-identidad');
-
-            if (modal) {
-                modal.classList.add('hidden');
-            } else {
-                console.warn("El modal 'modal-identidad' no existe en esta vista.");
-            }
-
-            // Haz lo mismo para cualquier otro elemento que busques con getElementById
-            const vistaPrincipal = document.getElementById('vista-principal');
-            if (vistaPrincipal) {
-                vistaPrincipal.classList.remove('hidden');
-            }
-        }
-    } catch (error) {
-        console.error("Error al conectar con la base de datos:", error);
-        alert("Error de conexión. Intenta nuevamente.");
+    if (validado) {
+        localStorage.setItem('app_currentUser', usuario);
+        currentUser = usuario;
+        
+        // --- AQUÍ ESTÁ LA CLAVE ---
+        // 1. Esconder el modal de identidad
+        const modal = document.getElementById('modal-identidad');
+        modal.classList.add('hidden');
+        
+        // 2. Actualizar la etiqueta del usuario
+        actualizarLabelUsuario();
+        
+        // 3. ¡Forzar la carga de la vista inicio!
+        cargarVista('inicio');
+        
+        console.log("Inicio de sesión exitoso, vista cargada.");
     }
 }
 
