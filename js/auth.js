@@ -7,22 +7,22 @@ function cambiarVista(tipo) {
     const tLogin = document.getElementById('tab-login');
     const tRegistration = document.getElementById('tab-registro');
 
-    if(tipo === 'login') {
-        if(vLogin) vLogin.classList.remove('hidden');
-        if(vRegistro) vRegistro.classList.add('hidden');
-        if(tLogin) tLogin.className = "flex-1 pb-2 text-center text-purple-600 border-b-2 border-purple-600 cursor-pointer";
-        if(tRegistration) tRegistration.className = "flex-1 pb-2 text-center text-gray-400 border-b-2 border-transparent cursor-pointer";
+    if (tipo === 'login') {
+        if (vLogin) vLogin.classList.remove('hidden');
+        if (vRegistro) vRegistro.classList.add('hidden');
+        if (tLogin) tLogin.className = "flex-1 pb-2 text-center text-purple-600 border-b-2 border-purple-600 cursor-pointer";
+        if (tRegistration) tRegistration.className = "flex-1 pb-2 text-center text-gray-400 border-b-2 border-transparent cursor-pointer";
     } else {
-        if(vLogin) vLogin.classList.add('hidden');
-        if(vRegistro) vRegistro.classList.remove('hidden');
-        if(tLogin) tLogin.className = "flex-1 pb-2 text-center text-gray-400 border-b-2 border-transparent cursor-pointer";
-        if(tRegistration) tRegistration.className = "flex-1 pb-2 text-center text-purple-600 border-b-2 border-purple-600 cursor-pointer";
+        if (vLogin) vLogin.classList.add('hidden');
+        if (vRegistro) vRegistro.classList.remove('hidden');
+        if (tLogin) tLogin.className = "flex-1 pb-2 text-center text-gray-400 border-b-2 border-transparent cursor-pointer";
+        if (tRegistration) tRegistration.className = "flex-1 pb-2 text-center text-purple-600 border-b-2 border-purple-600 cursor-pointer";
     }
 }
 
 function togglePassword(idInput) {
     const input = document.getElementById(idInput);
-    if(input) input.type = input.type === 'password' ? 'text' : 'password';
+    if (input) input.type = input.type === 'password' ? 'text' : 'password';
 }
 
 async function confirmarIdentidad() {
@@ -36,8 +36,8 @@ async function confirmarIdentidad() {
         const data = await respuesta.json();
         const listaUsuarios = data.usuarios;
 
-        const usuarioEncontrado = listaUsuarios.find(u => 
-            String(u.nombre).trim().toLowerCase() === String(nombreIngresado).trim().toLowerCase() && 
+        const usuarioEncontrado = listaUsuarios.find(u =>
+            String(u.nombre).trim().toLowerCase() === String(nombreIngresado).trim().toLowerCase() &&
             String(u.pin).trim() === String(pinIngresado).trim()
         );
 
@@ -45,20 +45,21 @@ async function confirmarIdentidad() {
             localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
 
             // 1. OCULTAR MODAL (Con protección)
-           // SOLUCIÓN: Busca el elemento y verifica si existe antes de usarlo
-    const modal = document.getElementById('modal-identidad');
-    
-    if (modal) {
-        modal.classList.add('hidden');
-    } else {
-        console.warn("El modal 'modal-identidad' no existe en esta vista.");
-    }
+            // SOLUCIÓN: Busca el elemento y verifica si existe antes de usarlo
+            const modal = document.getElementById('modal-identidad');
 
-    // Haz lo mismo para cualquier otro elemento que busques con getElementById
-    const vistaPrincipal = document.getElementById('vista-principal');
-    if (vistaPrincipal) {
-        vistaPrincipal.classList.remove('hidden');
-    }}
+            if (modal) {
+                modal.classList.add('hidden');
+            } else {
+                console.warn("El modal 'modal-identidad' no existe en esta vista.");
+            }
+
+            // Haz lo mismo para cualquier otro elemento que busques con getElementById
+            const vistaPrincipal = document.getElementById('vista-principal');
+            if (vistaPrincipal) {
+                vistaPrincipal.classList.remove('hidden');
+            }
+        }
     } catch (error) {
         console.error("Error al conectar con la base de datos:", error);
         alert("Error de conexión. Intenta nuevamente.");
@@ -76,11 +77,11 @@ async function procesarRegistro() {
     const celularInput = document.getElementById('reg-celular');
     const password = document.getElementById('reg-pass').value;
 
-    if(!celularInput) return;
+    if (!celularInput) return;
     const celular = celularInput.value.trim();
     const regexCelular = /^[0-9]{10}$/;
 
-    if(!nombre || password.length < 4) {
+    if (!nombre || password.length < 4) {
         return alert("Rellena todos los campos. La contraseña debe tener al menos 4 caracteres.");
     }
 
@@ -90,7 +91,7 @@ async function procesarRegistro() {
     }
 
     // 2. Validación usando la lista segura
-    if(lista.some(f => f.nombre.toLowerCase() === nombre.toLowerCase())) {
+    if (lista.some(f => f.nombre.toLowerCase() === nombre.toLowerCase())) {
         return alert("Este nombre ya se encuentra registrado.");
     }
 
@@ -99,7 +100,7 @@ async function procesarRegistro() {
         const URL_USUARIOS = 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios';
         // Asegúrate de que el objeto interno coincida con tus columnas:
         const nuevoFamiliar = {
-            usuario: { 
+            usuario: {
                 nombre: nombre,  // Debe ser igual a tu columna 'nombre'
                 pin: password,   // Debe ser igual a tu columna 'pin'
                 celular: celular // Debe ser igual a tu columna 'celular'
@@ -118,11 +119,11 @@ async function procesarRegistro() {
         lista.push({ nombre, celular, password });
         window.familiares = lista;
         localStorage.setItem('app_familiares', JSON.stringify(lista));
-        
+
         // ... (resto de tu lógica de éxito)
         alert(`¡Bienvenido(a), ${nombre}! ✨`);
         document.getElementById('modal-identidad').classList.add('hidden');
-        
+
     } catch (err) {
         console.error(err);
         alert("Error al conectar con la base de datos.");
