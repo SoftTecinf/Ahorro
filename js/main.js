@@ -79,38 +79,31 @@ async function cargarVista(nombreVista) {
 // ==========================================
 // INICIALIZACIÓN UNIFICADA DE LA APP
 // ==========================================
-function inicializarApp() {
-    if (familiares.length > 0 && typeof familiares[0] === 'string') {
-        familiares = familiares.map(fName => ({ nombre: fName, celular: "", password: "123" }));
-        localStorage.setItem('app_familiares', JSON.stringify(familiares));
-    }
-
-    actualizarLabelUsuario();
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const idProyectoInvitacion = urlParams.get('proyecto');
-    if (idProyectoInvitacion) {
-        sessionStorage.setItem('pending_proyecto', idProyectoInvitacion);
-        window.history.replaceState({}, document.title, window.location.pathname);
-    }
-
-    const modalIdentidad = document.getElementById('modal-identidad');
-
-    if (currentUser) {
-        if (modalIdentidad) modalIdentidad.classList.add('hidden');
-        procesarInvitacionPendiente();
-        navegarA('sec-inicio');
-    } else {
-        if (modalIdentidad) modalIdentidad.classList.remove('hidden');
-        cambiarVista('login');
+// 1. Asegúrate de que esta función sea global y robusta
+function actualizarLabelUsuario() {
+    const label = document.getElementById('user-label');
+    const usuarioActual = localStorage.getItem('app_currentUser');
+    if (label) {
+        label.textContent = usuarioActual ? usuarioActual : "No identificado";
     }
 }
-// En js/main.js
+
+// 2. Simplifica el inicio
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        await cargarDatosGlobales(); // 1. Traer datos
-        inicializarApp();            // 2. Ejecutar la lógica de UI
-        cargarVista('inicio');       // 3. Renderizar la primera vista
+        await cargarDatosGlobales(); // Cargar datos primero
+        
+        // Verificamos sesión
+        const usuarioGuardado = localStorage.getItem('app_currentUser');
+        
+        if (usuarioGuardado) {
+            currentUser = usuarioGuardado;
+            actualizarLabelUsuario();
+            await cargarVista('inicio'); // Carga la vista de inicio
+        } else {
+            await cargarVista('login');  // Si no hay usuario, fuerza el login
+        }
+        
     } catch (error) {
         console.error("Error al iniciar la aplicación:", error);
     }
