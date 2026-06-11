@@ -1,8 +1,3 @@
-console.log("--- INICIO DE CARGA ---");
-console.log("¿Existe usuario en LocalStorage?:", localStorage.getItem('app_currentUser'));
-console.log("URL actual:", window.location.href);
-
-
 let familiares = JSON.parse(localStorage.getItem('app_familiares')) || [];
 let proyectos = [];
 let cuentasBancarias = [];
