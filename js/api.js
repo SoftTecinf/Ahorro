@@ -1,10 +1,10 @@
 
 // Ahora (La nueva form://a de obtener datos)
-const SHEETY_URL = 'httpsapi.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios'; 
+const SHEETY_URL = 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios'; 
 
 async function cargarDatos() {
     try {
-        const respuesta = await fetch('httpsapi.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios'
+        const respuesta = await fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios'
 );
         const datos = await respuesta.json();
         
