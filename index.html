@@ -15,7 +15,10 @@
 
 <body class="min-h-screen pb-16">
 
-
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/projects.js"></script>
+    <script src="js/main.js"></script>
 
 
     <div id="status-bar"
@@ -47,7 +50,7 @@
                 class="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all cursor-pointer text-gray-500 hover:bg-purple-50/50">
                 📝 Datos
             </button>
-            <button onclick="cargarVista('config')" data-vista="config"
+             <button onclick="cargarVista('config')" data-vista="config"
                 class="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all cursor-pointer text-gray-500 hover:bg-purple-50/50">
                 ⚙️ Configurar
             </button>
@@ -55,15 +58,11 @@
     </nav>
 
 
-    <main id="contenedor-vistas" class="container mx-auto px-4 max-w-5xl">
-        <link rel="stylesheet" href="style.css">
-        <script src="js/main.js"></script>
-    </main>
+        <main id="contenedor-vistas" class="container mx-auto px-4 max-w-5xl">
+            <link rel="stylesheet" href="style.css">
+            <script src="js/main.js"></script>
+        </main>
 
-    <script src="js/api.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/projects.js"></script>
-    <script src="js/main.js"></script>
 
     <div id="modal-deposito-familiar"
         class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center hidden z-40 p-4">
