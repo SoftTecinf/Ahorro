@@ -106,6 +106,10 @@ function inicializarApp() {
         cambiarVista('login');
     }
 }
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 // En js/main.js
 document.addEventListener('DOMContentLoaded', async () => {
     try {
