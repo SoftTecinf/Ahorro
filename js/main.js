@@ -55,53 +55,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-async function cargarVista(nombreVista) {
-    const contenedor = document.getElementById('contenedor-vistas');
-    if (!contenedor) return;
-
-    try {
-        // 1. BLINDAJE: Antes de cargar, bloqueamos la visibilidad del contenedor
-        contenedor.style.opacity = '0';
-        
-        const respuesta = await fetch(`${nombreVista}.html`);
-        if (!respuesta.ok) throw new Error(`Archivo ${nombreVista}.html no encontrado`);
-        
-        const html = await respuesta.text();
-        contenedor.innerHTML = html;
-
-        // 2. BLINDAJE: NO uses el forEach agresivo que quita todos los 'hidden'
-        // Eso rompe la lógica de tus modales y secciones ocultas.
-        // Solo quitamos la clase 'hidden' al contenedor principal de la vista si es necesario:
-        const vistaPrincipal = contenedor.querySelector('.vista-contenido');
-        if (vistaPrincipal) vistaPrincipal.classList.remove('hidden');
-
-        // 3. Estilos de navegación (Esto está bien)
-        document.querySelectorAll('nav button').forEach(btn => 
-            btn.classList.remove('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white')
-        );
-        const btnActivo = document.querySelector(`[data-vista="${nombreVista}"]`);
-        if (btnActivo) btnActivo.classList.add('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white');
-
-        // 4. Lógica de renderizado
+function cargarVista(nombre) {
+    console.log("Cambiando a vista:", nombre);
+    
+    // 1. Oculta todas las secciones que tengan la clase 'vista'
+    document.querySelectorAll('.vista').forEach(v => v.classList.add('hidden'));
+    
+    // 2. Muestra solo la solicitada
+    const vistaDestino = document.getElementById(`vista-${nombre}`);
+    if (vistaDestino) {
+        vistaDestino.classList.remove('hidden');
+        // Ejecuta la lógica correspondiente sin recargar
         actualizarLabelUsuario();
-        
-        // Usamos una estructura de control más limpia
-        const acciones = {
-            'inicio': renderizarInicioProyectos,
-            'datos': renderizarGridProyectos,
-            'config': actualizarSelectoresConfig
-        };
-
-        if (acciones[nombreVista]) await acciones[nombreVista]();
-
-        // 5. BLINDAJE: Solo revelamos el contenido cuando ya está todo cargado
-        contenedor.style.transition = 'opacity 0.3s ease';
-        contenedor.style.opacity = '1';
-        
-    } catch (fetchError) {
-        console.error("Error crítico:", fetchError);
-        contenedor.innerHTML = `<p class="p-4 text-red-500">Error al cargar la vista.</p>`;
-        contenedor.style.opacity = '1';
+        if (nombre === 'inicio') renderizarInicioProyectos();
+        if (nombre === 'datos') renderizarGridProyectos();
+        if (nombre === 'config') actualizarSelectoresConfig();
     }
 }
 
@@ -121,24 +89,18 @@ function actualizarLabelUsuario() {
 /// En js/main.js
 // js/main.js
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log("1. DOM cargado. Usuario en storage:", localStorage.getItem('app_currentUser'));
-
-    // Cargamos datos
+    // 1. Cargamos datos
     await cargarDatosGlobales();
-    console.log("2. Datos de Sheety cargados.");
-
-    // Verificamos sesión
+    
+    // 2. Verificamos sesión
     const usuario = localStorage.getItem('app_currentUser');
     
+    // 3. Decidimos qué vista mostrar
     if (usuario) {
-        console.log("3. Sesión detectada:", usuario);
         currentUser = usuario;
-        actualizarLabelUsuario();
-        await cargarVista('inicio');
-        console.log("4. Vista 'inicio' cargada.");
+        cargarVista('inicio'); // No uses 'await' aquí, ya no es fetch
     } else {
-        console.log("3. No hay usuario, cargando vista 'login'.");
-        await cargarVista('login');
+        cargarVista('login');
     }
 });
 
