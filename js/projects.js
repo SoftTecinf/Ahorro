@@ -321,14 +321,14 @@ function eliminarCuentaBancariaReal(id) {
 // ==========================================
 
 async function actualizarSelectoresConfig() {
-    // 1. Aseguramos que los datos existan
-    if (!datosCargados) await cargarDatosGlobales();
-
-    // 2. Ahora sí, hacemos el filtro con seguridad
+    // Si la variable está vacía, no intentes filtrar
+    if (!cacheProyectos) {
+        console.warn("Proyectos aún no disponibles.");
+        return;
+    }
+    
     const misProyectos = cacheProyectos.filter(p => p.adminName === currentUser);
-
-    const selectProy = document.getElementById('config-select-proyecto');
-    // ... resto de tu código de llenado de selectores ...
+    // ... resto del código
 }
 
 function guardarConfiguracionProyecto(event) {
