@@ -109,24 +109,28 @@ function actualizarLabelUsuario() {
     }
 }
 /// En js/main.js
+// js/main.js
 document.addEventListener('DOMContentLoaded', async () => {
-    // 1. Cargamos datos de la nube
+    console.log("1. DOM cargado. Usuario en storage:", localStorage.getItem('app_currentUser'));
+
+    // Cargamos datos
     await cargarDatosGlobales();
+    console.log("2. Datos de Sheety cargados.");
+
+    // Verificamos sesión
+    const usuario = localStorage.getItem('app_currentUser');
     
-    // 2. Verificamos sesión con un poco más de robustez
-    const usuarioGuardado = localStorage.getItem('app_currentUser');
-    
-    if (usuarioGuardado) {
-        // Si existe el usuario, asignamos la variable y actualizamos la UI
-        currentUser = usuarioGuardado;
+    if (usuario) {
+        console.log("3. Sesión detectada:", usuario);
+        currentUser = usuario;
         actualizarLabelUsuario();
-        await cargarVista('inicio'); 
+        await cargarVista('inicio');
+        console.log("4. Vista 'inicio' cargada.");
     } else {
-        // Solo si NO existe el usuario en localStorage, vamos al login
+        console.log("3. No hay usuario, cargando vista 'login'.");
         await cargarVista('login');
     }
 });
-
 
 // Listener de navegación
 // En js/main.js
