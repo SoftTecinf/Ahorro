@@ -89,19 +89,20 @@ function actualizarLabelUsuario() {
 }
 /// En js/main.js
 document.addEventListener('DOMContentLoaded', async () => {
-    // 1. Primero, obtenemos el usuario del localStorage (fuente de verdad)
-    const usuarioGuardado = localStorage.getItem('app_currentUser');
-    
-    // 2. Cargamos datos de la nube
+    // 1. Cargamos datos de la nube
     await cargarDatosGlobales();
     
-    // 3. Verificamos sesión
+    // 2. Verificamos sesión con un poco más de robustez
+    const usuarioGuardado = localStorage.getItem('app_currentUser');
+    
     if (usuarioGuardado) {
+        // Si existe el usuario, asignamos la variable y actualizamos la UI
         currentUser = usuarioGuardado;
-        actualizarLabelUsuario(); // Actualiza el "Cargando..." por el nombre real
-        cargarVista('inicio');    // Carga la vista principal
+        actualizarLabelUsuario();
+        await cargarVista('inicio'); 
     } else {
-        cargarVista('login');     // Si no hay usuario, fuerza el login
+        // Solo si NO existe el usuario en localStorage, vamos al login
+        await cargarVista('login');
     }
 });
 
