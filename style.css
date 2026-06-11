@@ -1,3 +1,8 @@
+/* Esto evita que el modal parpadee antes de que JS decida qué hacer */
+#modal-identidad {
+    display: none; 
+}
+
 body {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
@@ -40,3 +45,4 @@ select:focus {
     background: #e9d5ff;
     border-radius: 10px;
 }
+
