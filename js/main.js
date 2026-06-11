@@ -1,4 +1,3 @@
-// ==========================================
 // VARIABLES GLOBALES (Ahora se llenarán desde la nube)
 // ==========================================
 let familiares = JSON.parse(localStorage.getItem('app_familiares')) || [];
