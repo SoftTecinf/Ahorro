@@ -34,6 +34,24 @@ async function cargarDatosGlobales() {
     }
 }
 
+// js/main.js
+document.addEventListener('DOMContentLoaded', async () => {
+    // 1. Cargamos datos de base (Esto es asíncrono)
+    await cargarDatosGlobales();
+    
+    // 2. VERIFICACIÓN DE GUARDIA: ¿Hay usuario?
+    const usuarioGuardado = localStorage.getItem('app_currentUser');
+    
+    if (usuarioGuardado) {
+        currentUser = usuarioGuardado;
+        actualizarLabelUsuario();
+        await cargarVista('inicio'); // Carga segura
+    } else {
+        // Si no hay usuario, forzamos el LOGIN
+        await cargarVista('login'); 
+    }
+});
+
 async function cargarVista(nombreVista) {
     const contenedor = document.getElementById('contenedor-vistas');
     if (!contenedor) return;
@@ -110,26 +128,3 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Listener de navegación
 // En js/main.js
 
-document.addEventListener('DOMContentLoaded', async () => {
-    // 1. Mostrar estado de carga en la UI (puedes poner un spinner o texto)
-    const label = document.getElementById('label-usuario-actual');
-    if (label) label.textContent = "Cargando...";
-
-    try {
-        // 2. BLOQUEO: La app no hace nada más hasta que esto termine
-        await cargarDatosGlobales();
-        
-        // 3. Verificamos sesión después de tener los datos
-        const usuarioGuardado = localStorage.getItem('app_currentUser');
-        
-        if (usuarioGuardado) {
-            currentUser = usuarioGuardado;
-            actualizarLabelUsuario();
-            await cargarVista('inicio'); 
-        } else {
-            await cargarVista('login');
-        }
-    } catch (error) {
-        console.error("Error crítico de inicialización:", error);
-    }
-});
