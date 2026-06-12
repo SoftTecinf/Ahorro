@@ -24,7 +24,10 @@ async function confirmarIdentidad() {
     const passwordIngresado = document.getElementById('input-password-inicial').value.trim();
 
     // 1. Intentamos obtener los datos de donde estén: la variable global o el localStorage
-    const lista = window.familiares || JSON.parse(localStorage.getItem('app_familiares')) || [];
+    let lista = window.familiares;
+    if (!lista || lista.length === 0) {
+        lista = JSON.parse(localStorage.getItem('app_familiares')) || [];
+    } const lista = window.familiares || JSON.parse(localStorage.getItem('app_familiares')) || [];
 
     // 2. Buscamos al usuario de forma segura
     const usuarioEncontrado = lista.find(f =>
@@ -36,10 +39,10 @@ async function confirmarIdentidad() {
         // Guardamos la sesión
         localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
 
-        // Escondemos el modal
-        const modal = document.getElementById('modal-identidad');
-        if (modal) {
-            modal.classList.add('hidden');
+        // ... dentro del if(usuarioEncontrado)
+        const userLabel = document.getElementById('user-label');
+        if (userLabel) {
+            userLabel.textContent = usuarioEncontrado.nombre;
         } else {
             console.warn("No se encontró el modal-identidad, pero la sesión ya inició.");
         }
@@ -84,37 +87,45 @@ async function procesarRegistro() {
     }
 
     // 3. Registro en Sheety (API)
+    // 3. Registro en Sheety (API)
     try {
         const URL_USUARIOS = 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios';
-        // Asegúrate de que el objeto interno coincida con tus columnas:
+
         const nuevoFamiliar = {
             usuario: {
-                nombre: nombre,  // Debe ser igual a tu columna 'nombre'
-                pin: password,   // Debe ser igual a tu columna 'pin'
-                celular: celular // Debe ser igual a tu columna 'celular'
+                nombre: nombre,
+                pin: password,
+                celular: celular
             }
         };
 
-        // 4. Guardar localmente solo si el servidor respondió bien
-        // CAMBIA 'password' POR 'pin' AQUÍ ABAJO:
+        // --- AQUÍ VA LA MEJORA: Petición real a la API ---
+        const response = await fetch(URL_USUARIOS, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(nuevoFamiliar)
+        });
+
+        if (!response.ok) throw new Error("No se pudo registrar en la API");
+        // --------------------------------------------------
+
+        // 4. Guardar localmente solo SI el servidor respondió bien
         lista.push({
             nombre: nombre,
             celular: celular,
-            pin: password // <--- ESTO ES LO QUE ESTABA MAL
+            pin: password
         });
 
         window.familiares = lista;
         localStorage.setItem('app_familiares', JSON.stringify(lista));
 
-        // ... resto de tu código
-
-        // ... (resto de tu lógica de éxito)
+        // ... resto de tu código de éxito
         alert(`¡Bienvenido(a), ${nombre}! ✨`);
         document.getElementById('modal-identidad').classList.add('hidden');
 
     } catch (err) {
         console.error(err);
-        alert("Error al conectar con la base de datos.");
+        alert("Error al conectar con la base de datos. Inténtalo más tarde.");
     }
 }
 
