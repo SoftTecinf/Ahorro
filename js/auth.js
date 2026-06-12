@@ -8,11 +8,14 @@
 actualizarLabelUsuario();
 cargarVista('inicio');
 
-// AÑADE ESTO:
+// En lugar de solo: document.getElementById('modal-identidad').classList.add('hidden');
+// Usa esto:
 const modal = document.getElementById('modal-identidad');
-modal.classList.add('hidden'); // Oculta el modal
-modal.style.display = 'none'; // Fuerza el cierre por si la clase CSS falla
-console.log("Sesión iniciada y modal oculto.");
+if (modal) {
+    modal.classList.add('hidden');
+} else {
+    console.warn("El modal aún no existe en el DOM");
+}
 
 function togglePassword(idInput) {
     const input = document.getElementById(idInput);
