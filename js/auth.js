@@ -95,15 +95,6 @@ async function procesarRegistro() {
             }
         };
 
-        //const res = await fetch(URL_USUARIOS, {
-        //    method: 'POST',
-         //   headers: { 'Content-Type': 'application/json' },
-//body: JSON.stringify(nuevoFamiliar)
-       // });
-
-        if (!res.ok) throw new Error("Error en servidor");
-
-        // 4. Guardar localmente solo si el servidor respondió bien
         // 4. Guardar localmente solo si el servidor respondió bien
         // CAMBIA 'password' POR 'pin' AQUÍ ABAJO:
         lista.push({
