@@ -26,22 +26,34 @@ function togglePassword(idInput) {
 }
 
 async function confirmarIdentidad() {
-    const usuario = document.getElementById('input-usuario-login').value;
-    // ... lógica para validar usuario ...
+    const usuarioIngresado = document.getElementById('input-usuario-login').value;
+    const passwordIngresado = document.getElementById('input-password-inicial').value;
+    
+    // 1. Debemos definir 'validado' basándonos en tu lógica real
+    let validado = false; 
 
+    // Aquí debes poner la lógica que busca a tu usuario en tus datos
+    // Por ejemplo:
+    const usuarioEncontrado = familiares.find(f => f.nombre === usuarioIngresado && f.password === passwordIngresado);
+
+    if (usuarioEncontrado) {
+        validado = true;
+    } else {
+        alert("Usuario o contraseña incorrectos");
+        return; // Detenemos la función si no es válido
+    }
+
+    // 2. Ahora que 'validado' tiene un valor (true), el if funcionará
     if (validado) {
-        localStorage.setItem('app_currentUser', usuario);
-        currentUser = usuario;
+        localStorage.setItem('app_currentUser', usuarioIngresado);
+        currentUser = usuarioIngresado;
         
-        // --- AQUÍ ESTÁ LA CLAVE ---
-        // 1. Esconder el modal de identidad
+        // Esconder el modal
         const modal = document.getElementById('modal-identidad');
-        modal.classList.add('hidden');
+        if (modal) modal.classList.add('hidden');
         
-        // 2. Actualizar la etiqueta del usuario
+        // Actualizar UI y cargar vista
         actualizarLabelUsuario();
-        
-        // 3. ¡Forzar la carga de la vista inicio!
         cargarVista('inicio');
         
         console.log("Inicio de sesión exitoso, vista cargada.");
