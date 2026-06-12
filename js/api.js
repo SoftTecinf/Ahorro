@@ -1,18 +1,15 @@
 // js/api.js
 window.familiares = JSON.parse(localStorage.getItem('app_familiares')) || [];
 
+// En js/api.js, asegúrate de tener una función como esta:
 async function cargarDatosGlobales() {
-    // Si ya tenemos datos, no satures la API
-    if (window.familiares.length > 0) return; 
-
     try {
-        const res = await fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios');
-        if (res.ok) {
-            const data = await res.json();
-            window.familiares = data.usuarios;
-            localStorage.setItem('app_familiares', JSON.stringify(data.usuarios));
-        }
+        const res = await fetch('URL_DE_TU_SHEETY');
+        const data = await res.json();
+        window.familiares = data.usuarios;
+        localStorage.setItem('cache_familiares', JSON.stringify(data.usuarios));
     } catch (e) {
-        console.warn("API bloqueada, usando datos locales");
+        // Si la API falla (402), cargamos del caché
+        window.familiares = JSON.parse(localStorage.getItem('cache_familiares')) || [];
     }
 }
