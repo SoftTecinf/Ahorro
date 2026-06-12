@@ -1,23 +1,24 @@
 // ==========================================
 // LÓGICA DE CONTROL DEL LOGIN / REGISTRO
 // ==========================================
-function cambiarVista(tipo) {
-    const vLogin = document.getElementById('vista-login');
-    const vRegistro = document.getElementById('vista-registro');
-    const tLogin = document.getElementById('tab-login');
-    const tRegistration = document.getElementById('tab-registro');
-
-    if (tipo === 'login') {
-        if (vLogin) vLogin.classList.remove('hidden');
-        if (vRegistro) vRegistro.classList.add('hidden');
-        if (tLogin) tLogin.className = "flex-1 pb-2 text-center text-purple-600 border-b-2 border-purple-600 cursor-pointer";
-        if (tRegistration) tRegistration.className = "flex-1 pb-2 text-center text-gray-400 border-b-2 border-transparent cursor-pointer";
+function cargarVista(nombre) {
+    console.log(`Intentando cargar vista: ${nombre}`);
+    
+    // 1. Ocultamos TODAS las secciones que tengan la clase 'vista'
+    document.querySelectorAll('.vista').forEach(v => v.classList.add('hidden'));
+    
+    // 2. Mostramos SOLO la que coincide con el nombre
+    const vista = document.getElementById(`vista-${nombre}`);
+    if (vista) {
+        vista.classList.remove('hidden');
+        console.log(`Vista ${nombre} mostrada correctamente.`);
     } else {
-        if (vLogin) vLogin.classList.add('hidden');
-        if (vRegistro) vRegistro.classList.remove('hidden');
-        if (tLogin) tLogin.className = "flex-1 pb-2 text-center text-gray-400 border-b-2 border-transparent cursor-pointer";
-        if (tRegistration) tRegistration.className = "flex-1 pb-2 text-center text-purple-600 border-b-2 border-purple-600 cursor-pointer";
+        console.error(`No se encontró el elemento con ID vista-${nombre}`);
     }
+
+    // 3. Ejecutas tu lógica (esto ya te funcionaba)
+    if (nombre === 'inicio') renderizarInicioProyectos();
+    if (nombre === 'datos') renderizarGridProyectos();
 }
 
 function togglePassword(idInput) {
