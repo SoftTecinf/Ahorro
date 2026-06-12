@@ -32,9 +32,6 @@ function actualizarLabelUsuario() {
     }
 }
 
-
-/// En js/main.js
-// js/main.js
 // js/main.js
 document.addEventListener('DOMContentLoaded', async () => {
     // 1. Cargamos datos de una sola vez
@@ -43,7 +40,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 2. Solo después de cargar, mostramos la vista inicial
     cargarVista('inicio');
 });
-
-// Listener de navegación
-// En js/main.js
 
