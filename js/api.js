@@ -1,7 +1,7 @@
 // js/api.js
 window.usuarios = JSON.parse(localStorage.getItem('datos_usuarios')) || [];
 
-async function cargarDatos() {
+async function cargarDatosGlobales() {
     try {
         const respuesta = await fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios');
         if (!respuesta.ok) throw new Error("API bloqueada");
