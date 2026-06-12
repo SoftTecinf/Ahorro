@@ -20,54 +20,52 @@ async function cargarDatosGlobales() {
         cuentas: 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/cuentas'
     };
 
-    for (const [key, url] of Object.entries(URLs)) {
-        try {
-            const res = await fetch(url);
-            if (!res.ok) throw new Error("API bloqueada");
-            const data = await res.json();
-            
-            // Guardamos en localStorage para futuras sesiones
-            localStorage.setItem(`datos_${key}`, JSON.stringify(data));
-            window[key] = data; 
-            console.log(`Datos de ${key} cargados desde API`);
-        } catch (e) {
-            console.warn(`Usando caché local para ${key} debido a error de API`);
-            window[key] = JSON.parse(localStorage.getItem(`datos_${key}`)) || [];
-        }
+for (const [key, url] of Object.entries(URLs)) {
+    try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("API bloqueada");
+        const data = await res.json();
+        
+        // --- AQUÍ ESTÁ EL AJUSTE ---
+        // Sheety suele devolver los datos bajo una clave que es el nombre de la hoja.
+        // Si el JSON es { "usuarios": [...] }, accedemos así:
+        const listaDatos = data[key] || data.hoja1 || data; 
+        
+        localStorage.setItem(`datos_${key}`, JSON.stringify(listaDatos));
+        window[key] = listaDatos; 
+        console.log(`Datos de ${key} cargados desde API`);
+    } catch (e) {
+        console.warn(`Usando caché local para ${key}`);
+        const localData = localStorage.getItem(`datos_${key}`);
+        window[key] = localData ? JSON.parse(localData) : [];
     }
+}
 }
 
 // js/main.js
-document.addEventListener('DOMContentLoaded', async () => {
-    // 1. Cargamos datos de base (Esto es asíncrono)
-    await cargarDatosGlobales();
-    
-    // 2. VERIFICACIÓN DE GUARDIA: ¿Hay usuario?
-    const usuarioGuardado = localStorage.getItem('app_currentUser');
-    
-    if (usuarioGuardado) {
-        currentUser = usuarioGuardado;
-        actualizarLabelUsuario();
-        await cargarVista('inicio'); // Carga segura
-    } else {
-        // Si no hay usuario, forzamos el LOGIN
-        await cargarVista('login'); 
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM listo. Iniciando aplicación...");
+    // Solo ahora intenta mostrar el modal o la vista
+    if (document.getElementById('modal-identidad')) {
+        // Tu lógica de mostrar modal
     }
 });
 
 // Asegúrate de que esta función esté definida solo una vez en todo tu proyecto
 // main.js - versión simplificada y segura
-function cargarVista(nombre) {
-    const contenedor = document.getElementById('contenedor-vistas');
-    
-    // Si queremos cargar el inicio, clonamos el template
-    if (nombre === 'inicio') {
-        const plantilla = document.getElementById('template-inicio');
-        const clon = plantilla.content.cloneNode(true);
-        contenedor.innerHTML = ''; // Limpia lo anterior
-        contenedor.appendChild(clon);
+async function cargarDatos() {
+    try {
+        const res = await fetch('URL_DE_SHEETY');
+        if (!res.ok) throw new Error("API bloqueada");
+        const data = await res.json();
+        localStorage.setItem('cache_data', JSON.stringify(data)); // Guarda copia
+    } catch (e) {
+        console.warn("API bloqueada. Usando datos guardados.");
+        const datosLocales = localStorage.getItem('cache_data');
+        window.familiares = datosLocales ? JSON.parse(datosLocales) : [];
     }
 }
+
 
 // ==========================================
 // INICIALIZACIÓN UNIFICADA DE LA APP
