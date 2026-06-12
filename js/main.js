@@ -7,40 +7,6 @@ let cacheProyectos = [];
 let cacheCuentas = [];
 let datosCargados = false;
 
-// ==========================================
-// CONTROL DE NAVEGACIÓN ENTRE SECCIONES
-// ==========================================
-// ========================================== 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/proyectos'
-// En api.js, centraliza la carga
-// Sustituye tu lógica actual en api.js por esta estructura segura:
-/*async function cargarDatosGlobales() {
-    const URLs = {
-        usuarios: 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios',
-        proyectos: 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/proyectos',
-        cuentas: 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/cuentas'
-    };
-
-for (const [key, url] of Object.entries(URLs)) {
-    try {
-       // const res = await fetch(url);
-       // if (!res.ok) throw new Error("API bloqueada");
-       // const data = await res.json();
-        
-        // --- AQUÍ ESTÁ EL AJUSTE ---
-        // Sheety suele devolver los datos bajo una clave que es el nombre de la hoja.
-        // Si el JSON es { "usuarios": [...] }, accedemos así:
-        const listaDatos = data[key] || data.hoja1 || data; 
-        
-        localStorage.setItem(`datos_${key}`, JSON.stringify(listaDatos));
-        window[key] = listaDatos; 
-        console.log(`Datos de ${key} cargados desde API`);
-    } catch (e) {
-        console.warn(`Usando caché local para ${key}`);
-        const localData = localStorage.getItem(`datos_${key}`);
-        window[key] = localData ? JSON.parse(localData) : [];
-    }
-}
-}*/
 
 // js/main.js
 document.addEventListener('DOMContentLoaded', () => {
@@ -50,21 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Tu lógica de mostrar modal
     }
 });
-
-// Asegúrate de que esta función esté definida solo una vez en todo tu proyecto
-// main.js - versión simplificada y segura
-/*async function cargarDatos() {
-    try {
-        //const res = await fetch('URL_DE_SHEETY');
-        //if (!res.ok) throw new Error("API bloqueada");
-        //const data = await res.json();
-        //localStorage.setItem('cache_data', JSON.stringify(data)); // Guarda copia
-    } catch (e) {
-        console.warn("API bloqueada. Usando datos guardados.");
-        const datosLocales = localStorage.getItem('cache_data');
-        window.familiares = datosLocales ? JSON.parse(datosLocales) : [];
-    }
-}*/
 
 
 // ==========================================
