@@ -8,10 +8,20 @@ let cacheCuentas = [];
 let datosCargados = false;
 
 
-// En main.js
+
+// js/main.js
 document.addEventListener('DOMContentLoaded', async () => {
-    await cargarDatosGlobales(); // Llamamos a la única función de carga
-    cargarVista('inicio');       // Ahora sí, cargamos la vista
+    await cargarDatosGlobales();
+    
+    // Si no hay usuario en localStorage, forzamos el login
+    const usuarioActual = localStorage.getItem('app_currentUser');
+    if (!usuarioActual) {
+        // Aquí mostramos tu modal de login/registro
+        const modal = document.getElementById('modal-identidad');
+        if (modal) modal.classList.remove('hidden');
+    } else {
+        cargarVista('inicio');
+    }
 });
 
 
