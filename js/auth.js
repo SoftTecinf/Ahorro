@@ -67,15 +67,6 @@ async function procesarRegistro() {
     try {
         const URL_USUARIOS = 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios';
         
-        // Ejecutar POST a Sheety
-        const response = await fetch(URL_USUARIOS, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ usuario: { nombre, pin: password, celular } })
-        });
-
-        if (!response.ok) throw new Error("Error en el servidor");
-
         // Guardar local
         lista.push({ nombre, celular, pin: password });
         window.familiares = lista;
