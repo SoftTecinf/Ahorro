@@ -21,6 +21,17 @@ function cargarVista(nombre) {
     if (nombre === 'datos') renderizarGridProyectos();
 }
 
+// En tu función confirmarIdentidad (dentro del if(usuarioEncontrado))
+// ...
+actualizarLabelUsuario();
+cargarVista('inicio');
+
+// AÑADE ESTO:
+const modal = document.getElementById('modal-identidad');
+modal.classList.add('hidden'); // Oculta el modal
+modal.style.display = 'none'; // Fuerza el cierre por si la clase CSS falla
+console.log("Sesión iniciada y modal oculto.");
+
 function togglePassword(idInput) {
     const input = document.getElementById(idInput);
     if (input) input.type = input.type === 'password' ? 'text' : 'password';
