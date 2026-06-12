@@ -1,30 +1,17 @@
-// api.js - Fuente única de verdad
-window.usuarios = [];
-window.proyectos = [];
-window.cuentas = [];
+// js/api.js
+window.usuarios = JSON.parse(localStorage.getItem('datos_usuarios')) || [];
 
-async function cargarDatosGlobales() {
-    const URLs = {
-        usuarios: 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios',
-        proyectos: 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/proyectos',
-        cuentas: 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/cuentas'
-    };
-
-    for (const [key, url] of Object.entries(URLs)) {
-        try {
-            
-            // Accedemos a la clave correcta (Sheety usa el nombre de la hoja como clave)
-            const listaDatos = data[key] || data.hoja1 || data; 
-            
-            localStorage.setItem(`datos_${key}`, JSON.stringify(listaDatos));
-            window[key] = listaDatos;
-            console.log(`Datos de ${key} cargados exitosamente.`);
-        } catch (e) {
-            console.warn(`Usando caché local para ${key}.`);
-            window[key] = JSON.parse(localStorage.getItem(`datos_${key}`)) || [];
-        }
+async function cargarDatos() {
+    try {
+        const respuesta = await fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios');
+        if (!respuesta.ok) throw new Error("API bloqueada");
+        
+        const datos = await respuesta.json();
+        window.usuarios = datos.usuarios || [];
+        // Guardamos en caché para cuando la API falle
+        localStorage.setItem('datos_usuarios', JSON.stringify(window.usuarios));
+    } catch (error) {
+        console.warn("Usando caché local debido a:", error.message);
     }
 }
-
-// Ejecutamos una sola vez al cargar la app
-cargarDatosGlobales();
+cargarDatos();
