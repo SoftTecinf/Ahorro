@@ -76,13 +76,16 @@ function cargarVista(nombre) {
 // 1. Asegúrate de que esta función sea global y robusta
 function actualizarLabelUsuario() {
     const label = document.getElementById('user-label');
-    if (label) {
-        label.textContent = currentUser || "No identificado";
-    } else {
-        // Si el label no existe, reintenta en 500ms (útil para vistas dinámicas)
-        setTimeout(actualizarLabelUsuario, 500);
+    const usuarioActual = localStorage.getItem('app_currentUser');
+    
+    if (label && usuarioActual) {
+        label.innerText = usuarioActual; // Actualiza con el nombre real
+        label.classList.remove('bg-purple-50', 'text-purple-600');
+        label.classList.add('bg-green-100', 'text-green-700'); // Cambia a verde para indicar éxito
     }
 }
+
+
 /// En js/main.js
 // js/main.js
 document.addEventListener('DOMContentLoaded', async () => {
