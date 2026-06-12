@@ -29,8 +29,6 @@ async function renderizarGridProyectos() {
     if (!grid) return;
 
     try {
-        //const res = await fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/proyectos');
-        const { proyectos } = await res.json();
 
         grid.innerHTML = proyectos.map(p => `
             <div class="p-4 border rounded-lg shadow-sm">
@@ -134,9 +132,6 @@ async function renderizarInicioProyectos() {
     contenedor.innerHTML = '<p class="text-gray-400 p-4">No hay proyectos activos aún.</p>';
 
     try {
-        //const res = await fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/proyectos');
-        const data = await res.json();
-        const proyectos = data.proyectos || [];
 
         const misProyectos = proyectos.filter(p => p.adminName === currentUser);
 
