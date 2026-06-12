@@ -42,26 +42,30 @@
 
     <nav class="max-w-md mx-auto mb-8 px-4">
         <div class="bg-white p-1.5 rounded-2xl shadow-sm flex justify-between gap-1 border border-purple-50">
-            <button data-vista="inicio" id="btn-inicio"
+
+            <button onclick="cargarVista('inicio')" data-vista="inicio" id="btn-inicio"
                 class="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all cursor-pointer bg-gradient-to-r from-purple-600 to-blue-500 text-white shadow-sm">
                 🔮 Inicio
             </button>
-            <button data-vista="datos" id="btn-datos"
+
+            <button onclick="cargarVista('datos')" data-vista="datos" id="btn-datos"
                 class="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all cursor-pointer text-gray-500 hover:bg-purple-50/50">
                 📝 Datos
             </button>
-             <button data-vista="config" id="btn-configuracion"
+
+            <button onclick="cargarVista('config')" data-vista="config" id="btn-configuracion"
                 class="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all cursor-pointer text-gray-500 hover:bg-purple-50/50">
                 ⚙️ Configurar
             </button>
+
         </div>
     </nav>
 
 
-        <main id="contenedor-vistas" class="container mx-auto px-4 max-w-5xl">
-            <link rel="stylesheet" href="style.css">
-            <script src="js/main.js"></script>
-        </main>
+    <main id="contenedor-vistas" class="container mx-auto px-4 max-w-5xl">
+        <link rel="stylesheet" href="style.css">
+        <script src="js/main.js"></script>
+    </main>
 
 
     <div id="modal-deposito-familiar"
