@@ -95,11 +95,11 @@ async function procesarRegistro() {
             }
         };
 
-        const res = await fetch(URL_USUARIOS, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(nuevoFamiliar)
-        });
+        //const res = await fetch(URL_USUARIOS, {
+        //    method: 'POST',
+         //   headers: { 'Content-Type': 'application/json' },
+//body: JSON.stringify(nuevoFamiliar)
+       // });
 
         if (!res.ok) throw new Error("Error en servidor");
 
