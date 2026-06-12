@@ -95,3 +95,10 @@ function cerrarSesion() {
         location.reload();
     }
 }
+
+// En tu archivo auth.js, cada vez que llames a cargarVista:
+if (typeof window.cargarVista === 'function') {
+    window.cargarVista('inicio');
+} else {
+    console.error("Error: cargarVista aún no está definida");
+}
