@@ -52,20 +52,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Asegúrate de que esta función esté definida solo una vez en todo tu proyecto
 function cargarVista(nombre) {
-    // 1. Ocultar vistas
+    // 1. Ocultar todas las secciones con clase 'vista'
     document.querySelectorAll('.vista').forEach(v => v.classList.add('hidden'));
-    document.getElementById(`vista-${nombre}`).classList.remove('hidden');
 
-    // 2. Cambiar estilos de los botones (opcional pero recomendado)
-    document.querySelectorAll('nav button').forEach(btn => {
-        btn.classList.remove('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white');
-        btn.classList.add('text-gray-500');
-    });
-
-    const botonActivo = document.getElementById(`btn-${nombre === 'config' ? 'configuracion' : nombre}`);
-    if (botonActivo) {
-        botonActivo.classList.add('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white');
-        botonActivo.classList.remove('text-gray-500');
+    // 2. Mostrar solo la elegida
+    const vistaDestino = document.getElementById(`vista-${nombre}`);
+    if (vistaDestino) {
+        vistaDestino.classList.remove('hidden');
     }
 } 
 
