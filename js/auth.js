@@ -1,25 +1,7 @@
 // ==========================================
 // LÓGICA DE CONTROL DEL LOGIN / REGISTRO
 // ==========================================
-function cargarVista(nombre) {
-    console.log(`Intentando cargar vista: ${nombre}`);
-    
-    // 1. Ocultamos TODAS las secciones que tengan la clase 'vista'
-    document.querySelectorAll('.vista').forEach(v => v.classList.add('hidden'));
-    
-    // 2. Mostramos SOLO la que coincide con el nombre
-    const vista = document.getElementById(`vista-${nombre}`);
-    if (vista) {
-        vista.classList.remove('hidden');
-        console.log(`Vista ${nombre} mostrada correctamente.`);
-    } else {
-        console.error(`No se encontró el elemento con ID vista-${nombre}`);
-    }
 
-    // 3. Ejecutas tu lógica (esto ya te funcionaba)
-    if (nombre === 'inicio') renderizarInicioProyectos();
-    if (nombre === 'datos') renderizarGridProyectos();
-}
 
 // En tu función confirmarIdentidad (dentro del if(usuarioEncontrado))
 // ...
