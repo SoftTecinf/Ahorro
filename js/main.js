@@ -52,38 +52,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Asegúrate de que esta función esté definida solo una vez en todo tu proyecto
 function cargarVista(nombre) {
-    const contenedor = document.getElementById('contenedor-vistas');
-    if (!contenedor) return;
+    // 1. Ocultar vistas
+    document.querySelectorAll('.vista').forEach(v => v.classList.add('hidden'));
+    document.getElementById(`vista-${nombre}`).classList.remove('hidden');
 
-    // 1. Ocultar todo lo que no sea el contenedor principal
-    // (Opcional: si tienes modales globales, ocúltalos aquí también)
-    
-    // 2. Cargar el contenido desde tu archivo HTML externo
-    fetch(`${nombre}.html`)
-        .then(response => {
-            if (!response.ok) throw new Error('No se pudo cargar la vista');
-            return response.text();
-        })
-        .then(html => {
-            // Inyectamos el nuevo contenido
-            contenedor.innerHTML = html;
+    // 2. Cambiar estilos de los botones (opcional pero recomendado)
+    document.querySelectorAll('nav button').forEach(btn => {
+        btn.classList.remove('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white');
+        btn.classList.add('text-gray-500');
+    });
 
-            // 3. Ejecutar la lógica específica para cada vista
-            // Esto es lo que mantiene tu app "viva" al cambiar de pantalla
-            if (nombre === 'inicio') {
-                renderizarInicioProyectos();
-            } else if (nombre === 'datos') {
-                renderizarGridProyectos();
-            } else if (nombre === 'config') {
-                actualizarSelectoresConfig();
-            }
-            
-            console.log(`Vista ${nombre} cargada correctamente.`);
-        })
-        .catch(err => {
-            console.error("Error al cargar la vista:", err);
-        });
-}
+    const botonActivo = document.getElementById(`btn-${nombre === 'config' ? 'configuracion' : nombre}`);
+    if (botonActivo) {
+        botonActivo.classList.add('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white');
+        botonActivo.classList.remove('text-gray-500');
+    }
+} 
+
+
 // ==========================================
 // INICIALIZACIÓN UNIFICADA DE LA APP
 // ==========================================
