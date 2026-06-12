@@ -1,21 +1,26 @@
-// En js/api.js
+window.familiares = JSON.parse(localStorage.getItem('app_familiares')) || [];
+
 async function cargarDatosGlobales() {
-    // Primero, intenta cargar desde localStorage para no saturar la API
-    const cache = localStorage.getItem('app_familiares');
-    if (cache) {
-        window.familiares = JSON.parse(cache);
-        console.log("Datos cargados desde caché");
+    // 1. Si ya tenemos datos, no malgastamos peticiones a la API
+    if (window.familiares.length > 0) {
+        console.log("Usando datos locales existentes...");
+        return;
     }
 
-    // Solo si no hay caché o si decides actualizar, llama a la API
     try {
+        console.log("Consultando API...");
         const respuesta = await fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios');
-        if (!respuesta.ok) throw new Error("API bloqueada o error");
         
+        if (!respuesta.ok) throw new Error("Error al conectar con Sheety");
+
         const data = await respuesta.json();
-        window.familiares = data.usuarios; // O el nombre de tu tabla
+        
+        // 2. Guardamos en variable global y localStorage
+        window.familiares = data.usuarios;
         localStorage.setItem('app_familiares', JSON.stringify(data.usuarios));
+        console.log("Datos actualizados desde la API.");
+        
     } catch (error) {
-        console.warn("No se pudo actualizar desde la API, usando caché.");
+        console.error("No se pudo obtener datos de la API:", error);
     }
 }
