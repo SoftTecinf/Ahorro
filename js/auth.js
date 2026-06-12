@@ -22,23 +22,31 @@ function togglePassword(idInput) {
 async function confirmarIdentidad() {
     const usuarioIngresado = document.getElementById('input-usuario-login').value.trim();
     const passwordIngresado = document.getElementById('input-password-inicial').value.trim();
-
-    const lista = window.familiares || [];
-
-    // Aquí está el cambio clave: usamos 'f.pin'
-    const usuarioEncontrado = lista.find(f =>
-        f.nombre.trim().toLowerCase() === usuarioIngresado.toLowerCase() &&
+    
+    // 1. Intentamos obtener los datos de donde estén: la variable global o el localStorage
+    const lista = window.familiares || JSON.parse(localStorage.getItem('app_familiares')) || [];
+    
+    // 2. Buscamos al usuario de forma segura
+    const usuarioEncontrado = lista.find(f => 
+        String(f.nombre).trim().toLowerCase() === usuarioIngresado.toLowerCase() && 
         String(f.pin) === String(passwordIngresado)
     );
 
     if (usuarioEncontrado) {
+        // Guardamos la sesión
         localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
-        document.getElementById('modal-identidad').classList.add('hidden'); // Oculta el login
-        actualizarLabelUsuario();
-        cargarVista('inicio'); // Llama a la función única en main.js
+        
+        // Escondemos el modal
+        const modal = document.getElementById('modal-identidad');
+        if (modal) modal.classList.add('hidden');
+        
+        // ¡Cargamos la vista! (Asegúrate de tener esta función en main.js)
+        if (typeof cargarVista === 'function') {
+            cargarVista('inicio');
+        }
+        console.log("¡Éxito! Usuario autenticado.");
     } else {
-        console.log("Intento fallido:", usuarioIngresado, passwordIngresado);
-        alert("Usuario o contraseña incorrectos. Verifica que el PIN sea correcto.");
+        alert("Usuario o contraseña incorrectos. Verifica tus datos.");
     }
 }
 
