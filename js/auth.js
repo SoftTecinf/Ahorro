@@ -99,14 +99,6 @@ async function procesarRegistro() {
             }
         };
 
-        // --- AQUÍ VA LA MEJORA: Petición real a la API ---
-        const response = await fetch(URL_USUARIOS, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(nuevoFamiliar)
-        });
-
-        if (!response.ok) throw new Error("No se pudo registrar en la API");
         // --------------------------------------------------
 
         // 4. Guardar localmente solo SI el servidor respondió bien
