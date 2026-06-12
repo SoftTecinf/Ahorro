@@ -22,9 +22,9 @@ async function cargarDatosGlobales() {
 
 for (const [key, url] of Object.entries(URLs)) {
     try {
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("API bloqueada");
-        const data = await res.json();
+       // const res = await fetch(url);
+       // if (!res.ok) throw new Error("API bloqueada");
+       // const data = await res.json();
         
         // --- AQUÍ ESTÁ EL AJUSTE ---
         // Sheety suele devolver los datos bajo una clave que es el nombre de la hoja.
@@ -55,10 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
 // main.js - versión simplificada y segura
 async function cargarDatos() {
     try {
-        const res = await fetch('URL_DE_SHEETY');
-        if (!res.ok) throw new Error("API bloqueada");
-        const data = await res.json();
-        localStorage.setItem('cache_data', JSON.stringify(data)); // Guarda copia
+        //const res = await fetch('URL_DE_SHEETY');
+        //if (!res.ok) throw new Error("API bloqueada");
+        //const data = await res.json();
+        //localStorage.setItem('cache_data', JSON.stringify(data)); // Guarda copia
     } catch (e) {
         console.warn("API bloqueada. Usando datos guardados.");
         const datosLocales = localStorage.getItem('cache_data');
