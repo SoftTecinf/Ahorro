@@ -10,25 +10,22 @@ let datosCargados = false;
 // ==========================================
 // CONTROL DE NAVEGACIÓN ENTRE SECCIONES
 // ==========================================
-// ==========================================
+// ========================================== 
+// En api.js, centraliza la carga
 async function cargarDatosGlobales() {
-    if (datosCargados) return; // Si ya se cargaron, no vuelvas a pedir a Sheety
-
     try {
-        const [resP, resC] = await Promise.all([
-            fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/proyectos'),
-            fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/cuentas')
-        ]);
+        // Intentar descargar de la API
+        const res = await fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/proyectos');
+        if (!res.ok) throw new Error("API bloqueada");
+        const datos = await res.json();
         
-        const dataP = await resP.json();
-        const dataC = await resC.json();
-        
-        cacheProyectos = dataP.proyectos || [];
-        cacheCuentas = dataC.cuentas || [];
-        datosCargados = true;
-        console.log("Datos cargados correctamente");
-    } catch (error) {
-        console.error("Error al cargar datos iniciales:", error);
+        // Guardar en localStorage para uso offline
+        localStorage.setItem('datos_proyectos', JSON.stringify(datos));
+        window.proyectos = datos;
+    } catch (e) {
+        // Si falla, usar lo que ya teníamos guardado
+        console.warn("Usando datos locales por fallo de API");
+        window.proyectos = JSON.parse(localStorage.getItem('datos_proyectos')) || [];
     }
 }
 
