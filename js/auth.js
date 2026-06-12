@@ -22,30 +22,20 @@ function togglePassword(idInput) {
 async function confirmarIdentidad() {
     const usuarioIngresado = document.getElementById('input-usuario-login').value.trim();
     const passwordIngresado = document.getElementById('input-password-inicial').value.trim();
-    
-    const lista = window.familiares || []; 
-    
+
+    const lista = window.familiares || [];
+
     // Aquí está el cambio clave: usamos 'f.pin'
-    const usuarioEncontrado = lista.find(f => 
-        f.nombre.trim().toLowerCase() === usuarioIngresado.toLowerCase() && 
+    const usuarioEncontrado = lista.find(f =>
+        f.nombre.trim().toLowerCase() === usuarioIngresado.toLowerCase() &&
         String(f.pin) === String(passwordIngresado)
     );
 
     if (usuarioEncontrado) {
-        console.log("¡Usuario encontrado! Accediendo...");
-        
         localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
-        currentUser = usuarioEncontrado.nombre;
-        
-        // Esconder el modal
-        const modal = document.getElementById('modal-identidad');
-        if (modal) modal.classList.add('hidden');
-        
-        // Actualizar UI
+        document.getElementById('modal-identidad').classList.add('hidden'); // Oculta el login
         actualizarLabelUsuario();
-        
-        // Cargar vista
-        cargarVista('inicio');
+        cargarVista('inicio'); // Llama a la función única en main.js
     } else {
         console.log("Intento fallido:", usuarioIngresado, passwordIngresado);
         alert("Usuario o contraseña incorrectos. Verifica que el PIN sea correcto.");
