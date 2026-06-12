@@ -12,9 +12,6 @@ async function cargarDatosGlobales() {
 
     for (const [key, url] of Object.entries(URLs)) {
         try {
-            const res = await fetch(url);
-            if (!res.ok) throw new Error("API bloqueada");
-            const data = await res.json();
             
             // Accedemos a la clave correcta (Sheety usa el nombre de la hoja como clave)
             const listaDatos = data[key] || data.hoja1 || data; 
