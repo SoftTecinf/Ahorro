@@ -29,31 +29,18 @@ async function confirmarIdentidad() {
     const usuarioIngresado = document.getElementById('input-usuario-login').value;
     const passwordIngresado = document.getElementById('input-password-inicial').value;
     
-    // 1. OBTENCIÓN SEGURA: Intentamos sacar los datos de window.familiares o de localStorage
-    const lista = window.familiares || JSON.parse(localStorage.getItem('app_familiares')) || [];
+    // Aquí buscamos en la variable global que acabamos de definir
+    const lista = window.familiares || []; 
     
-    // 2. BÚSQUEDA: Buscamos al usuario
-    // NOTA: Asegúrate de que las propiedades 'nombre' y 'password' coincidan 
-    // exactamente con cómo guardaste tus datos en el registro.
     const usuarioEncontrado = lista.find(f => 
-        f.nombre === usuarioIngresado && f.password === passwordIngresado
+        String(f.nombre).trim().toLowerCase() === usuarioIngresado.trim().toLowerCase() && 
+        String(f.pin) === String(passwordIngresado)
     );
 
     if (usuarioEncontrado) {
-        // ÉXITO
-        localStorage.setItem('app_currentUser', usuarioIngresado);
-        currentUser = usuarioIngresado;
-        
-        const modal = document.getElementById('modal-identidad');
-        if (modal) modal.classList.add('hidden');
-        
-        actualizarLabelUsuario();
-        cargarVista('inicio');
-        
-        console.log("Inicio de sesión exitoso, vista cargada.");
+        // ... (tu lógica de éxito) ...
     } else {
-        // ERROR
-        alert("Usuario o contraseña incorrectos, o datos no cargados aún.");
+        alert("Usuario o contraseña incorrectos.");
     }
 }
 
