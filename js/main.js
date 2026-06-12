@@ -13,7 +13,7 @@ let datosCargados = false;
 // ========================================== 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/proyectos'
 // En api.js, centraliza la carga
 // Sustituye tu lógica actual en api.js por esta estructura segura:
-async function cargarDatosGlobales() {
+/*async function cargarDatosGlobales() {
     const URLs = {
         usuarios: 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios',
         proyectos: 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/proyectos',
@@ -40,7 +40,7 @@ for (const [key, url] of Object.entries(URLs)) {
         window[key] = localData ? JSON.parse(localData) : [];
     }
 }
-}
+}*/
 
 // js/main.js
 document.addEventListener('DOMContentLoaded', () => {
