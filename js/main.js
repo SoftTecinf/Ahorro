@@ -10,22 +10,30 @@ let datosCargados = false;
 // ==========================================
 // CONTROL DE NAVEGACIÓN ENTRE SECCIONES
 // ==========================================
-// ========================================== 
+// ========================================== 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/proyectos'
 // En api.js, centraliza la carga
+// Sustituye tu lógica actual en api.js por esta estructura segura:
 async function cargarDatosGlobales() {
-    try {
-        // Intentar descargar de la API
-        const res = await fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/proyectos');
-        if (!res.ok) throw new Error("API bloqueada");
-        const datos = await res.json();
-        
-        // Guardar en localStorage para uso offline
-        localStorage.setItem('datos_proyectos', JSON.stringify(datos));
-        window.proyectos = datos;
-    } catch (e) {
-        // Si falla, usar lo que ya teníamos guardado
-        console.warn("Usando datos locales por fallo de API");
-        window.proyectos = JSON.parse(localStorage.getItem('datos_proyectos')) || [];
+    const URLs = {
+        usuarios: 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios',
+        proyectos: 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/proyectos',
+        cuentas: 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/cuentas'
+    };
+
+    for (const [key, url] of Object.entries(URLs)) {
+        try {
+            const res = await fetch(url);
+            if (!res.ok) throw new Error("API bloqueada");
+            const data = await res.json();
+            
+            // Guardamos en localStorage para futuras sesiones
+            localStorage.setItem(`datos_${key}`, JSON.stringify(data));
+            window[key] = data; 
+            console.log(`Datos de ${key} cargados desde API`);
+        } catch (e) {
+            console.warn(`Usando caché local para ${key} debido a error de API`);
+            window[key] = JSON.parse(localStorage.getItem(`datos_${key}`)) || [];
+        }
     }
 }
 
