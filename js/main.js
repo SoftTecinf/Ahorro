@@ -41,3 +41,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     cargarVista('inicio');
 });
 
+window.cargarVista = function(nombreVista) {
+    // Tu lógica para ocultar y mostrar vistas
+    const vistas = document.querySelectorAll('.vista');
+    vistas.forEach(v => v.classList.add('hidden'));
+    const vistaActiva = document.getElementById('vista-' + nombreVista);
+    if (vistaActiva) {
+        vistaActiva.classList.remove('hidden');
+    }
+};
