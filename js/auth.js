@@ -100,9 +100,18 @@ async function procesarRegistro() {
         if (!res.ok) throw new Error("Error en servidor");
 
         // 4. Guardar localmente solo si el servidor respondió bien
-        lista.push({ nombre, celular, password });
+       // 4. Guardar localmente solo si el servidor respondió bien
+        // CAMBIA 'password' POR 'pin' AQUÍ ABAJO:
+        lista.push({ 
+            nombre: nombre, 
+            celular: celular, 
+            pin: password // <--- ESTO ES LO QUE ESTABA MAL
+        });
+        
         window.familiares = lista;
         localStorage.setItem('app_familiares', JSON.stringify(lista));
+
+        // ... resto de tu código
 
         // ... (resto de tu lógica de éxito)
         alert(`¡Bienvenido(a), ${nombre}! ✨`);
