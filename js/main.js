@@ -58,16 +58,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Asegúrate de que esta función esté definida solo una vez en todo tu proyecto
 // main.js - versión simplificada y segura
 function cargarVista(nombre) {
-    // 1. Ocultar todas las secciones
-    document.querySelectorAll('.vista').forEach(v => v.classList.add('hidden'));
+    const contenedor = document.getElementById('contenedor-vistas');
     
-    // 2. Mostrar la seleccionada
-    const vistaDestino = document.getElementById(`vista-${nombre}`);
-    if (vistaDestino) {
-        vistaDestino.classList.remove('hidden');
-        console.log(`Vista ${nombre} cargada correctamente.`);
-    } else {
-        console.error(`La vista 'vista-${nombre}' no existe en el HTML.`);
+    // Si queremos cargar el inicio, clonamos el template
+    if (nombre === 'inicio') {
+        const plantilla = document.getElementById('template-inicio');
+        const clon = plantilla.content.cloneNode(true);
+        contenedor.innerHTML = ''; // Limpia lo anterior
+        contenedor.appendChild(clon);
     }
 }
 
