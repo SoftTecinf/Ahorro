@@ -24,17 +24,16 @@ async function confirmarIdentidad() {
     const passwordIngresado = document.getElementById('input-password-inicial').value.trim();
 
     // 1. Intentamos obtener los datos de donde estén: la variable global o el localStorage
-    let lista = window.familiares;
-    if (!lista || lista.length === 0) {
-        lista = JSON.parse(localStorage.getItem('app_familiares')) || [];
-    } const lista = window.familiares || JSON.parse(localStorage.getItem('app_familiares')) || [];
+    // 1. Obtenemos la lista una sola vez
+    const lista = window.familiares && window.familiares.length > 0
+        ? window.familiares
+        : (JSON.parse(localStorage.getItem('app_familiares')) || []);
 
     // 2. Buscamos al usuario de forma segura
     const usuarioEncontrado = lista.find(f =>
         String(f.nombre).trim().toLowerCase() === usuarioIngresado.toLowerCase() &&
         String(f.pin) === String(passwordIngresado)
     );
-
     if (usuarioEncontrado) {
         // Guardamos la sesión
         localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
