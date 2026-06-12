@@ -29,34 +29,31 @@ async function confirmarIdentidad() {
     const usuarioIngresado = document.getElementById('input-usuario-login').value;
     const passwordIngresado = document.getElementById('input-password-inicial').value;
     
-    // 1. Debemos definir 'validado' basándonos en tu lógica real
-    let validado = false; 
-
-    // Aquí debes poner la lógica que busca a tu usuario en tus datos
-    // Por ejemplo:
-    const usuarioEncontrado = familiares.find(f => f.nombre === usuarioIngresado && f.password === passwordIngresado);
+    // 1. OBTENCIÓN SEGURA: Intentamos sacar los datos de window.familiares o de localStorage
+    const lista = window.familiares || JSON.parse(localStorage.getItem('app_familiares')) || [];
+    
+    // 2. BÚSQUEDA: Buscamos al usuario
+    // NOTA: Asegúrate de que las propiedades 'nombre' y 'password' coincidan 
+    // exactamente con cómo guardaste tus datos en el registro.
+    const usuarioEncontrado = lista.find(f => 
+        f.nombre === usuarioIngresado && f.password === passwordIngresado
+    );
 
     if (usuarioEncontrado) {
-        validado = true;
-    } else {
-        alert("Usuario o contraseña incorrectos");
-        return; // Detenemos la función si no es válido
-    }
-
-    // 2. Ahora que 'validado' tiene un valor (true), el if funcionará
-    if (validado) {
+        // ÉXITO
         localStorage.setItem('app_currentUser', usuarioIngresado);
         currentUser = usuarioIngresado;
         
-        // Esconder el modal
         const modal = document.getElementById('modal-identidad');
         if (modal) modal.classList.add('hidden');
         
-        // Actualizar UI y cargar vista
         actualizarLabelUsuario();
         cargarVista('inicio');
         
         console.log("Inicio de sesión exitoso, vista cargada.");
+    } else {
+        // ERROR
+        alert("Usuario o contraseña incorrectos, o datos no cargados aún.");
     }
 }
 
