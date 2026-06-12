@@ -52,15 +52,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Asegúrate de que esta función esté definida solo una vez en todo tu proyecto
 function cargarVista(nombre) {
-    // 1. Ocultar todas las secciones con clase 'vista'
+    // Solo oculta y muestra elementos que YA existen en tu HTML
     document.querySelectorAll('.vista').forEach(v => v.classList.add('hidden'));
-
-    // 2. Mostrar solo la elegida
-    const vistaDestino = document.getElementById(`vista-${nombre}`);
-    if (vistaDestino) {
-        vistaDestino.classList.remove('hidden');
+    
+    const vista = document.getElementById(`vista-${nombre}`);
+    if (vista) {
+        vista.classList.remove('hidden');
+        console.log(`Vista ${nombre} cargada correctamente.`);
+    } else {
+        console.error(`Error: No existe el elemento con ID vista-${nombre}`);
     }
-} 
+}
 
 
 // ==========================================
