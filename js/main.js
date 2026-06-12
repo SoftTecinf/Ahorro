@@ -8,13 +8,10 @@ let cacheCuentas = [];
 let datosCargados = false;
 
 
-// js/main.js
-document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM listo. Iniciando aplicación...");
-    // Solo ahora intenta mostrar el modal o la vista
-    if (document.getElementById('modal-identidad')) {
-        // Tu lógica de mostrar modal
-    }
+// En main.js
+document.addEventListener('DOMContentLoaded', async () => {
+    await cargarDatosGlobales(); // Llamamos a la única función de carga
+    cargarVista('inicio');       // Ahora sí, cargamos la vista
 });
 
 
