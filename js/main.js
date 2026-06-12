@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Asegúrate de que esta función esté definida solo una vez en todo tu proyecto
 // main.js - versión simplificada y segura
-async function cargarDatos() {
+/*async function cargarDatos() {
     try {
         //const res = await fetch('URL_DE_SHEETY');
         //if (!res.ok) throw new Error("API bloqueada");
@@ -64,7 +64,7 @@ async function cargarDatos() {
         const datosLocales = localStorage.getItem('cache_data');
         window.familiares = datosLocales ? JSON.parse(datosLocales) : [];
     }
-}
+}*/
 
 
 // ==========================================
@@ -75,7 +75,7 @@ async function cargarDatos() {
 function actualizarLabelUsuario() {
     const label = document.getElementById('user-label');
     const usuario = localStorage.getItem('app_currentUser');
-    
+
     if (label) {
         label.innerText = usuario ? usuario : "Invitado";
     }
@@ -91,28 +91,29 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 2. Cargamos datos
     await cargarDatosGlobales();
-    
-    // 3. Verificamos sesión
- // Dentro de tu lógica de carga inicial:
-const usuario = localStorage.getItem('app_currentUser');
-const modalLogin = document.getElementById('modal-identidad');
 
-if (usuario) {
-    currentUser = usuario;
-    actualizarLabelUsuario();
-    
-    // FORZAR LA OCULTACIÓN DEL MODAL
-    if (modalLogin) {
-        modalLogin.classList.add('hidden'); // Esto elimina el login de la vista
+    // 3. Verificamos sesión
+    // Dentro de tu lógica de carga inicial:
+    const usuario = localStorage.getItem('app_currentUser');
+    const modalLogin = document.getElementById('modal-identidad');
+
+    if (usuario) {
+        currentUser = usuario;
+        actualizarLabelUsuario();
+
+        // FORZAR LA OCULTACIÓN DEL MODAL
+        if (modalLogin) {
+            modalLogin.classList.add('hidden'); // Esto elimina el login de la vista
+        }
+
+        cargarVista('inicio');
+    } else {
+        // Si no hay usuario, mostrar el login
+        if (modalLogin) {
+            modalLogin.classList.remove('hidden');
+        }
     }
-    
-    cargarVista('inicio');
-} else {
-    // Si no hay usuario, mostrar el login
-    if (modalLogin) {
-        modalLogin.classList.remove('hidden');
-    }
-}});
+});
 
 // Listener de navegación
 // En js/main.js
