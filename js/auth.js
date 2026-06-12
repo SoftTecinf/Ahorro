@@ -22,24 +22,28 @@ function togglePassword(idInput) {
 async function confirmarIdentidad() {
     const usuarioIngresado = document.getElementById('input-usuario-login').value.trim();
     const passwordIngresado = document.getElementById('input-password-inicial').value.trim();
-    
+
     // 1. Intentamos obtener los datos de donde estén: la variable global o el localStorage
     const lista = window.familiares || JSON.parse(localStorage.getItem('app_familiares')) || [];
-    
+
     // 2. Buscamos al usuario de forma segura
-    const usuarioEncontrado = lista.find(f => 
-        String(f.nombre).trim().toLowerCase() === usuarioIngresado.toLowerCase() && 
+    const usuarioEncontrado = lista.find(f =>
+        String(f.nombre).trim().toLowerCase() === usuarioIngresado.toLowerCase() &&
         String(f.pin) === String(passwordIngresado)
     );
 
     if (usuarioEncontrado) {
         // Guardamos la sesión
         localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
-        
+
         // Escondemos el modal
         const modal = document.getElementById('modal-identidad');
-        if (modal) modal.classList.add('hidden');
-        
+        if (modal) {
+            modal.classList.add('hidden');
+        } else {
+            console.warn("No se encontró el modal-identidad, pero la sesión ya inició.");
+        }
+
         // ¡Cargamos la vista! (Asegúrate de tener esta función en main.js)
         if (typeof cargarVista === 'function') {
             cargarVista('inicio');
@@ -100,14 +104,14 @@ async function procesarRegistro() {
         if (!res.ok) throw new Error("Error en servidor");
 
         // 4. Guardar localmente solo si el servidor respondió bien
-       // 4. Guardar localmente solo si el servidor respondió bien
+        // 4. Guardar localmente solo si el servidor respondió bien
         // CAMBIA 'password' POR 'pin' AQUÍ ABAJO:
-        lista.push({ 
-            nombre: nombre, 
-            celular: celular, 
+        lista.push({
+            nombre: nombre,
+            celular: celular,
             pin: password // <--- ESTO ES LO QUE ESTABA MAL
         });
-        
+
         window.familiares = lista;
         localStorage.setItem('app_familiares', JSON.stringify(lista));
 
