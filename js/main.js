@@ -67,14 +67,13 @@ function cargarVista(nombre) {
 // INICIALIZACIÓN UNIFICADA DE LA APP
 // ==========================================
 // 1. Asegúrate de que esta función sea global y robusta
+// En main.js (o donde esté tu función)
 function actualizarLabelUsuario() {
     const label = document.getElementById('user-label');
-    const usuarioActual = localStorage.getItem('app_currentUser');
+    const usuario = localStorage.getItem('app_currentUser');
     
-    if (label && usuarioActual) {
-        label.innerText = usuarioActual; // Actualiza con el nombre real
-        label.classList.remove('bg-purple-50', 'text-purple-600');
-        label.classList.add('bg-green-100', 'text-green-700'); // Cambia a verde para indicar éxito
+    if (label) {
+        label.innerText = usuario ? usuario : "Invitado";
     }
 }
 
