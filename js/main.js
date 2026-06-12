@@ -56,19 +56,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // Asegúrate de que esta función esté definida solo una vez en todo tu proyecto
+// main.js - versión simplificada y segura
 function cargarVista(nombre) {
-    // Solo oculta y muestra elementos que YA existen en tu HTML
+    // 1. Ocultar todas las secciones
     document.querySelectorAll('.vista').forEach(v => v.classList.add('hidden'));
     
-    const vista = document.getElementById(`vista-${nombre}`);
-    if (vista) {
-        vista.classList.remove('hidden');
+    // 2. Mostrar la seleccionada
+    const vistaDestino = document.getElementById(`vista-${nombre}`);
+    if (vistaDestino) {
+        vistaDestino.classList.remove('hidden');
         console.log(`Vista ${nombre} cargada correctamente.`);
     } else {
-        console.error(`Error: No existe el elemento con ID vista-${nombre}`);
+        console.error(`La vista 'vista-${nombre}' no existe en el HTML.`);
     }
 }
-
 
 // ==========================================
 // INICIALIZACIÓN UNIFICADA DE LA APP
