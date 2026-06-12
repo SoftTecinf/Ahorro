@@ -41,23 +41,17 @@ function actualizarLabelUsuario() {
 // INICIALIZACIÓN UNIFICADA
 // ==========================================
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log("Inicializando aplicación...");
-
-    // 1. Cargamos datos globales
+    // 1. Cargamos datos una sola vez
     if (typeof cargarDatosGlobales === 'function') {
         await cargarDatosGlobales();
     }
-
-    // 2. Verificamos sesión
+    
+    // 2. Solo después, verificamos si hay sesión
     const usuarioActual = localStorage.getItem('app_currentUser');
-    const modalIdentidad = document.getElementById('modal-identidad');
-
     if (!usuarioActual) {
-        // No hay sesión, mostramos el modal
-        if (modalIdentidad) modalIdentidad.classList.remove('hidden');
+        const modal = document.getElementById('modal-identidad');
+        if (modal) modal.classList.remove('hidden'); // Esto debería mostrar tu login
     } else {
-        // Hay sesión, configuramos la UI
-        actualizarLabelUsuario();
         cargarVista('inicio');
     }
 });
