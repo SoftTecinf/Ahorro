@@ -4,7 +4,7 @@ window.familiares = JSON.parse(localStorage.getItem('app_familiares')) || [];
 // En js/api.js, asegúrate de tener una función como esta:
 async function cargarDatosGlobales() {
     try {
-        const res = await fetch('URL_DE_TU_SHEETY');
+        const res = await fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios');
         const data = await res.json();
         window.familiares = data.usuarios;
         localStorage.setItem('cache_familiares', JSON.stringify(data.usuarios));
