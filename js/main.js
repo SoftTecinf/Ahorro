@@ -84,35 +84,13 @@ function actualizarLabelUsuario() {
 
 /// En js/main.js
 // js/main.js
+// js/main.js
 document.addEventListener('DOMContentLoaded', async () => {
-    // 1. Ocultar todo lo que no deba verse al principio
-    const modalIdentidad = document.getElementById('modal-identidad');
-    modalIdentidad.style.display = 'flex'; // Solo lo mostramos nosotros manualmente
-
-    // 2. Cargamos datos
+    // 1. Cargamos datos de una sola vez
     await cargarDatosGlobales();
-
-    // 3. Verificamos sesión
-    // Dentro de tu lógica de carga inicial:
-    const usuario = localStorage.getItem('app_currentUser');
-    const modalLogin = document.getElementById('modal-identidad');
-
-    if (usuario) {
-        currentUser = usuario;
-        actualizarLabelUsuario();
-
-        // FORZAR LA OCULTACIÓN DEL MODAL
-        if (modalLogin) {
-            modalLogin.classList.add('hidden'); // Esto elimina el login de la vista
-        }
-
-        cargarVista('inicio');
-    } else {
-        // Si no hay usuario, mostrar el login
-        if (modalLogin) {
-            modalLogin.classList.remove('hidden');
-        }
-    }
+    
+    // 2. Solo después de cargar, mostramos la vista inicial
+    cargarVista('inicio');
 });
 
 // Listener de navegación
