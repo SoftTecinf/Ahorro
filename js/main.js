@@ -108,23 +108,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     await cargarDatosGlobales();
     
     // 3. Verificamos sesión
-    const usuario = localStorage.getItem('app_currentUser');
+ // Dentro de tu lógica de carga inicial:
+const usuario = localStorage.getItem('app_currentUser');
+const modalLogin = document.getElementById('modal-identidad');
+
+if (usuario) {
+    currentUser = usuario;
+    actualizarLabelUsuario();
     
-    if (usuario) {
-        // Si hay usuario, ocultamos el modal inmediatamente
-        console.log("Sesión activa, ocultando login...");
-        modalIdentidad.classList.add('hidden'); // O usa display: none
-        modalIdentidad.style.display = 'none';
-        
-        currentUser = usuario;
-        actualizarLabelUsuario();
-        cargarVista('inicio'); 
-    } else {
-        // Si no hay usuario, aseguramos que el modal se vea
-        modalIdentidad.classList.remove('hidden');
-        modalIdentidad.style.display = 'flex';
+    // FORZAR LA OCULTACIÓN DEL MODAL
+    if (modalLogin) {
+        modalLogin.classList.add('hidden'); // Esto elimina el login de la vista
     }
-});
+    
+    cargarVista('inicio');
+} else {
+    // Si no hay usuario, mostrar el login
+    if (modalLogin) {
+        modalLogin.classList.remove('hidden');
+    }
+}});
 
 // Listener de navegación
 // En js/main.js
