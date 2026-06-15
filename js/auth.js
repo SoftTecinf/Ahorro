@@ -2,29 +2,7 @@
 // LÓGICA DE CONTROL DEL LOGIN / REGISTRO
 // ==========================================
 
-// Agrega esto a js/auth.js
-function cambiarVista(nombre) {
-    const vistaLogin = document.getElementById('vista-login');
-    const vistaRegistro = document.getElementById('vista-registro');
-    const tabLogin = document.getElementById('tab-login');
-    const tabRegistro = document.getElementById('tab-registro');
 
-    if (nombre === 'login') {
-        vistaLogin.classList.remove('hidden');
-        vistaRegistro.classList.add('hidden');
-        tabLogin.classList.add('text-purple-600', 'border-purple-600');
-        tabLogin.classList.remove('text-gray-400', 'border-transparent');
-        tabRegistro.classList.add('text-gray-400', 'border-transparent');
-        tabRegistro.classList.remove('text-purple-600', 'border-purple-600');
-    } else {
-        vistaLogin.classList.add('hidden');
-        vistaRegistro.classList.remove('hidden');
-        tabRegistro.classList.add('text-purple-600', 'border-purple-600');
-        tabRegistro.classList.remove('text-gray-400', 'border-transparent');
-        tabLogin.classList.add('text-gray-400', 'border-transparent');
-        tabLogin.classList.remove('text-purple-600', 'border-purple-600');
-    }
-}
 
 function togglePassword(idInput) {
     const input = document.getElementById(idInput);
@@ -40,11 +18,11 @@ function ocultarModalIdentidad() {
 }
 
 async function confirmarIdentidad() {
-    // Declara 'lista' una sola vez aquí
-    const lista = window.familiares && window.familiares.length > 0
-        ? window.familiares
-        : (JSON.parse(localStorage.getItem('app_familiares')) || []);
+    const usuarioIngresado = document.getElementById('input-usuario-login').value.trim();
+    const passwordIngresado = document.getElementById('input-password-inicial').value.trim();
 
+    // Obtención segura de datos
+const lista = window.obtenerListaFamiliares(); // Llama a la función central
     // Búsqueda
     const usuarioEncontrado = lista.find(f =>
         String(f.nombre).trim().toLowerCase() === usuarioIngresado.toLowerCase() &&
@@ -71,8 +49,7 @@ async function confirmarIdentidad() {
 }
 
 async function procesarRegistro() {
-    const lista = window.familiares || JSON.parse(localStorage.getItem('app_familiares')) || [];
-    
+    const lista = window.obtenerListaFamiliares(); // Llama a la función central
     const nombre = document.getElementById('reg-nombre').value.trim();
     const celular = document.getElementById('reg-celular').value.trim();
     const password = document.getElementById('reg-pass').value;
