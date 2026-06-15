@@ -33,17 +33,26 @@ async function confirmarIdentidad() {
 
     if (usuarioEncontrado) {
         localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
-        document.getElementById('modal-identidad').classList.add('hidden');
+        
+        // 1. Ocultamos el modal inmediatamente
+        const modal = document.getElementById('modal-identidad');
+        modal.classList.add('hidden');
+        modal.style.display = 'none'; // <-- Forzamos el CSS por si acaso
 
-        // BLINDAJE: Si cargarVista aún no existe, esperamos 100ms y reintentamos
+        // 2. Actualizamos la etiqueta del usuario ANTES de cargar la vista
+        const label = document.getElementById('user-label');
+        if (label) label.textContent = usuarioEncontrado.nombre;
+
+        // 3. Ejecutamos la carga de vista
         const asegurarCargaVista = (intento = 0) => {
             if (typeof window.cargarVista === 'function') {
                 window.cargarVista('inicio');
-            } else if (intento < 10) { // Reintentar hasta 10 veces
-                console.warn("Esperando a cargarVista...");
+                console.log("Vista cargada exitosamente.");
+            } else if (intento < 10) {
                 setTimeout(() => asegurarCargaVista(intento + 1), 100);
             } else {
-                console.error("Error crítico: cargarVista nunca se definió.");
+                // Si falla, al menos recargamos la página para salvar la sesión
+                window.location.reload(); 
             }
         };
 
