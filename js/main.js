@@ -24,25 +24,22 @@ function actualizarLabelUsuario() {
 // ==========================================
 // En js/main.js
 document.addEventListener('DOMContentLoaded', async () => {
-    // ... tu lógica actual de carga y login ...
+    // En lugar de añadir eventos a cada botón, añadimos uno solo al contenedor padre
+    const navContainer = document.querySelector('nav'); // Cambia 'nav' por el ID o clase de tu barra de menú si es necesario
 
-    // AQUÍ ES DONDE DEBEN IR:
-    // document.getElementById('btn-inicio').addEventListener('click', () => navegarA('inicio'));
-    // En lugar de hacer esto directamente:
-    // document.getElementById('btn-inicio').addEventListener('click', ...);
+    if (navContainer) {
+        navContainer.addEventListener('click', (e) => {
+            // Verificamos si el elemento clickeado es uno de nuestros botones
+            const target = e.target.closest('button');
+            if (!target) return;
 
-    // Haz esto para protegerte:
-    const btnInicio = document.getElementById('btn-inicio');
-    if (btnInicio) {
-        btnInicio.addEventListener('click', () => navegarA('inicio'));
+            if (target.id === 'btn-inicio') navegarA('inicio');
+            else if (target.id === 'btn-datos') navegarA('datos');
+            else if (target.id === 'btn-configurar') navegarA('configurar');
+        });
     } else {
-        console.warn("El botón 'btn-inicio' no existe en el DOM aún.");
+        console.error("No se encontró el contenedor de navegación (nav). Verifica tu HTML.");
     }
-    document.getElementById('btn-datos').addEventListener('click', () => navegarA('datos'));
-    document.getElementById('btn-configurar').addEventListener('click', () => navegarA('configurar'));
-
-    // Y si quieres que la App cargue Inicio por defecto al abrir:
-    await navegarA('inicio');
 });
 
 
