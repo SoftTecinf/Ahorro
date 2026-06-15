@@ -20,29 +20,34 @@ function ocultarModalIdentidad() {
 async function confirmarIdentidad() {
     const usuarioIngresado = document.getElementById('input-usuario-login').value.trim();
     const passwordIngresado = document.getElementById('input-password-inicial').value.trim();
-    
-    const lista = window.obtenerListaFamiliares(); 
+
+    const lista = window.obtenerListaFamiliares();
 
     const usuarioEncontrado = lista.find(f => {
         const nombreSheet = f.nombre ? String(f.nombre).trim().toLowerCase() : "";
         const passwordSheet = f.password ? String(f.password).trim() : "";
 
-        return nombreSheet === usuarioIngresado.toLowerCase() && 
-               passwordSheet === passwordIngresado;
+        return nombreSheet === usuarioIngresado.toLowerCase() &&
+            passwordSheet === passwordIngresado;
     });
 
     if (usuarioEncontrado) {
-    localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
+        localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
+        document.getElementById('modal-identidad').classList.add('hidden');
 
-    // Cierra el modal
-    document.getElementById('modal-identidad').classList.add('hidden');
+        // BLINDAJE: Si cargarVista aún no existe, esperamos 100ms y reintentamos
+        const asegurarCargaVista = (intento = 0) => {
+            if (typeof window.cargarVista === 'function') {
+                window.cargarVista('inicio');
+            } else if (intento < 10) { // Reintentar hasta 10 veces
+                console.warn("Esperando a cargarVista...");
+                setTimeout(() => asegurarCargaVista(intento + 1), 100);
+            } else {
+                console.error("Error crítico: cargarVista nunca se definió.");
+            }
+        };
 
-    // CAMBIO DE VISTA AUTOMÁTICO
-    if (typeof window.cargarVista === 'function') {
-        window.cargarVista('inicio');
-    }
-} else {
-        alert("Usuario o contraseña incorrectos. Verifica que el PIN coincida.");
+        asegurarCargaVista();
     }
 }
 
