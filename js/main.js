@@ -23,15 +23,22 @@ function actualizarLabelUsuario() {
 // INICIALIZACIÓN UNIFICADA
 // ==========================================
 // En js/main.js
+// main.js - Modifica tu DOMContentLoaded así:
 document.addEventListener('DOMContentLoaded', async () => {
-    const usuario = localStorage.getItem('app_currentUser');
-    
-    if (!usuario) {
-        // NO hay usuario: Forzamos el Login
-        document.getElementById('modal-identidad').classList.remove('hidden');
+    const usuarioActual = localStorage.getItem('app_currentUser');
+    const modal = document.getElementById('modal-identidad');
+
+    if (!usuarioActual) {
+        // NO hay usuario: Ocultamos todo y mostramos el Login
+        document.querySelectorAll('.vista').forEach(v => v.classList.add('hidden'));
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
+        }
     } else {
-        // SÍ hay usuario: Iniciamos la app normalmente
-        await navegarA('inicio');
+        // SÍ hay usuario: Iniciamos la App y cargamos la vista por defecto
+        document.getElementById('user-label').textContent = usuarioActual;
+        await navegarA('inicio'); // Esto carga el contenido y lo muestra
     }
 });
 
