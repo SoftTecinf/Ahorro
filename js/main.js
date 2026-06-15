@@ -10,7 +10,7 @@ let currentUser = localStorage.getItem('app_currentUser') || '';
 // ==========================================
 // LÓGICA DE CONTROL DE VISTAS (Global)
 // ==========================================
-window.cargarVista = function(nombreVista) {
+/*window.cargarVista = function(nombreVista) {
     const vistas = document.querySelectorAll('.vista');
     vistas.forEach(v => v.classList.add('hidden'));
     const vistaActiva = document.getElementById('vista-' + nombreVista);
@@ -27,7 +27,7 @@ window.cargarVista = function(nombreVista) {
         btnActivo.classList.add('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white');
         btnActivo.classList.remove('text-gray-500');
     }
-};
+};*/
 
 function actualizarLabelUsuario() {
     const label = document.getElementById('user-label');
