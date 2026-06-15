@@ -66,15 +66,16 @@ async function procesarRegistro() {
     }
 
     try {
-        const URL_USUARIOS = 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios';
+        // Dentro de tu función procesarRegistro en auth.js:
+        const URL_API = 'https://script.google.com/macros/s/AKfycbxTFZLLfvP8cywVA8IzMsVa0BPA9OeLieUV-6Cgg_XNxLZLH6Uxzx_QpfdOzMH3x2wdVQ/exec';
 
-        // Guardar local
-        lista.push({ nombre, celular, pin: password });
-        window.familiares = lista;
-        localStorage.setItem('app_familiares', JSON.stringify(lista));
-
-        alert(`¡Bienvenido(a), ${nombre}! ✨`);
-        ocultarModalIdentidad();
+        // En el fetch de envío:
+        const respuesta = await fetch(URL_API, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nombre, celular, password })
+        });
     } catch (err) {
         console.error(err);
         alert("Error al conectar con la base de datos.");
