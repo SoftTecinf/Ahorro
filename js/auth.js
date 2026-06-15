@@ -27,7 +27,7 @@ async function confirmarIdentidad() {
     const usuarioEncontrado = lista.find(f => {
         // Aseguramos que los campos existan antes de comparar
         const nombreSheet = f.nombre ? String(f.nombre).trim().toLowerCase() : "";
-        const pinSheet = f.pin ? String(f.pin).trim() : "";
+        const pinSheet = f.password ? String(f.password).trim() : "";
 
         return nombreSheet === usuarioIngresado.toLowerCase() && 
                pinSheet === passwordIngresado;
