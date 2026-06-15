@@ -25,30 +25,23 @@ async function confirmarIdentidad() {
 
     const usuarioEncontrado = lista.find(f => {
         const nombreSheet = f.nombre ? String(f.nombre).trim().toLowerCase() : "";
-        const pinSheet = f.password ? String(f.password).trim() : "";
+        const passwordSheet = f.password ? String(f.password).trim() : "";
 
         return nombreSheet === usuarioIngresado.toLowerCase() && 
-               pinSheet === passwordIngresado;
+               passwordSheet === passwordIngresado;
     });
 
     if (usuarioEncontrado) {
-        // 1. Guardar sesión
-        localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
-        
-        // 2. Cerrar el modal de identidad
-        const modal = document.getElementById('modal-identidad');
-        modal.classList.add('hidden');
-        
-        // 3. Actualizar el nombre en el status-bar (tu función de main.js)
-        actualizarLabelUsuario();
-        
-        // 4. Cambiar a la vista principal instantáneamente
-        if (typeof window.cargarVista === 'function') {
-            window.cargarVista('inicio');
-        }
-        
-        console.log("Sesión iniciada correctamente para:", usuarioEncontrado.nombre);
-    } else {
+    localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
+
+    // Cierra el modal
+    document.getElementById('modal-identidad').classList.add('hidden');
+
+    // CAMBIO DE VISTA AUTOMÁTICO
+    if (typeof window.cargarVista === 'function') {
+        window.cargarVista('inicio');
+    }
+} else {
         alert("Usuario o contraseña incorrectos. Verifica que el PIN coincida.");
     }
 }
