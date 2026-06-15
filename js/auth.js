@@ -86,7 +86,10 @@ function cerrarSesion() {
 }
 
 if (typeof window.cargarVista === 'function') {
-    window.cargarVista('inicio');
+    window.cargarVista = function(nombreVista) {
+    console.log("Cargando vista:", nombreVista);
+    // ... aquí va toda tu lógica para ocultar/mostrar elementos
+};
 } else {
     console.warn("cargarVista aún no está disponible, intentando recargar...");
     setTimeout(() => { if (window.cargarVista) window.cargarVista('inicio'); }, 500);
