@@ -46,3 +46,7 @@ select:focus {
     border-radius: 10px;
 }
 
+/* Esto oculta cualquier elemento que tenga la clase 'hidden' */
+.hidden {
+    display: none !important;
+}
