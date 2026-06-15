@@ -76,6 +76,8 @@ async function procesarRegistro() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ nombre, celular, password })
         });
+        const resultado = await respuesta.json();
+        console.log("Datos enviados:", resultado);
     } catch (err) {
         console.error(err);
         alert("Error al conectar con la base de datos.");
