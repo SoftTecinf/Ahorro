@@ -23,9 +23,7 @@ async function confirmarIdentidad() {
     
     const lista = window.obtenerListaFamiliares(); 
 
-    // Aquí está la clave: convertimos todo a minúsculas y comparamos
     const usuarioEncontrado = lista.find(f => {
-        // Aseguramos que los campos existan antes de comparar
         const nombreSheet = f.nombre ? String(f.nombre).trim().toLowerCase() : "";
         const pinSheet = f.password ? String(f.password).trim() : "";
 
@@ -34,8 +32,22 @@ async function confirmarIdentidad() {
     });
 
     if (usuarioEncontrado) {
+        // 1. Guardar sesión
         localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
-        // ... resto de tu código de éxito
+        
+        // 2. Cerrar el modal de identidad
+        const modal = document.getElementById('modal-identidad');
+        modal.classList.add('hidden');
+        
+        // 3. Actualizar el nombre en el status-bar (tu función de main.js)
+        actualizarLabelUsuario();
+        
+        // 4. Cambiar a la vista principal instantáneamente
+        if (typeof window.cargarVista === 'function') {
+            window.cargarVista('inicio');
+        }
+        
+        console.log("Sesión iniciada correctamente para:", usuarioEncontrado.nombre);
     } else {
         alert("Usuario o contraseña incorrectos. Verifica que el PIN coincida.");
     }
