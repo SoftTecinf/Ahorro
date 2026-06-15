@@ -1,3 +1,16 @@
+document.addEventListener('click', (event) => {
+    // 1. Verificamos si lo que se clickeó es el botón de Entrar
+    if (event.target && event.target.id === 'btn-entrar') {
+        event.preventDefault(); // Evita que se recargue la página
+        iniciarSesion(); // Llamamos a tu función de login
+    }
+
+    // 2. Verificamos si se clickeó Cerrar Sesión
+    if (event.target && event.target.id === 'btn-cerrar-sesion') {
+        window.cerrarSesion();
+    }
+});
+
 // ==========================================
 // VARIABLES GLOBALES
 // ==========================================
