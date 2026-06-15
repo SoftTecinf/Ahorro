@@ -24,21 +24,14 @@ function actualizarLabelUsuario() {
 // ==========================================
 // En js/main.js
 document.addEventListener('DOMContentLoaded', async () => {
-    // En lugar de añadir eventos a cada botón, añadimos uno solo al contenedor padre
-    const navContainer = document.querySelector('nav'); // Cambia 'nav' por el ID o clase de tu barra de menú si es necesario
-
-    if (navContainer) {
-        navContainer.addEventListener('click', (e) => {
-            // Verificamos si el elemento clickeado es uno de nuestros botones
-            const target = e.target.closest('button');
-            if (!target) return;
-
-            if (target.id === 'btn-inicio') navegarA('inicio');
-            else if (target.id === 'btn-datos') navegarA('datos');
-            else if (target.id === 'btn-configurar') navegarA('configurar');
-        });
+    const usuario = localStorage.getItem('app_currentUser');
+    
+    if (!usuario) {
+        // NO hay usuario: Forzamos el Login
+        document.getElementById('modal-identidad').classList.remove('hidden');
     } else {
-        console.error("No se encontró el contenedor de navegación (nav). Verifica tu HTML.");
+        // SÍ hay usuario: Iniciamos la app normalmente
+        await navegarA('inicio');
     }
 });
 
