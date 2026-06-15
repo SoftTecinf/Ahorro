@@ -34,12 +34,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-if (typeof window.cargarVista === 'function') {
-    window.cargarVista = function(nombreVista) {
-    console.log("Cargando vista:", nombreVista);
-    // ... aquí va toda tu lógica para ocultar/mostrar elementos
+
+// En js/main.js
+window.cargarVista = function(nombreVista) {
+    console.log("Cambiando a vista:", nombreVista);
+    
+    // 1. Ocultar todas las vistas
+    document.querySelectorAll('.vista').forEach(v => v.classList.add('hidden'));
+    
+    // 2. Mostrar la vista seleccionada
+    const vista = document.getElementById('vista-' + nombreVista);
+    if (vista) {
+        vista.classList.remove('hidden');
+    } else {
+        console.error("No se encontró la vista:", nombreVista);
+    }
+    
+    // 3. Lógica extra para modales (opcional)
+    if (nombreVista === 'login' || nombreVista === 'registro') {
+        document.getElementById('vista-login').classList.toggle('hidden', nombreVista !== 'login');
+        document.getElementById('vista-registro').classList.toggle('hidden', nombreVista !== 'registro');
+    }
 };
-} else {
-    console.warn("cargarVista aún no está disponible, intentando recargar...");
-    setTimeout(() => { if (window.cargarVista) window.cargarVista('inicio'); }, 500);
-}
