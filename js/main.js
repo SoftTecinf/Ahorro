@@ -22,7 +22,13 @@ function actualizarLabelUsuario() {
 // ==========================================
 // INICIALIZACIÓN UNIFICADA
 // ==========================================
+// En js/main.js
 document.addEventListener('DOMContentLoaded', async () => {
-    await cargarDatosGlobales(); // De api.js
-    console.log("Datos inicializados");
+    console.log("Inicializando aplicación...");
+    await cargarDatosGlobales(); // Llama a tu función de api.js
+    
+    // Ahora que los datos están cargados, inicializa tu vista
+    if (typeof cargarVista === 'function') {
+        cargarVista('inicio');
+    }
 });
