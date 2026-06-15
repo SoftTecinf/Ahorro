@@ -40,10 +40,7 @@ function ocultarModalIdentidad() {
 }
 
 async function confirmarIdentidad() {
-    const usuarioIngresado = document.getElementById('input-usuario-login').value.trim();
-    const passwordIngresado = document.getElementById('input-password-inicial').value.trim();
-
-    // Obtención segura de datos
+    // Declara 'lista' una sola vez aquí
     const lista = window.familiares && window.familiares.length > 0
         ? window.familiares
         : (JSON.parse(localStorage.getItem('app_familiares')) || []);
