@@ -28,35 +28,30 @@ async function confirmarIdentidad() {
         const passwordSheet = f.password ? String(f.password).trim() : "";
 
         return nombreSheet === usuarioIngresado.toLowerCase() &&
-            passwordSheet === passwordIngresado;
+               passwordSheet === passwordIngresado;
     });
 
     if (usuarioEncontrado) {
+        // 1. Guardamos sesión
         localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
         
-        // 1. Ocultamos el modal inmediatamente
+        // 2. Ocultamos el modal
         const modal = document.getElementById('modal-identidad');
         modal.classList.add('hidden');
-        modal.style.display = 'none'; // <-- Forzamos el CSS por si acaso
+        modal.style.display = 'none';
 
-        // 2. Actualizamos la etiqueta del usuario ANTES de cargar la vista
+        // 3. Actualizamos la etiqueta del usuario
         const label = document.getElementById('user-label');
         if (label) label.textContent = usuarioEncontrado.nombre;
 
-        // 3. Ejecutamos la carga de vista
-        const asegurarCargaVista = (intento = 0) => {
-            if (typeof window.cargarVista === 'function') {
-                window.cargarVista('inicio');
-                console.log("Vista cargada exitosamente.");
-            } else if (intento < 10) {
-                setTimeout(() => asegurarCargaVista(intento + 1), 100);
-            } else {
-                // Si falla, al menos recargamos la página para salvar la sesión
-                window.location.reload(); 
-            }
-        };
-
-        asegurarCargaVista();
+        // 4. USAMOS LA FUNCIÓN CORRECTA (navegarA en lugar de cargarVista)
+        // Ya no necesitamos el "asegurarCargaVista" porque navegarA 
+        // ya incluye la lógica de fetch y carga.
+        await navegarA('inicio');
+        
+        console.log("Sesión iniciada y vista cargada correctamente.");
+    } else {
+        alert("Usuario o contraseña incorrectos.");
     }
 }
 
@@ -93,4 +88,24 @@ async function procesarRegistro() {
     }
 }
 
+function cerrarSesion() {
+    // 1. Limpiamos los datos del usuario
+    localStorage.removeItem('app_currentUser');
+    // Opcional: localStorage.removeItem('app_familiares'); 
+    
+    // 2. Ocultamos TODAS las vistas
+    document.querySelectorAll('.vista').forEach(v => {
+        v.classList.add('hidden');
+        v.style.display = 'none';
+    });
+
+    // 3. Mostramos el modal de login
+    const modal = document.getElementById('modal-identidad');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+    }
+
+    console.log("Sesión cerrada correctamente.");
+}
 
