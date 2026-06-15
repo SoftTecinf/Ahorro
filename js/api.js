@@ -1,27 +1,30 @@
 window.familiares = JSON.parse(localStorage.getItem('app_familiares')) || [];
+//        const respuesta = await fetch('https://script.google.com/macros/s/AKfycbxTFZLLfvP8cywVA8IzMsVa0BPA9OeLieUV-6Cgg_XNxLZLH6Uxzx_QpfdOzMH3x2wdVQ/exec');
+
 
 async function cargarDatosGlobales() {
-    // 1. Si ya tenemos datos, no malgastamos peticiones a la API
-    if (window.familiares.length > 0) {
-        console.log("Usando datos locales existentes...");
-        return;
-    }
-
+    console.log("Conectando a mi API gratuita...");
+    // PEGA AQUÍ TU URL QUE TERMINA EN /exec
+    const url = "https://script.google.com/macros/s/AKfycbxTFZLLfvP8cywVA8IzMsVa0BPA9OeLieUV-6Cgg_XNxLZLH6Uxzx_QpfdOzMH3x2wdVQ/exec"; 
+    
     try {
-        console.log("Consultando API...");
-        const respuesta = await fetch('https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios');
-        
-        if (!respuesta.ok) throw new Error("Error al conectar con Sheety");
-
+        const respuesta = await fetch(url);
         const data = await respuesta.json();
         
-        // 2. Guardamos en variable global y localStorage
-        window.familiares = data.usuarios;
-        localStorage.setItem('app_familiares', JSON.stringify(data.usuarios));
-        console.log("Datos actualizados desde la API.");
+        // Google Apps Script devuelve un array de arrays. 
+        // Convertimos ese formato a objetos para que tu App lo entienda:
+        // Nota: Ajusta los índices [0], [1], [2] según el orden de tus columnas en el Sheet
+        window.familiares = data.slice(1).map(fila => ({
+            nombre: fila[0],    
+            password: fila[1], 
+            celular: fila[2]
+        }));
         
-    } catch (error) {
-        console.error("No se pudo obtener datos de la API:", error);
+        console.log("¡Éxito! Datos cargados:", window.familiares);
+        // Guardamos en localStorage para que la app sea rápida
+        localStorage.setItem('app_familiares', JSON.stringify(window.familiares));
+    } catch (e) {
+        console.error("Error conectando a la API:", e);
     }
 }
 
