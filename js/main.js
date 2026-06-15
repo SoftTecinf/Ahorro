@@ -53,23 +53,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 // En js/main.js
-window.cargarVista = (nombreVista) => {
-    // 1. Primero, ocultamos todas las vistas usando un selector general
-    const todasLasVistas = document.querySelectorAll('.vista');
-    todasLasVistas.forEach(v => {
-        v.classList.add('hidden');
-        v.style.display = 'none'; // Forzamos el ocultado por CSS
-    });
-
-    // 2. Buscamos específicamente la vista que queremos mostrar
-    const vistaDestino = document.getElementById('vista-' + nombreVista);
-    
-    if (vistaDestino) {
-        // 3. Quitamos las clases y estilos que la mantienen oculta
-        vistaDestino.classList.remove('hidden');
-        vistaDestino.style.display = 'block'; // Forzamos la visibilidad
-        console.log("Vista cargada con éxito:", nombreVista);
-    } else {
-        console.error("Error: No se encontró el elemento con ID: vista-" + nombreVista);
+async function cargarVistaInicio() {
+    const contenedor = document.getElementById('vista-inicio');
+    // Solo cargamos si está vacío para no duplicar contenido
+    if (contenedor.innerHTML.trim() === '<h2 class="text-xl font-bold">¡Bienvenido al Ahorro!</h2>') {
+        const respuesta = await fetch('inicio.html');
+        const contenido = await respuesta.text();
+        contenedor.innerHTML = contenido;
     }
-};
+}
+
+// Llama a esto justo después de iniciar sesión en tu auth.js
+// await cargarVistaInicio();
