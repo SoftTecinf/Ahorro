@@ -73,13 +73,15 @@ async function navegarA(nombreVista) {
 }
 
 window.cerrarSesion = () => {
-    // 1. ELIMINAR LA IDENTIDAD (El usuario ya no existe para la app)
+    // 1. Pregunta de confirmación (Agregamos esto para evitar cierres accidentales)
+    if (!confirm("¿Estás seguro de que quieres cerrar tu sesión?")) {
+        return;
+    }
+
+    // 2. Borrado total de estado
     localStorage.removeItem('app_currentUser');
-    
-    // 2. ELIMINAR EL ESTADO DE NAVEGACIÓN (Opcional: para que no recuerde dónde estaba)
     localStorage.removeItem('app_ultima_vista');
     
-    // 3. RECARGAR LA PÁGINA O VOLVER AL LOGIN
-    // La forma más segura de limpiar TODO el estado de la memoria es recargar
+    // 3. Recarga limpia
     window.location.reload(); 
 };
