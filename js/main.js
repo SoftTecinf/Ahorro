@@ -55,11 +55,27 @@ document.addEventListener('DOMContentLoaded', async () => {
 // En js/main.js
 async function cargarVistaInicio() {
     const contenedor = document.getElementById('vista-inicio');
-    // Solo cargamos si está vacío para no duplicar contenido
-    if (contenedor.innerHTML.trim() === '<h2 class="text-xl font-bold">¡Bienvenido al Ahorro!</h2>') {
-        const respuesta = await fetch('inicio.html');
-        const contenido = await respuesta.text();
-        contenedor.innerHTML = contenido;
+    
+    // Verificamos si ya está cargado para no recargarlo innecesariamente
+    if (contenedor.innerHTML.trim() === "") {
+        try {
+            const respuesta = await fetch('inicio.html');
+            if (!respuesta.ok) throw new Error("No se pudo cargar inicio.html");
+            
+            const html = await respuesta.text();
+            
+            // Creamos un contenedor temporal para extraer solo el contenido del <section>
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const seccionInicio = doc.querySelector('section');
+            
+            if (seccionInicio) {
+                contenedor.innerHTML = seccionInicio.outerHTML;
+                console.log("Contenido de inicio.html cargado con éxito.");
+            }
+        } catch (error) {
+            console.error("Error al cargar la vista de inicio:", error);
+        }
     }
 }
 
