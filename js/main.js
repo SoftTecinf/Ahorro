@@ -1,15 +1,4 @@
-document.addEventListener('click', (event) => {
-    // 1. Verificamos si lo que se clickeó es el botón de Entrar
-    if (event.target && event.target.id === 'btn-entrar') {
-        event.preventDefault(); // Evita que se recargue la página
-        iniciarSesion(); // Llamamos a tu función de login
-    }
 
-    // 2. Verificamos si se clickeó Cerrar Sesión
-    if (event.target && event.target.id === 'btn-cerrar-sesion') {
-        window.cerrarSesion();
-    }
-});
 
 // ==========================================
 // VARIABLES GLOBALES
@@ -84,17 +73,3 @@ async function navegarA(nombreVista) {
         console.error(`Error al cargar ${nombreVista}.html:`, error);
     }
 }
-
-window.cerrarSesion = () => {
-    // 1. Pregunta de confirmación (Agregamos esto para evitar cierres accidentales)
-    if (!confirm("¿Estás seguro de que quieres cerrar tu sesión?")) {
-        return;
-    }
-
-    // 2. Borrado total de estado
-    localStorage.removeItem('app_currentUser');
-    localStorage.removeItem('app_ultima_vista');
-    
-    // 3. Recarga limpia
-    window.location.reload(); 
-};
