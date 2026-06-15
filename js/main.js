@@ -72,23 +72,14 @@ async function navegarA(nombreVista) {
     }
 }
 
-function cerrarSesion() {
-    // 1. Limpiamos los datos del usuario
+window.cerrarSesion = () => {
+    // 1. ELIMINAR LA IDENTIDAD (El usuario ya no existe para la app)
     localStorage.removeItem('app_currentUser');
-    // Opcional: localStorage.removeItem('app_familiares'); 
     
-    // 2. Ocultamos TODAS las vistas
-    document.querySelectorAll('.vista').forEach(v => {
-        v.classList.add('hidden');
-        v.style.display = 'none';
-    });
-
-    // 3. Mostramos el modal de login
-    const modal = document.getElementById('modal-identidad');
-    if (modal) {
-        modal.classList.remove('hidden');
-        modal.style.display = 'flex';
-    }
-
-    console.log("Sesión cerrada correctamente.");
-}
+    // 2. ELIMINAR EL ESTADO DE NAVEGACIÓN (Opcional: para que no recuerde dónde estaba)
+    localStorage.removeItem('app_ultima_vista');
+    
+    // 3. RECARGAR LA PÁGINA O VOLVER AL LOGIN
+    // La forma más segura de limpiar TODO el estado de la memoria es recargar
+    window.location.reload(); 
+};
