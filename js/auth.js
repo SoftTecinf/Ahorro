@@ -93,10 +93,4 @@ async function procesarRegistro() {
     }
 }
 
-function cerrarSesion() {
-    if (confirm("¿Cerrar sesión?")) {
-        localStorage.removeItem('app_currentUser');
-        location.reload();
-    }
-}
 
