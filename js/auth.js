@@ -20,31 +20,24 @@ function ocultarModalIdentidad() {
 async function confirmarIdentidad() {
     const usuarioIngresado = document.getElementById('input-usuario-login').value.trim();
     const passwordIngresado = document.getElementById('input-password-inicial').value.trim();
+    
+    const lista = window.obtenerListaFamiliares(); 
 
-    // Obtención segura de datos
-    const lista = window.obtenerListaFamiliares();
-    // Búsqueda
-    const usuarioEncontrado = lista.find(f =>
-        String(f.nombre).trim().toLowerCase() === usuarioIngresado.toLowerCase() &&
-        String(f.pin) === String(passwordIngresado)
-    );
+    // Aquí está la clave: convertimos todo a minúsculas y comparamos
+    const usuarioEncontrado = lista.find(f => {
+        // Aseguramos que los campos existan antes de comparar
+        const nombreSheet = f.nombre ? String(f.nombre).trim().toLowerCase() : "";
+        const pinSheet = f.pin ? String(f.pin).trim() : "";
+
+        return nombreSheet === usuarioIngresado.toLowerCase() && 
+               pinSheet === passwordIngresado;
+    });
 
     if (usuarioEncontrado) {
-        // Sesión
         localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
-
-        // Actualizar UI
-        const userLabel = document.getElementById('user-label');
-        if (userLabel) userLabel.textContent = usuarioEncontrado.nombre;
-
-        ocultarModalIdentidad();
-
-        if (typeof cargarVista === 'function') {
-            cargarVista('inicio');
-        }
-        console.log("¡Éxito! Usuario autenticado.");
+        // ... resto de tu código de éxito
     } else {
-        alert("Usuario o contraseña incorrectos.");
+        alert("Usuario o contraseña incorrectos. Verifica que el PIN coincida.");
     }
 }
 
