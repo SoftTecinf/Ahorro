@@ -24,3 +24,10 @@ async function cargarDatosGlobales() {
         console.error("No se pudo obtener datos de la API:", error);
     }
 }
+
+// En js/api.js
+window.obtenerListaFamiliares = function() {
+    return window.familiares && window.familiares.length > 0 
+        ? window.familiares 
+        : (JSON.parse(localStorage.getItem('app_familiares')) || []);
+};
