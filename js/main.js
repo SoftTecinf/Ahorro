@@ -53,9 +53,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 // En js/main.js
-window.cargarVista = function(nombreVista) {
-    console.log("Cambiando a vista:", nombreVista);
-    document.querySelectorAll('.vista').forEach(v => v.classList.add('hidden'));
-    const vista = document.getElementById('vista-' + nombreVista);
-    if (vista) vista.classList.remove('hidden');
+window.cargarVista = (nombreVista) => {
+    // 1. Primero, ocultamos todas las vistas usando un selector general
+    const todasLasVistas = document.querySelectorAll('.vista');
+    todasLasVistas.forEach(v => {
+        v.classList.add('hidden');
+        v.style.display = 'none'; // Forzamos el ocultado por CSS
+    });
+
+    // 2. Buscamos específicamente la vista que queremos mostrar
+    const vistaDestino = document.getElementById('vista-' + nombreVista);
+    
+    if (vistaDestino) {
+        // 3. Quitamos las clases y estilos que la mantienen oculta
+        vistaDestino.classList.remove('hidden');
+        vistaDestino.style.display = 'block'; // Forzamos la visibilidad
+        console.log("Vista cargada con éxito:", nombreVista);
+    } else {
+        console.error("Error: No se encontró el elemento con ID: vista-" + nombreVista);
+    }
 };
