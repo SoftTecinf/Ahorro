@@ -22,7 +22,7 @@ async function confirmarIdentidad() {
     const passwordIngresado = document.getElementById('input-password-inicial').value.trim();
 
     // Obtención segura de datos
-const lista = window.obtenerListaFamiliares(); // Llama a la función central
+    const lista = window.obtenerListaFamiliares(); // Llama a la función central
     // Búsqueda
     const usuarioEncontrado = lista.find(f =>
         String(f.nombre).trim().toLowerCase() === usuarioIngresado.toLowerCase() &&
@@ -32,13 +32,13 @@ const lista = window.obtenerListaFamiliares(); // Llama a la función central
     if (usuarioEncontrado) {
         // Sesión
         localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
-        
+
         // Actualizar UI
         const userLabel = document.getElementById('user-label');
         if (userLabel) userLabel.textContent = usuarioEncontrado.nombre;
 
         ocultarModalIdentidad();
-        
+
         if (typeof cargarVista === 'function') {
             cargarVista('inicio');
         }
@@ -64,7 +64,7 @@ async function procesarRegistro() {
 
     try {
         const URL_USUARIOS = 'https://api.sheety.co/f600b8b3553fb0a7656cd10008f5885a/ahorro/usuarios';
-        
+
         // Guardar local
         lista.push({ nombre, celular, pin: password });
         window.familiares = lista;
@@ -85,9 +85,9 @@ function cerrarSesion() {
     }
 }
 
-// En tu archivo auth.js, cada vez que llames a cargarVista:
 if (typeof window.cargarVista === 'function') {
     window.cargarVista('inicio');
 } else {
-    console.error("Error: cargarVista aún no está definida");
+    console.warn("cargarVista aún no está disponible, intentando recargar...");
+    setTimeout(() => { if (window.cargarVista) window.cargarVista('inicio'); }, 500);
 }
