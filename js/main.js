@@ -27,12 +27,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ... tu lógica actual de carga y login ...
 
     // AQUÍ ES DONDE DEBEN IR:
-    document.getElementById('btn-inicio').addEventListener('click', () => navegarA('inicio'));
+    // document.getElementById('btn-inicio').addEventListener('click', () => navegarA('inicio'));
+    // En lugar de hacer esto directamente:
+    // document.getElementById('btn-inicio').addEventListener('click', ...);
+
+    // Haz esto para protegerte:
+    const btnInicio = document.getElementById('btn-inicio');
+    if (btnInicio) {
+        btnInicio.addEventListener('click', () => navegarA('inicio'));
+    } else {
+        console.warn("El botón 'btn-inicio' no existe en el DOM aún.");
+    }
     document.getElementById('btn-datos').addEventListener('click', () => navegarA('datos'));
     document.getElementById('btn-configurar').addEventListener('click', () => navegarA('configurar'));
-    
+
     // Y si quieres que la App cargue Inicio por defecto al abrir:
-    await navegarA('inicio'); 
+    await navegarA('inicio');
 });
 
 
@@ -40,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 // main.js
 async function navegarA(nombreVista) {
     const contenedor = document.getElementById(`vista-${nombreVista}`);
-    
+
     // Si el contenido ya fue cargado, solo mostramos la vista
     if (contenedor.innerHTML.trim() !== "") {
         window.cargarVista(nombreVista);
@@ -52,12 +62,12 @@ async function navegarA(nombreVista) {
         console.log(`Cargando vista: ${nombreVista}.html`);
         const respuesta = await fetch(`${nombreVista}.html`);
         const html = await respuesta.text();
-        
+
         // Inyectamos solo la sección principal
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
         const seccion = doc.querySelector('section');
-        
+
         contenedor.innerHTML = seccion ? seccion.outerHTML : html;
         window.cargarVista(nombreVista);
     } catch (error) {
