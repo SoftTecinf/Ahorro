@@ -22,7 +22,7 @@ async function confirmarIdentidad() {
     const passwordIngresado = document.getElementById('input-password-inicial').value.trim();
 
     // Obtención segura de datos
-    const lista = window.obtenerListaFamiliares(); // Llama a la función central
+    const lista = window.obtenerListaFamiliares();
     // Búsqueda
     const usuarioEncontrado = lista.find(f =>
         String(f.nombre).trim().toLowerCase() === usuarioIngresado.toLowerCase() &&
