@@ -71,3 +71,24 @@ async function navegarA(nombreVista) {
         console.error(`Error al cargar ${nombreVista}.html:`, error);
     }
 }
+
+function cerrarSesion() {
+    // 1. Limpiamos los datos del usuario
+    localStorage.removeItem('app_currentUser');
+    // Opcional: localStorage.removeItem('app_familiares'); 
+    
+    // 2. Ocultamos TODAS las vistas
+    document.querySelectorAll('.vista').forEach(v => {
+        v.classList.add('hidden');
+        v.style.display = 'none';
+    });
+
+    // 3. Mostramos el modal de login
+    const modal = document.getElementById('modal-identidad');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+    }
+
+    console.log("Sesión cerrada correctamente.");
+}
