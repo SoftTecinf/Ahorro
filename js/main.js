@@ -23,12 +23,13 @@ function actualizarLabelUsuario() {
 // INICIALIZACIÓN UNIFICADA
 // ==========================================
 // En js/main.js
-document.addEventListener('DOMContentLoaded', async () => {
-    console.log("Inicializando aplicación...");
-    await cargarDatosGlobales(); // Llama a tu función de api.js
-    
-    // Ahora que los datos están cargados, inicializa tu vista
-    if (typeof cargarVista === 'function') {
-        cargarVista('inicio');
+// En main.js (al final del archivo)
+document.addEventListener('DOMContentLoaded', () => {
+    const usuarioActual = localStorage.getItem('app_currentUser');
+    if (!usuarioActual) {
+        console.log("No hay sesión, mostrando login...");
+        document.getElementById('modal-identidad').classList.remove('hidden');
+    } else {
+        document.getElementById('user-label').textContent = usuarioActual;
     }
 });
