@@ -23,61 +23,44 @@ function actualizarLabelUsuario() {
 // INICIALIZACIÓN UNIFICADA
 // ==========================================
 // En js/main.js
-// En main.js (al final del archivo)
-// En js/main.js
 document.addEventListener('DOMContentLoaded', async () => {
-    // 1. DIBUJO INMEDIATO: Carga lo que tengas guardado en el navegador
-    const datosGuardados = localStorage.getItem('app_familiares');
-    if (datosGuardados) {
-        window.familiares = JSON.parse(datosGuardados);
-        console.log("Carga inmediata desde caché");
-    }
+    // ... tu lógica actual de carga y login ...
 
-    // 2. VERIFICACIÓN DE SESIÓN (Inmediata también)
-    const usuarioActual = localStorage.getItem('app_currentUser');
-    const modal = document.getElementById('modal-identidad');
-
-    if (!usuarioActual) {
-        modal.classList.remove('hidden');
-        modal.style.display = 'flex';
-    } else {
-        document.getElementById('user-label').textContent = usuarioActual;
-    }
-
-    // 3. ACTUALIZACIÓN EN SEGUNDO PLANO (Silenciosa)
-    // Esto asegura que si alguien cambió algo en el Sheet, se actualice sin que el usuario lo note
-    cargarDatosGlobales().then(() => {
-        console.log("Datos sincronizados con Google en segundo plano");
-    });
+    // AQUÍ ES DONDE DEBEN IR:
+    document.getElementById('btn-inicio').addEventListener('click', () => navegarA('inicio'));
+    document.getElementById('btn-datos').addEventListener('click', () => navegarA('datos'));
+    document.getElementById('btn-configurar').addEventListener('click', () => navegarA('configurar'));
+    
+    // Y si quieres que la App cargue Inicio por defecto al abrir:
+    await navegarA('inicio'); 
 });
 
 
-// En js/main.js
-async function cargarVistaInicio() {
-    const contenedor = document.getElementById('vista-inicio');
+
+// main.js
+async function navegarA(nombreVista) {
+    const contenedor = document.getElementById(`vista-${nombreVista}`);
     
-    // Verificamos si ya está cargado para no recargarlo innecesariamente
-    if (contenedor.innerHTML.trim() === "") {
-        try {
-            const respuesta = await fetch('inicio.html');
-            if (!respuesta.ok) throw new Error("No se pudo cargar inicio.html");
-            
-            const html = await respuesta.text();
-            
-            // Creamos un contenedor temporal para extraer solo el contenido del <section>
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const seccionInicio = doc.querySelector('section');
-            
-            if (seccionInicio) {
-                contenedor.innerHTML = seccionInicio.outerHTML;
-                console.log("Contenido de inicio.html cargado con éxito.");
-            }
-        } catch (error) {
-            console.error("Error al cargar la vista de inicio:", error);
-        }
+    // Si el contenido ya fue cargado, solo mostramos la vista
+    if (contenedor.innerHTML.trim() !== "") {
+        window.cargarVista(nombreVista);
+        return;
+    }
+
+    // Si está vacío, traemos el archivo correspondiente
+    try {
+        console.log(`Cargando vista: ${nombreVista}.html`);
+        const respuesta = await fetch(`${nombreVista}.html`);
+        const html = await respuesta.text();
+        
+        // Inyectamos solo la sección principal
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const seccion = doc.querySelector('section');
+        
+        contenedor.innerHTML = seccion ? seccion.outerHTML : html;
+        window.cargarVista(nombreVista);
+    } catch (error) {
+        console.error(`Error al cargar ${nombreVista}.html:`, error);
     }
 }
-
-// Llama a esto justo después de iniciar sesión en tu auth.js
-// await cargarVistaInicio();
