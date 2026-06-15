@@ -2,6 +2,30 @@
 // LÓGICA DE CONTROL DEL LOGIN / REGISTRO
 // ==========================================
 
+// Agrega esto a js/auth.js
+function cambiarVista(nombre) {
+    const vistaLogin = document.getElementById('vista-login');
+    const vistaRegistro = document.getElementById('vista-registro');
+    const tabLogin = document.getElementById('tab-login');
+    const tabRegistro = document.getElementById('tab-registro');
+
+    if (nombre === 'login') {
+        vistaLogin.classList.remove('hidden');
+        vistaRegistro.classList.add('hidden');
+        tabLogin.classList.add('text-purple-600', 'border-purple-600');
+        tabLogin.classList.remove('text-gray-400', 'border-transparent');
+        tabRegistro.classList.add('text-gray-400', 'border-transparent');
+        tabRegistro.classList.remove('text-purple-600', 'border-purple-600');
+    } else {
+        vistaLogin.classList.add('hidden');
+        vistaRegistro.classList.remove('hidden');
+        tabRegistro.classList.add('text-purple-600', 'border-purple-600');
+        tabRegistro.classList.remove('text-gray-400', 'border-transparent');
+        tabLogin.classList.add('text-gray-400', 'border-transparent');
+        tabLogin.classList.remove('text-purple-600', 'border-purple-600');
+    }
+}
+
 function togglePassword(idInput) {
     const input = document.getElementById(idInput);
     if (input) input.type = input.type === 'password' ? 'text' : 'password';
