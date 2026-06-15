@@ -26,9 +26,16 @@ function actualizarLabelUsuario() {
 // En main.js (al final del archivo)
 document.addEventListener('DOMContentLoaded', () => {
     const usuarioActual = localStorage.getItem('app_currentUser');
+    const modal = document.getElementById('modal-identidad');
+    
+    console.log("Verificando sesión. Usuario actual:", usuarioActual);
+
     if (!usuarioActual) {
-        console.log("No hay sesión, mostrando login...");
-        document.getElementById('modal-identidad').classList.remove('hidden');
+        console.log("No hay sesión, forzando aparición del login...");
+        if (modal) {
+            modal.classList.remove('hidden'); // Esto quita el 'hidden'
+            modal.style.display = 'flex';     // Fuerza el estilo visual
+        }
     } else {
         document.getElementById('user-label').textContent = usuarioActual;
     }
