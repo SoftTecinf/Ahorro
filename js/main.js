@@ -48,50 +48,31 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 // main.js
-async function navegarA(nombreVista) {
+function navegarA(nombreVista) {
     console.log("Navegando a:", nombreVista);
 
-    try {
-        // 1. Intentar cargar el contenido externo (si los archivos existen)
-        // Nota: Si los archivos NO existen en el servidor, esto dará error.
-        const respuesta = await fetch(`${nombreVista}.html`);
-        
-        if (respuesta.ok) {
-            const contenido = await respuesta.text();
-            const contenedorDestino = document.getElementById(nombreVista);
-            if (contenedorDestino) {
-                contenedorDestino.innerHTML = contenido;
-            }
-        }
-        // Si el archivo no existe, el código continúa igual para mostrar el div que ya tienes en el HTML.
+    // 1. Ocultar TODAS las vistas
+    document.querySelectorAll('.vista').forEach(v => {
+        v.classList.add('hidden');
+        v.style.display = 'none';
+    });
 
-        // 2. Ocultar todas las vistas
-        document.querySelectorAll('.vista').forEach(v => {
-            v.classList.add('hidden');
-            v.style.display = 'none';
-        });
-
-        // 3. Mostrar la vista seleccionada
-        const vistaACargar = document.getElementById(nombreVista);
-        if (vistaACargar) {
-            vistaACargar.classList.remove('hidden');
-            vistaACargar.style.display = 'block';
-        }
-
-        // 4. Gestionar botones
-        document.querySelectorAll('button[data-vista]').forEach(btn => {
-            if (btn.getAttribute('data-vista') === nombreVista) {
-                btn.classList.add('nav-btn-active');
-                btn.classList.remove('nav-btn-inactive');
-            } else {
-                btn.classList.remove('nav-btn-active');
-                btn.classList.add('nav-btn-inactive');
-            }
-        });
-
-    } catch (error) {
-        console.error("Error en navegación:", error);
+    // 2. Mostrar la seleccionada (buscando por ID)
+    // Nota: Asegúrate de que el ID en tu HTML sea EXACTAMENTE 'config'
+    const vista = document.getElementById(nombreVista);
+    
+    if (vista) {
+        vista.classList.remove('hidden');
+        vista.style.display = 'block';
+    } else {
+        console.error("No existe el div con id:", nombreVista);
     }
+
+    // 3. Gestión de botones activa/inactiva
+    document.querySelectorAll('button[data-vista]').forEach(btn => {
+        btn.classList.toggle('nav-btn-active', btn.getAttribute('data-vista') === nombreVista);
+        btn.classList.toggle('nav-btn-inactive', btn.getAttribute('data-vista') !== nombreVista);
+    });
 }
 
 // ESTA LÍNEA VA FUERA DE LA FUNCIÓN
