@@ -81,23 +81,17 @@ async function procesarRegistro() {
 }
 
 function cerrarSesion() {
-    // 1. Limpiamos los datos del usuario
+    // 1. Borramos la sesión
     localStorage.removeItem('app_currentUser');
-    // Opcional: localStorage.removeItem('app_familiares'); 
-
-    // 2. Ocultamos TODAS las vistas
-    document.querySelectorAll('.vista').forEach(v => {
-        v.classList.add('hidden');
-        v.style.display = 'none';
-    });
-
-    // 3. Mostramos el modal de login
+    
+    // 2. Limpiamos variables de memoria
+    window.familiares = null; 
+    
+    // 3. Forzamos la aparición del modal
     const modal = document.getElementById('modal-identidad');
-    if (modal) {
-        modal.classList.remove('hidden');
-        modal.style.display = 'flex';
-    }
-
-    console.log("Sesión cerrada correctamente.");
+    modal.style.display = 'flex'; // Forzamos que se vea
+    modal.classList.remove('hidden'); // Por si acaso usas clases de Tailwind
+    
+    // 4. Opcional: Recargar la página para limpiar todo desde cero
+    location.reload(); 
 }
-
