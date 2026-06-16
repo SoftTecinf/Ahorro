@@ -50,33 +50,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function navegarA(nombreVista) {
     console.log("Cargando vista:", nombreVista);
 
-    // 1. Cargar el HTML
     try {
         const respuesta = await fetch(`${nombreVista}.html`);
-        if (!respuesta.ok) throw new Error("Archivo no encontrado");
         const html = await respuesta.text();
-        
+
         const contenedor = document.getElementById('contenedor-vistas');
+        
         if (contenedor) {
+            // AQUÍ LA PRUEBA: inyectamos el HTML recibido
             contenedor.innerHTML = html;
+            console.log("HTML inyectado en el contenedor.");
+        } else {
+            console.error("NO ENCONTRÉ 'contenedor-vistas'");
         }
+
+        // ... resto de tu lógica de botones
     } catch (error) {
         console.error("Error al cargar:", error);
-    }
-
-    // 2. CORRECCIÓN: Resetear estilos de todos los botones
-    const botones = document.querySelectorAll('button[data-vista]');
-    botones.forEach(btn => {
-        // Quitamos la clase activa y ponemos la inactiva
-        btn.classList.remove('nav-btn-active');
-        btn.classList.add('nav-btn-inactive');
-    });
-
-    // 3. CORRECCIÓN: Activar solo el botón presionado
-    const botonSeleccionado = document.querySelector(`button[data-vista="${nombreVista}"]`);
-    if (botonSeleccionado) {
-        botonSeleccionado.classList.remove('nav-btn-inactive');
-        botonSeleccionado.classList.add('nav-btn-active');
     }
 }
 window.cargarDatosGlobales();
