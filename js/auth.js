@@ -33,17 +33,15 @@ async function confirmarIdentidad() {
         const passwordSheet = f.password ? String(f.password).trim() : "";
 
         return nombreSheet === usuarioIngresado.toLowerCase() &&
-               passwordSheet === passwordIngresado;
+            passwordSheet === passwordIngresado;
     });
 
+    // Asegúrate de que esto sea lo único que hace el botón
     if (usuarioEncontrado) {
         localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
-        
-        // ... el resto de tu lógica de login (ocultar modal, etc.)
         document.getElementById('modal-identidad').classList.add('hidden');
         document.getElementById('user-label').textContent = usuarioEncontrado.nombre;
-        
-        await navegarA('inicio');
+        await navegarA('inicio'); // Esto carga la vista inicial
     } else {
         alert("Usuario no encontrado o contraseña incorrecta.");
     }
@@ -86,7 +84,7 @@ function cerrarSesion() {
     // 1. Limpiamos los datos del usuario
     localStorage.removeItem('app_currentUser');
     // Opcional: localStorage.removeItem('app_familiares'); 
-    
+
     // 2. Ocultamos TODAS las vistas
     document.querySelectorAll('.vista').forEach(v => {
         v.classList.add('hidden');
