@@ -27,27 +27,24 @@ function actualizarLabelUsuario() {
 // En js/main.js
 // Este evento se dispara tan pronto como la página termina de cargar
 window.addEventListener('DOMContentLoaded', async () => {
-    // 1. Cargamos los datos primero, obligatoriamente
-    await cargarDatosGlobales();
-
-    // 2. Ahora verificamos la sesión
+    // 1. Cargamos datos
+    await cargarDatosGlobales(); 
+    
+    // 2. Verificamos sesión
     const usuarioGuardado = localStorage.getItem('app_currentUser');
-
-    if (usuarioGuardado) {
-        // Verificamos que el usuario guardado realmente exista en la lista cargada
-        const usuarioValido = window.familiares.find(f => f.nombre === usuarioGuardado);
-
-        if (usuarioValido) {
-            console.log("Sesión restaurada correctamente para:", usuarioGuardado);
-            document.getElementById('modal-identidad').classList.add('hidden');
-            document.getElementById('user-label').textContent = usuarioGuardado;
-            await navegarA('inicio');
-        } else {
-            console.log("Sesión inválida, limpiando...");
-            localStorage.removeItem('app_currentUser');
-        }
+    const modal = document.getElementById('modal-identidad');
+    
+    if (usuarioGuardado && window.familiares.some(f => f.nombre === usuarioGuardado)) {
+        // SESIÓN VÁLIDA: Ocultamos el login y mostramos la interfaz
+        console.log("Sesión restaurada");
+        modal.style.display = 'none'; // Aseguramos que siga oculto
+        document.getElementById('user-label').textContent = usuarioGuardado;
+        await navegarA('inicio');
     } else {
-        console.log("Esperando inicio de sesión...");
+        // SIN SESIÓN: Aquí sí mostramos el login
+        console.log("Mostrando login...");
+        modal.style.display = 'flex'; // Cambiamos de 'none' a 'flex'
+        modal.classList.remove('hidden'); // Por si acaso
     }
 });
 
