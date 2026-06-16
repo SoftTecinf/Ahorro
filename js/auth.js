@@ -39,9 +39,13 @@ async function confirmarIdentidad() {
     // Asegúrate de que esto sea lo único que hace el botón
     if (usuarioEncontrado) {
         localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
-        document.getElementById('modal-identidad').classList.add('hidden');
+        
+        // ¡IMPORTANTE! Limpiar la UI inmediatamente
+        document.getElementById('modal-identidad').classList.remove('visible');
         document.getElementById('user-label').textContent = usuarioEncontrado.nombre;
-        await navegarA('inicio'); // Esto carga la vista inicial
+        
+        // No esperes al F5, navega ahora mismo
+        await navegarA('inicio'); 
     } else {
         alert("Usuario no encontrado o contraseña incorrecta.");
     }
