@@ -48,7 +48,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 // main.js
-async function navegarA(vistaId) {
+async function navegarA(vistaId, event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    
     console.log("Navegando a:", vistaId);
 
     // 1. Ocultar todas las vistas (añadir 'hidden')
