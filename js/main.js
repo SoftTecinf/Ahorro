@@ -51,46 +51,36 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function navegarA(nombreVista) {
     console.log("Navegando a:", nombreVista);
 
-    try {
-        // 1. Intentar cargar el contenido externo (si los archivos existen)
-        // Nota: Si los archivos NO existen en el servidor, esto dará error.
-        const respuesta = await fetch(`${nombreVista}.html`);
+    // 1. Ocultar todos los contenedores principales
+    document.querySelectorAll('.vista').forEach(v => {
+        v.classList.add('hidden');
+        v.style.display = 'none';
+    });
+
+    const contenedor = document.getElementById(nombreVista);
+
+    if (contenedor) {
+        // 2. Solo cargamos si está vacío
+        if (contenedor.innerHTML.trim() === "") {
+            try {
+                const respuesta = await fetch(`${nombreVista}.html`);
+                const texto = await respuesta.text();
+                
+                // Limpiamos el HTML recibido para no tener IDs duplicados
+                // Solo inyectamos el contenido interno de la sección
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = texto;
+                const contenidoReal = tempDiv.querySelector('section') || tempDiv.firstElementChild;
+                
+                contenedor.innerHTML = contenidoReal.innerHTML;
+            } catch (error) {
+                console.error("Error al cargar:", error);
+            }
+        }
         
-        if (respuesta.ok) {
-            const contenido = await respuesta.text();
-            const contenedorDestino = document.getElementById(nombreVista);
-            if (contenedorDestino) {
-                contenedorDestino.innerHTML = contenido;
-            }
-        }
-        // Si el archivo no existe, el código continúa igual para mostrar el div que ya tienes en el HTML.
-
-        // 2. Ocultar todas las vistas
-        document.querySelectorAll('.vista').forEach(v => {
-            v.classList.add('hidden');
-            v.style.display = 'none';
-        });
-
-        // 3. Mostrar la vista seleccionada
-        const vistaACargar = document.getElementById(nombreVista);
-        if (vistaACargar) {
-            vistaACargar.classList.remove('hidden');
-            vistaACargar.style.display = 'block';
-        }
-
-        // 4. Gestionar botones
-        document.querySelectorAll('button[data-vista]').forEach(btn => {
-            if (btn.getAttribute('data-vista') === nombreVista) {
-                btn.classList.add('nav-btn-active');
-                btn.classList.remove('nav-btn-inactive');
-            } else {
-                btn.classList.remove('nav-btn-active');
-                btn.classList.add('nav-btn-inactive');
-            }
-        });
-
-    } catch (error) {
-        console.error("Error en navegación:", error);
+        // 3. Mostramos el contenedor padre
+        contenedor.classList.remove('hidden');
+        contenedor.style.display = 'block';
     }
 }
 
