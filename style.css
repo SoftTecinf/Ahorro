@@ -57,12 +57,3 @@ body {
     opacity: 1;
     visibility: visible;
 }
-
-/* Por defecto, todo el contenido de la app está oculto */
-#app-container {
-    display: none;
-}
-/* Cuando el usuario está logueado, lo mostramos */
-#app-container.activo {
-    display: block;
-}
