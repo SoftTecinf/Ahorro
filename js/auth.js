@@ -85,22 +85,24 @@ async function procesarRegistro() {
 }
 
 function cerrarSesion() {
-    // 1. Eliminamos del almacenamiento persistente
+    // 1. Limpieza lógica primero
     localStorage.removeItem('app_currentUser');
-    
-    // 2. BORRAMOS LOS DATOS EN MEMORIA (¡Crucial!)
     window.familiares = null;
     
-    // 3. Limpiamos visualmente la interfaz
-    document.getElementById('user-label').textContent = "";
-    
-    // 4. Ocultamos el contenedor de la aplicación
-    // Si tienes todo en un div principal (ej: <div id="app-container">)
-    document.getElementById('app-container').classList.add('hidden'); 
-    
-    // 5. Mostramos el login
+    // 2. Limpieza de elementos del DOM con protección
     const modal = document.getElementById('modal-identidad');
-    modal.classList.add('visible');
+    const appContainer = document.getElementById('app-container');
+
+    // Usamos el signo de interrogación ?. para evitar el error si es null
+    modal?.classList.add('visible'); 
+    appContainer?.classList.remove('activo');
     
-    console.log("Datos limpiados y sesión cerrada.");
+    // 3. Reset visual de etiquetas
+    const userLabel = document.getElementById('user-label');
+    if (userLabel) userLabel.textContent = "";
+
+    console.log("Sesión cerrada exitosamente.");
+    
+    // Solo recarga si es estrictamente necesario para limpiar memoria residual
+    location.reload(); 
 }
