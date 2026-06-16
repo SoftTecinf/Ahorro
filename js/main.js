@@ -27,22 +27,27 @@ function actualizarLabelUsuario() {
 // En js/main.js
 // Este evento se dispara tan pronto como la página termina de cargar
 window.addEventListener('DOMContentLoaded', async () => {
+    // 1. Cargamos los datos primero, obligatoriamente
+    await cargarDatosGlobales();
+
+    // 2. Ahora verificamos la sesión
     const usuarioGuardado = localStorage.getItem('app_currentUser');
-    
+
     if (usuarioGuardado) {
-        console.log("Sesión recuperada para:", usuarioGuardado);
-        
-        // 1. Cargamos los datos primero para que todo funcione
-        await cargarDatosGlobales(); 
-        
-        // 2. Restauramos la interfaz
-        document.getElementById('modal-identidad').classList.add('hidden');
-        document.getElementById('user-label').textContent = usuarioGuardado;
-        
-        // 3. Navegamos a la última vista o al inicio
-        await navegarA('inicio');
+        // Verificamos que el usuario guardado realmente exista en la lista cargada
+        const usuarioValido = window.familiares.find(f => f.nombre === usuarioGuardado);
+
+        if (usuarioValido) {
+            console.log("Sesión restaurada correctamente para:", usuarioGuardado);
+            document.getElementById('modal-identidad').classList.add('hidden');
+            document.getElementById('user-label').textContent = usuarioGuardado;
+            await navegarA('inicio');
+        } else {
+            console.log("Sesión inválida, limpiando...");
+            localStorage.removeItem('app_currentUser');
+        }
     } else {
-        console.log("No hay sesión, usuario debe iniciar sesión");
+        console.log("Esperando inicio de sesión...");
     }
 });
 
@@ -77,7 +82,7 @@ async function navegarA(vistaId, event) {
                 console.error("Error al cargar la vista:", err);
             }
         }
-        
+
         // 4. Hacer visible el contenedor
         contenedor.classList.remove('hidden');
         contenedor.style.display = 'block'; // Forzamos visibilidad
@@ -88,9 +93,9 @@ async function navegarA(vistaId, event) {
 }
 
 // ESTA LÍNEA VA FUERA DE LA FUNCIÓN
-window.onload = async function() {
+window.onload = async function () {
     const usuarioGuardado = localStorage.getItem('usuarioActivo');
-    
+
     if (usuarioGuardado) {
         // Validamos con Google Apps Script si el usuario sigue siendo válido
         google.script.run
