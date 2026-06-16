@@ -46,7 +46,7 @@ body.app-lista {
 }
 
 /* Ocultamos el modal */
-#app-principal, #modal-identidad {
+#modal-identidad {
     opacity: 0;
     visibility: hidden;
     position: fixed; /* Asegura que flote sobre todo */
@@ -62,4 +62,9 @@ body.app-lista {
 #modal-identidad.visible {
     opacity: 1;
     visibility: visible;
+}
+
+/* Oculta todo por defecto de manera total */
+body.cargando {
+    display: none !important;
 }
