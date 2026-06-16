@@ -48,31 +48,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // main.js
 function navegarA(nombreVista) {
-    // 1. Ocultar todas las vistas (añadir 'hidden' a todas)
+    // 1. Ocultar todas las vistas
     document.querySelectorAll('.vista').forEach(v => v.classList.add('hidden'));
 
-    // 2. Mostrar solo la vista seleccionada
-    // IMPORTANTE: nombreVista debe ser 'inicio', 'datos' o 'configurar'
+    // 2. Mostrar la seleccionada
     const vistaACargar = document.getElementById(`vista-${nombreVista}`);
-    if (vistaACargar) {
-        vistaACargar.classList.remove('hidden');
-    }
+    if (vistaACargar) vistaACargar.classList.remove('hidden');
 
-    // 3. Gestionar los estilos de los botones
-    const botones = document.querySelectorAll('button[data-vista]');
-    botones.forEach(btn => {
+    // 3. Gestionar botones: Limpieza total de estilos
+    document.querySelectorAll('button[data-vista]').forEach(btn => {
         if (btn.getAttribute('data-vista') === nombreVista) {
-            // Aplicar estilo activo
             btn.classList.add('nav-btn-active');
             btn.classList.remove('nav-btn-inactive');
+            // Si tu degradado se queda pegado, intenta esto:
+            btn.style.background = ""; 
         } else {
-            // Aplicar estilo inactivo
             btn.classList.remove('nav-btn-active');
             btn.classList.add('nav-btn-inactive');
         }
     });
-
-    localStorage.setItem('app_ultima_vista', nombreVista);
 }
 
 window.cargarDatosGlobales();
