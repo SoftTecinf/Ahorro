@@ -69,3 +69,13 @@ select:focus {
     visibility: visible !important;
     opacity: 1 !important;
 }
+
+#vista-datos {
+    display: block !important;
+    height: 500px !important;  /* Altura fija para ver si aparece */
+    background-color: red !important; /* Color chillón para ver si ocupa espacio */
+    border: 5px solid yellow !important; /* Borde para ver los límites */
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 9999 !important;
+}
