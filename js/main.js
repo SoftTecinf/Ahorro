@@ -73,3 +73,5 @@ async function navegarA(nombreVista) {
         console.error(`Error al cargar ${nombreVista}.html:`, error);
     }
 }
+
+window.cargarDatosGlobales();
