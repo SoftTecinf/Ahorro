@@ -39,7 +39,15 @@ body {
     width: 100%;
 }
 
-/* Oculta el login por defecto para evitar el parpadeo */
+/* Ocultamos el modal usando opacidad, no display */
 #modal-identidad {
-    display: none !important;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease; /* Transición suave */
+}
+
+/* Cuando tenga esta clase, se muestra */
+#modal-identidad.visible {
+    opacity: 1;
+    visibility: visible;
 }
