@@ -48,28 +48,35 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // main.js
 async function navegarA(nombreVista) {
-    console.log("Intentando cargar:", `${nombreVista}.html`);
+    console.log("Cargando vista:", nombreVista);
 
+    // 1. Cargar el HTML
     try {
         const respuesta = await fetch(`${nombreVista}.html`);
-        
-        if (!respuesta.ok) {
-            throw new Error(`No se pudo encontrar el archivo: ${nombreVista}.html`);
-        }
-
+        if (!respuesta.ok) throw new Error("Archivo no encontrado");
         const html = await respuesta.text();
-        const contenedor = document.getElementById('contenedor-vistas');
         
+        const contenedor = document.getElementById('contenedor-vistas');
         if (contenedor) {
             contenedor.innerHTML = html;
         }
-
-        // ... (resto de tu lógica de botones)
     } catch (error) {
-        console.error(error);
-        // Esto mostrará el error en la pantalla para que lo veas inmediatamente
-        document.getElementById('contenedor-vistas').innerHTML = `<p style="color:red">Error: ${error.message}</p>`;
+        console.error("Error al cargar:", error);
+    }
+
+    // 2. CORRECCIÓN: Resetear estilos de todos los botones
+    const botones = document.querySelectorAll('button[data-vista]');
+    botones.forEach(btn => {
+        // Quitamos la clase activa y ponemos la inactiva
+        btn.classList.remove('nav-btn-active');
+        btn.classList.add('nav-btn-inactive');
+    });
+
+    // 3. CORRECCIÓN: Activar solo el botón presionado
+    const botonSeleccionado = document.querySelector(`button[data-vista="${nombreVista}"]`);
+    if (botonSeleccionado) {
+        botonSeleccionado.classList.remove('nav-btn-inactive');
+        botonSeleccionado.classList.add('nav-btn-active');
     }
 }
-
 window.cargarDatosGlobales();
