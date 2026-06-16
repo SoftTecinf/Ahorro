@@ -53,7 +53,7 @@ async function navegarA(vistaId, event) {
         event.preventDefault();
         event.stopPropagation();
     }
-    
+
     console.log("Navegando a:", vistaId);
 
     // 1. Ocultar todas las vistas (añadir 'hidden')
@@ -88,6 +88,22 @@ async function navegarA(vistaId, event) {
 }
 
 // ESTA LÍNEA VA FUERA DE LA FUNCIÓN
-window.onload = () => navegarA('inicio');
-
+window.onload = async function() {
+    const usuarioGuardado = localStorage.getItem('usuarioActivo');
+    
+    if (usuarioGuardado) {
+        // Validamos con Google Apps Script si el usuario sigue siendo válido
+        google.script.run
+            .withSuccessHandler(validado => {
+                if (validado) {
+                    console.log("Sesión validada por el servidor");
+                    // Aquí restauras tu vista (ej. navegarA('inicio'))
+                } else {
+                    localStorage.removeItem('usuarioActivo');
+                    // Redirigir al login
+                }
+            })
+            .validarSesionServidor(usuarioGuardado); // Esta función debe existir en Code.gs
+    }
+};
 window.cargarDatosGlobales();
