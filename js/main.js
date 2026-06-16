@@ -48,19 +48,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // main.js
 async function navegarA(nombreVista) {
-    console.log("Navegando a:", nombreVista);
-
     try {
-        // 1. Hacemos el fetch al archivo .html (ej. inicio.html, datos.html)
         const respuesta = await fetch(`${nombreVista}.html`);
         const html = await respuesta.text();
 
-        // 2. Inyectamos el HTML en tu contenedor principal (reemplaza 'app' por tu ID real)
-        document.getElementById('app').innerHTML = html;
+        // Buscamos el contenedor
+        const contenedor = document.getElementById('app'); 
 
-        // 3. Guardamos en el localStorage para que al hacer F5 sepa dónde estaba
+        // Si el contenedor no existe, intentamos buscarlo una vez más 
+        // o lanzamos un error claro
+        if (!contenedor) {
+            console.error("Error: No se encontró el elemento con id='app' en el HTML.");
+            return; 
+        }
+
+        contenedor.innerHTML = html;
         localStorage.setItem('app_ultima_vista', nombreVista);
-
     } catch (error) {
         console.error("Error al cargar la vista:", error);
     }
