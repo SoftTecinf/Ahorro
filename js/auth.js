@@ -81,17 +81,7 @@ async function procesarRegistro() {
 }
 
 function cerrarSesion() {
-    // 1. Borramos la sesión
     localStorage.removeItem('app_currentUser');
-    
-    // 2. Limpiamos variables de memoria
-    window.familiares = null; 
-    
-    // 3. Forzamos la aparición del modal
-    const modal = document.getElementById('modal-identidad');
-    modal.style.display = 'flex'; // Forzamos que se vea
-    modal.classList.remove('hidden'); // Por si acaso usas clases de Tailwind
-    
-    // 4. Opcional: Recargar la página para limpiar todo desde cero
-    location.reload(); 
+    document.body.classList.remove('esta-logueado'); // El CSS ocultará el app y mostrará el login
+    location.reload(); // Recargamos para limpiar memoria y estado
 }
