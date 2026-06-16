@@ -78,7 +78,7 @@ select:focus {
     z-index: 9999 !important;
 }
 
-.vista {
+#vista-datos {
     min-height: 200px; /* Asegura que siempre tenga espacio, aunque esté vacío */
     width: 100%;
 }
