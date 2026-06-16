@@ -63,3 +63,8 @@ select:focus {
     background: transparent !important;
     color: #6b7280 !important;
 }
+
+#contenedor-vistas {
+    min-height: 300px; /* Asegura que el contenedor tenga espacio */
+    display: block;    /* Asegura que no esté oculto */
+}
