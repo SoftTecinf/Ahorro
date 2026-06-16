@@ -65,6 +65,7 @@ select:focus {
 }
 
 #contenedor-vistas {
-    min-height: 300px; /* Asegura que el contenedor tenga espacio */
-    display: block;    /* Asegura que no esté oculto */
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
