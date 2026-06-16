@@ -48,31 +48,29 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // main.js
 async function navegarA(nombreVista) {
+    // 1. Cargar el HTML
     try {
         const respuesta = await fetch(`${nombreVista}.html`);
         const html = await respuesta.text();
-
-        // Inyectamos el contenido
-        const contenedor = document.getElementById('contenedor-vistas');
-        if (contenedor) {
-            contenedor.innerHTML = html;
-        }
-
-        // --- NUEVA LÓGICA DE PESTAÑAS ---
-        // Quitamos la clase 'active' de todos los botones
-        document.querySelectorAll('.btn-nav').forEach(btn => btn.classList.remove('active'));
-        
-        // Ponemos la clase 'active' solo al botón que corresponde
-        const botonActual = document.querySelector(`[onclick="navegarA('${nombreVista}')"]`);
-        if (botonActual) {
-            botonActual.classList.add('active');
-        }
-        // ---------------------------------
-
+        document.getElementById('contenedor-vistas').innerHTML = html;
         localStorage.setItem('app_ultima_vista', nombreVista);
     } catch (error) {
-        console.error("Error al navegar:", error);
+        console.error("Error al cargar la vista:", error);
     }
+
+    // 2. Cambiar estilos de botones
+    // Seleccionamos todos los botones dentro del nav
+    const botones = document.querySelectorAll('nav button');
+    
+    botones.forEach(btn => {
+        // Obtenemos la vista a la que apunta el botón (usando el onclick o el data-vista)
+        // Aquí comparamos si el atributo coincide con la vista cargada
+        if (btn.getAttribute('data-vista') === nombreVista) {
+            btn.className = btn.className.replace('nav-btn-inactive', '') + ' nav-btn-active';
+        } else {
+            btn.className = btn.className.replace('nav-btn-active', '') + ' nav-btn-inactive';
+        }
+    });
 }
 
 window.cargarDatosGlobales();
