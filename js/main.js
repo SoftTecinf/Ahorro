@@ -28,17 +28,17 @@ function actualizarLabelUsuario() {
 window.appReady = false;
 
 window.addEventListener('DOMContentLoaded', async () => {
-    // 1. CARGA DE DATOS OBLIGATORIA
+    // 1. Cargamos datos
     await cargarDatosGlobales(); 
-    window.appReady = true;
+    console.log("Datos cargados, procediendo a decidir vista...");
 
-    // 2. DECISIÓN INMEDIATA (Sin navegar todavía)
+    // 2. Decisión de vista
     const modal = document.getElementById('modal-identidad');
     const usuarioGuardado = localStorage.getItem('app_currentUser');
-    const esValido = usuarioGuardado && window.familiares.some(f => f.nombre === usuarioGuardado);
+    const esValido = usuarioGuardado && window.familiares?.some(f => f.nombre === usuarioGuardado);
 
     if (esValido) {
-        // Usuario ya logueado
+        // Usuario logueado
         document.getElementById('user-label').textContent = usuarioGuardado;
         modal.classList.remove('visible'); // Ocultar login
         await navegarA('inicio');          // Cargar vista
@@ -46,6 +46,9 @@ window.addEventListener('DOMContentLoaded', async () => {
         // Usuario no logueado
         modal.classList.add('visible');    // Mostrar login
     }
+
+    // 3. ¡LISTO! Ahora mostramos todo de golpe
+    document.body.classList.add('app-lista');
 });
 
 
