@@ -52,20 +52,26 @@ async function navegarA(nombreVista) {
         const respuesta = await fetch(`${nombreVista}.html`);
         const html = await respuesta.text();
 
-        // Buscamos el contenedor
+        // Inyectamos el contenido
         const contenedor = document.getElementById('contenedor-vistas');
-
-        // Si el contenedor no existe, intentamos buscarlo una vez más 
-        // o lanzamos un error claro
-        if (!contenedor) {
-            console.error("Error: No se encontró el elemento con id='app' en el HTML.");
-            return; 
+        if (contenedor) {
+            contenedor.innerHTML = html;
         }
 
-        contenedor.innerHTML = html;
+        // --- NUEVA LÓGICA DE PESTAÑAS ---
+        // Quitamos la clase 'active' de todos los botones
+        document.querySelectorAll('.btn-nav').forEach(btn => btn.classList.remove('active'));
+        
+        // Ponemos la clase 'active' solo al botón que corresponde
+        const botonActual = document.querySelector(`[onclick="navegarA('${nombreVista}')"]`);
+        if (botonActual) {
+            botonActual.classList.add('active');
+        }
+        // ---------------------------------
+
         localStorage.setItem('app_ultima_vista', nombreVista);
     } catch (error) {
-        console.error("Error al cargar la vista:", error);
+        console.error("Error al navegar:", error);
     }
 }
 
