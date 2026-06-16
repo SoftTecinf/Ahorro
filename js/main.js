@@ -30,7 +30,8 @@ window.addEventListener('DOMContentLoaded', () => {
     
     if (sesionGuardada) {
         console.log("Sesión encontrada para:", sesionGuardada);
-        // Saltamos directo al inicio
+        // Ocultamos el login y mostramos la interfaz
+        document.getElementById('modal-identidad').style.display = 'none';
         cargarInterfaz(); 
     } else {
         console.log("No hay sesión, mostrando login");
@@ -99,4 +100,13 @@ window.onload = async function() {
             .validarSesionServidor(usuarioGuardado); // Esta función debe existir en Code.gs
     }
 };
+
+function loginExitoso(nombre) {
+    // ESTA ES LA LÍNEA QUE TE FALTA
+    localStorage.setItem('sesionAhorro', nombre); 
+    
+    // Luego cargas tu interfaz
+    cargarInterfaz();
+}
+
 window.cargarDatosGlobales();
