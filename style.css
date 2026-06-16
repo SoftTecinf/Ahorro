@@ -38,3 +38,8 @@ body {
 .vista {
     width: 100%;
 }
+
+/* Oculta el login por defecto para evitar el parpadeo */
+#modal-identidad {
+    display: none !important;
+}
