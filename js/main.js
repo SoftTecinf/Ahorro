@@ -61,7 +61,10 @@ async function navegarA(nombreVista) {
         const contenedorDestino = document.getElementById(nombreVista);
         if (contenedorDestino) {
             contenedorDestino.innerHTML = contenido;
-        }
+        setTimeout(() => {
+            contenedor.style.display = 'block'; 
+            contenedor.classList.remove('hidden');
+        }, 10);}
 
         // 3. Ocultar todas las vistas y mostrar solo la seleccionada
         document.querySelectorAll('.vista').forEach(v => v.classList.add('hidden'));
