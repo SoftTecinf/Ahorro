@@ -49,23 +49,34 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // main.js
 async function navegarA(nombreVista) {
-    console.log("Cargando archivo:", `${nombreVista}.html`);
+    console.log("Navegando a:", nombreVista);
 
     try {
-        // 1. Fetch del archivo externo
+        // 1. Intentar cargar el contenido externo (si los archivos existen)
+        // Nota: Si los archivos NO existen en el servidor, esto dará error.
         const respuesta = await fetch(`${nombreVista}.html`);
-        if (!respuesta.ok) throw new Error("No se pudo cargar el archivo");
-        const contenido = await respuesta.text();
-
-        // 2. Inyectar contenido en el div correspondiente (ej: id="inicio")
-        const contenedorDestino = document.getElementById(nombreVista);
-        if (contenedorDestino) {
-            contenedorDestino.innerHTML = contenido;
+        
+        if (respuesta.ok) {
+            const contenido = await respuesta.text();
+            const contenedorDestino = document.getElementById(nombreVista);
+            if (contenedorDestino) {
+                contenedorDestino.innerHTML = contenido;
+            }
         }
+        // Si el archivo no existe, el código continúa igual para mostrar el div que ya tienes en el HTML.
 
-        // 3. Ocultar todas las vistas y mostrar solo la seleccionada
-        document.querySelectorAll('.vista').forEach(v => v.classList.add('hidden'));
-        if (contenedorDestino) contenedorDestino.classList.remove('hidden');
+        // 2. Ocultar todas las vistas
+        document.querySelectorAll('.vista').forEach(v => {
+            v.classList.add('hidden');
+            v.style.display = 'none';
+        });
+
+        // 3. Mostrar la vista seleccionada
+        const vistaACargar = document.getElementById(nombreVista);
+        if (vistaACargar) {
+            vistaACargar.classList.remove('hidden');
+            vistaACargar.style.display = 'block';
+        }
 
         // 4. Gestionar botones
         document.querySelectorAll('button[data-vista]').forEach(btn => {
@@ -77,10 +88,13 @@ async function navegarA(nombreVista) {
                 btn.classList.add('nav-btn-inactive');
             }
         });
+
     } catch (error) {
-        console.error("Error al cargar la vista:", error);
+        console.error("Error en navegación:", error);
     }
-window.onload = () => navegarA('inicio');
 }
+
+// ESTA LÍNEA VA FUERA DE LA FUNCIÓN
+window.onload = () => navegarA('inicio');
 
 window.cargarDatosGlobales();
