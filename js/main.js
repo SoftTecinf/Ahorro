@@ -47,26 +47,34 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 // main.js
-async function navegarA(nombreVista) {
-    console.log("Cargando vista:", nombreVista);
+function navegarA(nombreVista) {
+    console.log("Cambiando a vista:", nombreVista);
 
-    try {
-        const respuesta = await fetch(`${nombreVista}.html`);
-        const html = await respuesta.text();
+    // 1. Ocultar TODAS las vistas
+    const vistas = document.querySelectorAll('.vista');
+    vistas.forEach(v => v.classList.add('hidden'));
 
-        const contenedor = document.getElementById('contenedor-vistas');
-        
-        if (contenedor) {
-            // AQUÍ LA PRUEBA: inyectamos el HTML recibido
-            contenedor.innerHTML = html;
-            console.log("HTML inyectado en el contenedor.");
-        } else {
-            console.error("NO ENCONTRÉ 'contenedor-vistas'");
-        }
-
-        // ... resto de tu lógica de botones
-    } catch (error) {
-        console.error("Error al cargar:", error);
+    // 2. Mostrar SOLO la vista seleccionada
+    // Nota: El ID en tu HTML es 'vista-datos', así que nombreVista debe coincidir
+    const vistaACargar = document.getElementById(`vista-${nombreVista}`);
+    if (vistaACargar) {
+        vistaACargar.classList.remove('hidden');
     }
+
+    // 3. Gestionar botones (la lógica que ya tenías)
+    const botones = document.querySelectorAll('button[data-vista]');
+    botones.forEach(btn => {
+        btn.classList.remove('nav-btn-active');
+        btn.classList.add('nav-btn-inactive');
+    });
+
+    const botonActual = document.querySelector(`button[data-vista="${nombreVista}"]`);
+    if (botonActual) {
+        botonActual.classList.remove('nav-btn-inactive');
+        botonActual.classList.add('nav-btn-active');
+    }
+
+    localStorage.setItem('app_ultima_vista', nombreVista);
 }
+
 window.cargarDatosGlobales();
