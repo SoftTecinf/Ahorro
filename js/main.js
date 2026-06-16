@@ -83,3 +83,4 @@ async function navegarA(nombreVista) {
 }
 
 window.cargarDatosGlobales();
+window.onload = () => navegarA('inicio');
