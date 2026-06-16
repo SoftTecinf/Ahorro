@@ -49,25 +49,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // main.js
 function navegarA(nombreVista) {
-    // 1. Ocultar todos los divs que tengan la clase .vista
-    document.querySelectorAll('.vista').forEach(v => v.classList.add('hidden'));
+    console.log("Navegando a:", nombreVista);
 
-    // 2. Mostrar solo el que corresponde (ej: vista-datos)
+    // 1. Ocultar todas las vistas
+    const vistas = document.querySelectorAll('.vista');
+    vistas.forEach(v => {
+        v.classList.add('hidden');
+        v.style.display = 'none'; // Forzamos el ocultado
+    });
+
+    // 2. Mostrar la seleccionada
     const vistaACargar = document.getElementById('vista-' + nombreVista);
     if (vistaACargar) {
         vistaACargar.classList.remove('hidden');
+        vistaACargar.style.display = 'block'; // Forzamos la visibilidad
+        console.log("Vista visible:", vistaACargar.id);
+    } else {
+        console.error("No existe el div: vista-" + nombreVista);
     }
-
-    // 3. Gestión de botones (Opcional: si quieres que cambien de color)
-    document.querySelectorAll('button[data-vista]').forEach(btn => {
-        if (btn.getAttribute('data-vista') === nombreVista) {
-            btn.classList.add('nav-btn-active');
-            btn.classList.remove('nav-btn-inactive');
-        } else {
-            btn.classList.remove('nav-btn-active');
-            btn.classList.add('nav-btn-inactive');
-        }
-    });
 }
 
 window.cargarDatosGlobales();
