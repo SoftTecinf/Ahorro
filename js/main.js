@@ -48,42 +48,43 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 // main.js
-async function navegarA(nombreVista) {
-    console.log("Cargando archivo:", `${nombreVista}.html`);
+function navegarA(nombreVista) {
+    console.log("Navegando a:", nombreVista);
 
-    try {
-        // 1. Fetch del archivo externo
-        const respuesta = await fetch(`${nombreVista}.html`);
-        if (!respuesta.ok) throw new Error("No se pudo cargar el archivo");
-        const contenido = await respuesta.text();
+    // 1. Ocultar todos los divs que tienen la clase 'vista'
+    const todasLasVistas = document.querySelectorAll('.vista');
+    todasLasVistas.forEach(v => {
+        v.classList.add('hidden');
+        v.style.display = 'none'; // Asegura que se oculten
+    });
 
-        // 2. Inyectar contenido en el div correspondiente (ej: id="inicio")
-        const contenedorDestino = document.getElementById(nombreVista);
-        if (contenedorDestino) {
-            contenedorDestino.innerHTML = contenido;
-        setTimeout(() => {
-            contenedor.style.display = 'block'; 
-            contenedor.classList.remove('hidden');
-        }, 10);}
-
-        // 3. Ocultar todas las vistas y mostrar solo la seleccionada
-        document.querySelectorAll('.vista').forEach(v => v.classList.add('hidden'));
-        if (contenedorDestino) contenedorDestino.classList.remove('hidden');
-
-        // 4. Gestionar botones
-        document.querySelectorAll('button[data-vista]').forEach(btn => {
-            if (btn.getAttribute('data-vista') === nombreVista) {
-                btn.classList.add('nav-btn-active');
-                btn.classList.remove('nav-btn-inactive');
-            } else {
-                btn.classList.remove('nav-btn-active');
-                btn.classList.add('nav-btn-inactive');
-            }
-        });
-    } catch (error) {
-        console.error("Error al cargar la vista:", error);
+    // 2. Mostrar SOLO el div que corresponde al nombre
+    // Buscamos el elemento por su ID (ej: 'inicio', 'datos', 'config')
+    const vistaACargar = document.getElementById(nombreVista);
+    
+    if (vistaACargar) {
+        vistaACargar.classList.remove('hidden');
+        vistaACargar.style.display = 'block'; // Asegura que se muestre
+        console.log("Vista cargada correctamente:", nombreVista);
+    } else {
+        console.error("No se encontró ningún elemento con ID:", nombreVista);
     }
+
+    // 3. (Opcional) Cambiar el estilo de los botones activos
+    document.querySelectorAll('button[data-vista]').forEach(btn => {
+        if (btn.getAttribute('data-vista') === nombreVista) {
+            btn.classList.add('nav-btn-active');
+            btn.classList.remove('nav-btn-inactive');
+        } else {
+            btn.classList.remove('nav-btn-active');
+            btn.classList.add('nav-btn-inactive');
+        }
+    });
 }
 
+// Carga inicial al abrir la página
+window.onload = () => {
+    navegarA('inicio'); // Carga 'inicio' por defecto
+};
+
 window.cargarDatosGlobales();
-window.onload = () => navegarA('inicio');
