@@ -49,23 +49,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // main.js
 function navegarA(nombreVista) {
-    console.log("Navegando a:", nombreVista);
+    // 1. Ocultar todas las vistas (buscamos por la clase .vista)
+    document.querySelectorAll('.vista').forEach(v => v.classList.add('hidden'));
 
-    // 1. Ocultar todas las vistas
-    const vistas = document.querySelectorAll('.vista');
-    vistas.forEach(v => {
-        v.classList.add('hidden');
-        v.style.display = 'none'; // Forzamos el ocultado
-    });
-
-    // 2. Mostrar la seleccionada
-    const vistaACargar = document.getElementById('vista-' + nombreVista);
+    // 2. Mostrar la seleccionada (Quitamos el prefijo 'vista-')
+    const vistaACargar = document.getElementById(nombreVista); 
     if (vistaACargar) {
         vistaACargar.classList.remove('hidden');
-        vistaACargar.style.display = 'block'; // Forzamos la visibilidad
-        console.log("Vista visible:", vistaACargar.id);
-    } else {
-        console.error("No existe el div: vista-" + nombreVista);
     }
 }
 
