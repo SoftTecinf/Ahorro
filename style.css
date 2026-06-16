@@ -1,11 +1,13 @@
-/* Configuración base */
+/* Esto evita que el modal parpadee antes de que JS decida qué hacer */
+#modal-identidad {
+    display: none; 
+}
+
 body {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    min-height: 100vh;
 }
 
-/* Tarjetas y botones */
 .neon-card {
     box-shadow: 0 10px 20px -3px rgba(107, 33, 168, 0.05), 0 4px 6px -2px rgba(59, 130, 246, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.4);
@@ -14,7 +16,7 @@ body {
 
 .btn-gradient {
     background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
-    transition: all 0.3s ease;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .btn-gradient:hover {
@@ -22,29 +24,27 @@ body {
     box-shadow: 0 6px 20px rgba(168, 85, 247, 0.3);
 }
 
-/* Inputs y Selects */
-input, select {
+input,
+select {
     background-color: rgba(255, 255, 255, 0.85) !important;
+    border-color: #e9d5ff !important;
 }
 
-/* Control de vistas */
-.vista {
-    width: 100%;
-    transition: opacity 0.3s ease;
+input:focus,
+select:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
 }
 
-/* Gestión de estados */
-.nav-btn-active {
-    background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%) !important;
-    color: white !important;
-    box-shadow: 0 4px 6px -1px rgba(168, 85, 247, 0.2);
+.custom-scrollbar::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
 }
 
-.nav-btn-inactive {
-    background: transparent !important;
-    color: #6b7280 !important;
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #e9d5ff;
+    border-radius: 10px;
 }
 
-/* Scrollbar personalizado */
-.custom-scrollbar::-webkit-scrollbar { width: 6px; }
-.custom-scrollbar::-webkit-scrollbar-thumb { background: #e9d5ff; border-radius: 10px; }
+
+
