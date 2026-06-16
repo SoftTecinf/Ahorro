@@ -50,3 +50,16 @@ select:focus {
 .hidden {
     display: none !important;
 }
+
+/* Clase que aplicaremos al botón seleccionado */
+.nav-btn-active {
+    background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%) !important;
+    color: white !important;
+    box-shadow: 0 4px 6px -1px rgba(168, 85, 247, 0.2);
+}
+
+/* Clase para los botones que no están seleccionados */
+.nav-btn-inactive {
+    background: transparent !important;
+    color: #6b7280 !important;
+}
