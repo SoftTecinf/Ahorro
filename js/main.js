@@ -48,29 +48,28 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // main.js
 async function navegarA(nombreVista) {
-    // 1. Cargar el HTML
+    console.log("Intentando cargar:", `${nombreVista}.html`);
+
     try {
         const respuesta = await fetch(`${nombreVista}.html`);
-        const html = await respuesta.text();
-        document.getElementById('contenedor-vistas').innerHTML = html;
-        localStorage.setItem('app_ultima_vista', nombreVista);
-    } catch (error) {
-        console.error("Error al cargar la vista:", error);
-    }
-
-    // 2. Cambiar estilos de botones
-    // Seleccionamos todos los botones dentro del nav
-    const botones = document.querySelectorAll('nav button');
-    
-    botones.forEach(btn => {
-        // Obtenemos la vista a la que apunta el botón (usando el onclick o el data-vista)
-        // Aquí comparamos si el atributo coincide con la vista cargada
-        if (btn.getAttribute('data-vista') === nombreVista) {
-            btn.className = btn.className.replace('nav-btn-inactive', '') + ' nav-btn-active';
-        } else {
-            btn.className = btn.className.replace('nav-btn-active', '') + ' nav-btn-inactive';
+        
+        if (!respuesta.ok) {
+            throw new Error(`No se pudo encontrar el archivo: ${nombreVista}.html`);
         }
-    });
+
+        const html = await respuesta.text();
+        const contenedor = document.getElementById('contenedor-vistas');
+        
+        if (contenedor) {
+            contenedor.innerHTML = html;
+        }
+
+        // ... (resto de tu lógica de botones)
+    } catch (error) {
+        console.error(error);
+        // Esto mostrará el error en la pantalla para que lo veas inmediatamente
+        document.getElementById('contenedor-vistas').innerHTML = `<p style="color:red">Error: ${error.message}</p>`;
+    }
 }
 
 window.cargarDatosGlobales();
