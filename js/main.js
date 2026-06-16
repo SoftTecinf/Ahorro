@@ -48,20 +48,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // main.js
 function navegarA(nombreVista) {
-    // 1. Ocultar todas las vistas
+    // 1. Ocultar todos los divs que tengan la clase .vista
     document.querySelectorAll('.vista').forEach(v => v.classList.add('hidden'));
 
-    // 2. Mostrar la seleccionada
-    const vistaACargar = document.getElementById(`vista-${nombreVista}`);
-    if (vistaACargar) vistaACargar.classList.remove('hidden');
+    // 2. Mostrar solo el que corresponde (ej: vista-datos)
+    const vistaACargar = document.getElementById('vista-' + nombreVista);
+    if (vistaACargar) {
+        vistaACargar.classList.remove('hidden');
+    }
 
-    // 3. Gestionar botones: Limpieza total de estilos
+    // 3. Gestión de botones (Opcional: si quieres que cambien de color)
     document.querySelectorAll('button[data-vista]').forEach(btn => {
         if (btn.getAttribute('data-vista') === nombreVista) {
             btn.classList.add('nav-btn-active');
             btn.classList.remove('nav-btn-inactive');
-            // Si tu degradado se queda pegado, intenta esto:
-            btn.style.background = ""; 
         } else {
             btn.classList.remove('nav-btn-active');
             btn.classList.add('nav-btn-inactive');
