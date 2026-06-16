@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // main.js
 async function navegarA(nombreVista) {
-    console.log("Navegando a:", nombreVista);
+    //console.log("Navegando a:", nombreVista);
 
     // 1. Ocultar todos los contenedores principales
     document.querySelectorAll('.vista').forEach(v => {
