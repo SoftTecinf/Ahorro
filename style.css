@@ -1,13 +1,11 @@
-/* Esto evita que el modal parpadee antes de que JS decida qué hacer */
-#modal-identidad {
-    display: none; 
-}
-
+/* Configuración base */
 body {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
 }
 
+/* Tarjetas y botones */
 .neon-card {
     box-shadow: 0 10px 20px -3px rgba(107, 33, 168, 0.05), 0 4px 6px -2px rgba(59, 130, 246, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.4);
@@ -16,7 +14,7 @@ body {
 
 .btn-gradient {
     background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: all 0.3s ease;
 }
 
 .btn-gradient:hover {
@@ -24,61 +22,29 @@ body {
     box-shadow: 0 6px 20px rgba(168, 85, 247, 0.3);
 }
 
-input,
-select {
+/* Inputs y Selects */
+input, select {
     background-color: rgba(255, 255, 255, 0.85) !important;
-    border-color: #e9d5ff !important;
 }
 
-input:focus,
-select:focus {
-    border-color: #3b82f6 !important;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+/* Control de vistas */
+.vista {
+    width: 100%;
+    transition: opacity 0.3s ease;
 }
 
-.custom-scrollbar::-webkit-scrollbar {
-    height: 6px;
-    width: 6px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #e9d5ff;
-    border-radius: 10px;
-}
-
-/* Esto oculta cualquier elemento que tenga la clase 'hidden' */
-.hidden {
-    display: none !important;
-}
-
-/* Clase que aplicaremos al botón seleccionado */
+/* Gestión de estados */
 .nav-btn-active {
     background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%) !important;
     color: white !important;
     box-shadow: 0 4px 6px -1px rgba(168, 85, 247, 0.2);
 }
 
-/* Clase para los botones que no están seleccionados */
 .nav-btn-inactive {
     background: transparent !important;
     color: #6b7280 !important;
 }
 
-#contenedor-vistas {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-
-#vista-datos {
-    display: block !important;
-    height: 500px !important;  /* Altura fija para ver si aparece */
-    visibility: visible !important;
-    opacity: 1 !important;
-    z-index: 9999 !important;
-}
-
-.vista {
-    min-height: 200px; /* Asegura que siempre tenga espacio, aunque esté vacío */
-    width: 100%;
-}
+/* Scrollbar personalizado */
+.custom-scrollbar::-webkit-scrollbar { width: 6px; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #e9d5ff; border-radius: 10px; }
