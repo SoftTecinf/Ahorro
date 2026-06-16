@@ -48,39 +48,38 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 // main.js
-function navegarA(nombreVista) {
-    console.log("--- Inicio de Navegación ---");
-    console.log("Vista solicitada:", nombreVista);
+async function navegarA(nombreVista) {
+    console.log("Cargando archivo:", `${nombreVista}.html`);
 
-    // 1. Ocultar todas las vistas
-    const vistas = document.querySelectorAll('.vista');
-    vistas.forEach(v => {
-        v.classList.add('hidden');
-    });
+    try {
+        // 1. Fetch del archivo externo
+        const respuesta = await fetch(`${nombreVista}.html`);
+        if (!respuesta.ok) throw new Error("No se pudo cargar el archivo");
+        const contenido = await respuesta.text();
 
-    // 2. Mostrar la vista seleccionada
-    // Usamos el ID exacto que tienes en tu HTML (ej: 'inicio', 'datos', 'config')
-    const vistaACargar = document.getElementById(nombreVista);
-    
-    if (vistaACargar) {
-        vistaACargar.classList.remove('hidden');
-        console.log("Vista encontrada y mostrada:", nombreVista);
-    } else {
-        console.error("ERROR CRÍTICO: No se encontró el div con id:", nombreVista);
-    }
-
-    // 3. Gestionar botones
-    const botones = document.querySelectorAll('button[data-vista]');
-    botones.forEach(btn => {
-        if (btn.getAttribute('data-vista') === nombreVista) {
-            btn.classList.add('nav-btn-active');
-            btn.classList.remove('nav-btn-inactive');
-            console.log("Botón activado:", btn.id);
-        } else {
-            btn.classList.remove('nav-btn-active');
-            btn.classList.add('nav-btn-inactive');
+        // 2. Inyectar contenido en el div correspondiente (ej: id="inicio")
+        const contenedorDestino = document.getElementById(nombreVista);
+        if (contenedorDestino) {
+            contenedorDestino.innerHTML = contenido;
         }
-    });
+
+        // 3. Ocultar todas las vistas y mostrar solo la seleccionada
+        document.querySelectorAll('.vista').forEach(v => v.classList.add('hidden'));
+        if (contenedorDestino) contenedorDestino.classList.remove('hidden');
+
+        // 4. Gestionar botones
+        document.querySelectorAll('button[data-vista]').forEach(btn => {
+            if (btn.getAttribute('data-vista') === nombreVista) {
+                btn.classList.add('nav-btn-active');
+                btn.classList.remove('nav-btn-inactive');
+            } else {
+                btn.classList.remove('nav-btn-active');
+                btn.classList.add('nav-btn-inactive');
+            }
+        });
+    } catch (error) {
+        console.error("Error al cargar la vista:", error);
+    }
 }
 
 window.cargarDatosGlobales();
