@@ -48,39 +48,37 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 // main.js
-async function navegarA(nombreVista) {
-    //console.log("Navegando a:", nombreVista);
+async function navegarA(vistaId) {
+    console.log("Navegando a:", vistaId);
 
-    // 1. Ocultar todos los contenedores principales
+    // 1. Ocultar todas las vistas (añadir 'hidden')
     document.querySelectorAll('.vista').forEach(v => {
         v.classList.add('hidden');
         v.style.display = 'none';
     });
 
-    const contenedor = document.getElementById(nombreVista);
+    // 2. Localizar el contenedor
+    const contenedor = document.getElementById(vistaId);
 
     if (contenedor) {
-        // 2. Solo cargamos si está vacío
+        // 3. Cargar contenido solo si está vacío
         if (contenedor.innerHTML.trim() === "") {
             try {
-                const respuesta = await fetch(`${nombreVista}.html`);
-                const texto = await respuesta.text();
-                
-                // Limpiamos el HTML recibido para no tener IDs duplicados
-                // Solo inyectamos el contenido interno de la sección
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = texto;
-                const contenidoReal = tempDiv.querySelector('section') || tempDiv.firstElementChild;
-                
-                contenedor.innerHTML = contenidoReal.innerHTML;
-            } catch (error) {
-                console.error("Error al cargar:", error);
+                const response = await fetch(`${vistaId}.html`);
+                const html = await response.text();
+                contenedor.innerHTML = html;
+                console.log("Contenido cargado para:", vistaId);
+            } catch (err) {
+                console.error("Error al cargar la vista:", err);
             }
         }
         
-        // 3. Mostramos el contenedor padre
+        // 4. Hacer visible el contenedor
         contenedor.classList.remove('hidden');
-        contenedor.style.display = 'block';
+        contenedor.style.display = 'block'; // Forzamos visibilidad
+        console.log("Vista mostrada exitosamente");
+    } else {
+        console.error("No se encontró el contenedor con ID:", vistaId);
     }
 }
 
