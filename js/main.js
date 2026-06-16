@@ -25,20 +25,26 @@ function actualizarLabelUsuario() {
 // INICIALIZACIÓN UNIFICADA
 // ==========================================
 // En js/main.js
-window.addEventListener('DOMContentLoaded', () => {
-    const sesionGuardada = localStorage.getItem('sesionAhorro');
+// Este evento se dispara tan pronto como la página termina de cargar
+window.addEventListener('DOMContentLoaded', async () => {
+    const usuarioGuardado = localStorage.getItem('app_currentUser');
     
-    if (sesionGuardada) {
-        console.log("Sesión encontrada para:", sesionGuardada);
-        // Ocultamos el login y mostramos la interfaz
-        document.getElementById('modal-identidad').style.display = 'none';
-        cargarInterfaz(); 
+    if (usuarioGuardado) {
+        console.log("Sesión recuperada para:", usuarioGuardado);
+        
+        // 1. Cargamos los datos primero para que todo funcione
+        await cargarDatosGlobales(); 
+        
+        // 2. Restauramos la interfaz
+        document.getElementById('modal-identidad').classList.add('hidden');
+        document.getElementById('user-label').textContent = usuarioGuardado;
+        
+        // 3. Navegamos a la última vista o al inicio
+        await navegarA('inicio');
     } else {
-        console.log("No hay sesión, mostrando login");
-        document.getElementById('modal-identidad').style.display = 'flex';
+        console.log("No hay sesión, usuario debe iniciar sesión");
     }
 });
-
 
 
 // main.js
@@ -101,12 +107,6 @@ window.onload = async function() {
     }
 };
 
-function loginExitoso(nombre) {
-    // ESTA ES LA LÍNEA QUE TE FALTA
-    localStorage.setItem('sesionAhorro', nombre); 
-    
-    // Luego cargas tu interfaz
-    cargarInterfaz();
-}
+
 
 window.cargarDatosGlobales();
