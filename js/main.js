@@ -48,31 +48,29 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // main.js
 function navegarA(nombreVista) {
-    console.log("Cambiando a vista:", nombreVista);
+    // 1. Ocultar todas las vistas (añadir 'hidden' a todas)
+    document.querySelectorAll('.vista').forEach(v => v.classList.add('hidden'));
 
-    // 1. Ocultar TODAS las vistas
-    const vistas = document.querySelectorAll('.vista');
-    vistas.forEach(v => v.classList.add('hidden'));
-
-    // 2. Mostrar SOLO la vista seleccionada
-    // Nota: El ID en tu HTML es 'vista-datos', así que nombreVista debe coincidir
+    // 2. Mostrar solo la vista seleccionada
+    // IMPORTANTE: nombreVista debe ser 'inicio', 'datos' o 'configurar'
     const vistaACargar = document.getElementById(`vista-${nombreVista}`);
     if (vistaACargar) {
         vistaACargar.classList.remove('hidden');
     }
 
-    // 3. Gestionar botones (la lógica que ya tenías)
+    // 3. Gestionar los estilos de los botones
     const botones = document.querySelectorAll('button[data-vista]');
     botones.forEach(btn => {
-        btn.classList.remove('nav-btn-active');
-        btn.classList.add('nav-btn-inactive');
+        if (btn.getAttribute('data-vista') === nombreVista) {
+            // Aplicar estilo activo
+            btn.classList.add('nav-btn-active');
+            btn.classList.remove('nav-btn-inactive');
+        } else {
+            // Aplicar estilo inactivo
+            btn.classList.remove('nav-btn-active');
+            btn.classList.add('nav-btn-inactive');
+        }
     });
-
-    const botonActual = document.querySelector(`button[data-vista="${nombreVista}"]`);
-    if (botonActual) {
-        botonActual.classList.remove('nav-btn-inactive');
-        botonActual.classList.add('nav-btn-active');
-    }
 
     localStorage.setItem('app_ultima_vista', nombreVista);
 }
