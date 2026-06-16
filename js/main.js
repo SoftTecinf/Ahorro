@@ -53,7 +53,7 @@ async function navegarA(nombreVista) {
         const html = await respuesta.text();
 
         // Buscamos el contenedor
-        const contenedor = document.getElementById('app'); 
+        const contenedor = document.getElementById('contenedor-vistas');
 
         // Si el contenedor no existe, intentamos buscarlo una vez más 
         // o lanzamos un error claro
