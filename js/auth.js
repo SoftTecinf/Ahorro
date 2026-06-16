@@ -85,7 +85,23 @@ async function procesarRegistro() {
 }
 
 function cerrarSesion() {
+    // 1. Limpieza lógica (Instantáneo)
     localStorage.removeItem('app_currentUser');
-    document.body.classList.remove('esta-logueado'); // El CSS ocultará el app y mostrará el login
-    location.reload(); // Recargamos para limpiar memoria y estado
+    
+    // 2. Limpieza de memoria (para que no queden datos viejos)
+    window.familiares = null; 
+    
+    // 3. Efecto visual instantáneo
+    const modal = document.getElementById('modal-identidad');
+    modal.classList.add('visible'); // Mostramos el login sin recargar
+    
+    // 4. Ocultamos las vistas activas (para que no queden restos)
+    const vistas = document.querySelectorAll('.vista'); 
+    vistas.forEach(v => v.classList.add('hidden')); // Ajusta según tu clase de ocultar
+    
+    console.log("Sesión cerrada instantáneamente");
+    
+    // ¡NO USES location.reload()! 
+    // Si la app no muestra el login correctamente, 
+    // es un problema de estilos, no de recarga.
 }
