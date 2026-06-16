@@ -48,29 +48,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // main.js
 async function navegarA(nombreVista) {
-    const contenedor = document.getElementById(`vista-${nombreVista}`);
+    console.log("Navegando a:", nombreVista);
 
-    // Si el contenido ya fue cargado, solo mostramos la vista
-    if (contenedor.innerHTML.trim() !== "") {
-        window.cargarVista(nombreVista);
-        return;
-    }
-
-    // Si está vacío, traemos el archivo correspondiente
     try {
-        console.log(`Cargando vista: ${nombreVista}.html`);
+        // 1. Hacemos el fetch al archivo .html (ej. inicio.html, datos.html)
         const respuesta = await fetch(`${nombreVista}.html`);
         const html = await respuesta.text();
 
-        // Inyectamos solo la sección principal
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        const seccion = doc.querySelector('section');
+        // 2. Inyectamos el HTML en tu contenedor principal (reemplaza 'app' por tu ID real)
+        document.getElementById('app').innerHTML = html;
 
-        contenedor.innerHTML = seccion ? seccion.outerHTML : html;
-        window.cargarVista(nombreVista);
+        // 3. Guardamos en el localStorage para que al hacer F5 sepa dónde estaba
+        localStorage.setItem('app_ultima_vista', nombreVista);
+
     } catch (error) {
-        console.error(`Error al cargar ${nombreVista}.html:`, error);
+        console.error("Error al cargar la vista:", error);
     }
 }
 
