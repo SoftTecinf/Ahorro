@@ -24,26 +24,27 @@ function actualizarLabelUsuario() {
 // ==========================================
 // INICIALIZACIÓN UNIFICADA
 // ==========================================
-// En js/main.js
-// Este evento se dispara tan pronto como la página termina de cargar
+// Variable global para saber si estamos listos
+window.appReady = false;
+
 window.addEventListener('DOMContentLoaded', async () => {
-    // 1. Cargamos datos primero
+    // 1. CARGA DE DATOS OBLIGATORIA
     await cargarDatosGlobales(); 
-    
+    window.appReady = true;
+
+    // 2. DECISIÓN INMEDIATA (Sin navegar todavía)
     const modal = document.getElementById('modal-identidad');
     const usuarioGuardado = localStorage.getItem('app_currentUser');
-    
-    // Verificamos si existe el usuario en la data cargada
     const esValido = usuarioGuardado && window.familiares.some(f => f.nombre === usuarioGuardado);
 
     if (esValido) {
-        console.log("Sesión activa:", usuarioGuardado);
+        // Usuario ya logueado
         document.getElementById('user-label').textContent = usuarioGuardado;
-        modal.classList.remove('visible'); // Ocultamos el modal
-        await navegarA('inicio');
+        modal.classList.remove('visible'); // Ocultar login
+        await navegarA('inicio');          // Cargar vista
     } else {
-        console.log("No hay sesión, abriendo login...");
-        modal.classList.add('visible'); // Mostramos el modal
+        // Usuario no logueado
+        modal.classList.add('visible');    // Mostrar login
     }
 });
 
