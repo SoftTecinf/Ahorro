@@ -32,10 +32,10 @@
         </h1>
     </header>
 
-<nav class="max-w-md mx-auto mb-8 px-4">
-    <div class="bg-white p-1.5 rounded-2xl shadow-sm flex justify-between gap-1 border border-purple-50">
+    <nav class="max-w-md mx-auto mb-8 px-4">
+        <div class="bg-white p-1.5 rounded-2xl shadow-sm flex justify-between gap-1 border border-purple-50">
 
-            <button onclick="navegarA('inicio')" data-vista="inicio" 
+            <button onclick="navegarA('inicio')" data-vista="inicio"
                 class="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all cursor-pointer bg-gradient-to-r from-purple-600 to-blue-500 text-white shadow-sm">
                 🔮 Inicio
             </button>
@@ -55,9 +55,20 @@
 
 
     <main id="contenedor-vistas">
-        <div id="vista-inicio" class="vista"></div>
-        <div id="vista-datos" class="vista"></div>
-        <div id="vista-configurar" class="vista"></div>
+        <div id="vista-inicio" class="vista">
+            <h2>Bienvenido a Inicio</h2>
+            <p>Aquí verás tus ahorros.</p>
+        </div>
+
+        <div id="vista-datos" class="vista hidden">
+            <h2>Tus Datos</h2>
+            <p>Aquí aparecerá la información de tus movimientos.</p>
+        </div>
+
+        <div id="vista-configurar" class="vista hidden">
+            <h2>Configuración</h2>
+            <p>Ajustes de tu cuenta.</p>
+        </div>
     </main>
 
     <div id="modal-deposito-familiar"
