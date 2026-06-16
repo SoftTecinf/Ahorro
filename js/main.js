@@ -28,23 +28,27 @@ function actualizarLabelUsuario() {
 window.appReady = false;
 
 window.addEventListener('DOMContentLoaded', async () => {
-    // 1. CARGA DE DATOS OBLIGATORIA
+    // 1. Cargamos datos
     await cargarDatosGlobales(); 
-    window.appReady = true;
-
-    // 2. DECISIÓN INMEDIATA (Sin navegar todavía)
+    
+    // 2. Definimos elementos
+    const app = document.getElementById('app-principal');
     const modal = document.getElementById('modal-identidad');
     const usuarioGuardado = localStorage.getItem('app_currentUser');
-    const esValido = usuarioGuardado && window.familiares.some(f => f.nombre === usuarioGuardado);
-
-    if (esValido) {
-        // Usuario ya logueado
+    
+    // 3. Decisión de estado
+    if (usuarioGuardado && window.familiares?.some(f => f.nombre === usuarioGuardado)) {
+        // Usuario válido -> Mostramos la app, ocultamos login
         document.getElementById('user-label').textContent = usuarioGuardado;
-        modal.classList.remove('visible'); // Ocultar login
-        await navegarA('inicio');          // Cargar vista
+        modal.style.display = 'none'; // El login no debe estorbar
+        app.style.visibility = 'visible';
+        app.style.opacity = '1';
+        await navegarA('inicio');
     } else {
-        // Usuario no logueado
-        modal.classList.add('visible');    // Mostrar login
+        // Usuario no logueado -> Mostramos el login, ocultamos app
+        app.style.display = 'none';
+        modal.style.visibility = 'visible';
+        modal.style.opacity = '1';
     }
 });
 
