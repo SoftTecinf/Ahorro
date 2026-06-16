@@ -36,17 +36,17 @@
     <div class="bg-white p-1.5 rounded-2xl shadow-sm flex justify-between gap-1 border border-purple-50">
 
             <button onclick="navegarA('inicio')" data-vista="inicio" 
-                class="nav-btn-active flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all cursor-pointer bg-gradient-to-r from-purple-600 to-blue-500 text-white shadow-sm">
+                class="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all cursor-pointer bg-gradient-to-r from-purple-600 to-blue-500 text-white shadow-sm">
                 🔮 Inicio
             </button>
 
             <button onclick="navegarA('datos')" data-vista="datos"
-                class="nav-btn-active flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all cursor-pointer text-gray-500 hover:bg-purple-50/50">
+                class="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all cursor-pointer text-gray-500 hover:bg-purple-50/50">
                 📝 Datos
             </button>
 
             <button onclick="navegarA('config')" data-vista="config"
-                class="nav-btn-active flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all cursor-pointer text-gray-500 hover:bg-purple-50/50">
+                class="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all cursor-pointer text-gray-500 hover:bg-purple-50/50">
                 ⚙️ Configurar
             </button>
 
@@ -55,9 +55,9 @@
 
 
     <main id="contenedor-vistas">
-        <div id="vista-inicio" class="vista hidden"></div>
-        <div id="vista-datos" class="vista hidden"></div>
-        <div id="vista-configurar" class="vista hidden"></div>
+        <div id="vista-inicio" class="vista"></div>
+        <div id="vista-datos" class="vista"></div>
+        <div id="vista-configurar" class="vista"></div>
     </main>
 
     <div id="modal-deposito-familiar"
