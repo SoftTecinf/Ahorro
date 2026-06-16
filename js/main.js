@@ -40,7 +40,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
         // SÍ hay usuario: Iniciamos la App y cargamos la vista por defecto
         document.getElementById('user-label').textContent = usuarioActual;
-        await navegarA('inicio'); // Esto carga el contenido y lo muestra
+       const ultimaVista = localStorage.getItem('app_ultima_vista') || 'inicio';
+    navegarA(ultimaVista);
     }
 });
 
