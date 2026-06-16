@@ -27,24 +27,23 @@ function actualizarLabelUsuario() {
 // En js/main.js
 // Este evento se dispara tan pronto como la página termina de cargar
 window.addEventListener('DOMContentLoaded', async () => {
-    // 1. Cargamos datos
+    // 1. Cargamos datos primero
     await cargarDatosGlobales(); 
     
-    // 2. Verificamos sesión
-    const usuarioGuardado = localStorage.getItem('app_currentUser');
     const modal = document.getElementById('modal-identidad');
+    const usuarioGuardado = localStorage.getItem('app_currentUser');
     
-    if (usuarioGuardado && window.familiares.some(f => f.nombre === usuarioGuardado)) {
-        // SESIÓN VÁLIDA: Ocultamos el login y mostramos la interfaz
-        console.log("Sesión restaurada");
-        modal.style.display = 'none'; // Aseguramos que siga oculto
+    // Verificamos si existe el usuario en la data cargada
+    const esValido = usuarioGuardado && window.familiares.some(f => f.nombre === usuarioGuardado);
+
+    if (esValido) {
+        console.log("Sesión activa:", usuarioGuardado);
         document.getElementById('user-label').textContent = usuarioGuardado;
+        modal.classList.remove('visible'); // Ocultamos el modal
         await navegarA('inicio');
     } else {
-        // SIN SESIÓN: Aquí sí mostramos el login
-        console.log("Mostrando login...");
-        modal.style.display = 'flex'; // Cambiamos de 'none' a 'flex'
-        modal.classList.remove('hidden'); // Por si acaso
+        console.log("No hay sesión, abriendo login...");
+        modal.classList.add('visible'); // Mostramos el modal
     }
 });
 
