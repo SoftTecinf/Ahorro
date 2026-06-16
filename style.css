@@ -39,14 +39,20 @@ body {
     width: 100%;
 }
 
-/* Ocultamos el modal usando opacidad, no display */
+/* Ocultamos el modal */
 #modal-identidad {
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease; /* Transición suave */
+    position: fixed; /* Asegura que flote sobre todo */
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex; /* Para centrar contenido si usas flex */
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+    z-index: 9999; /* Asegura que esté al frente */
 }
 
-/* Cuando tenga esta clase, se muestra */
+/* Clase que activaremos con JS */
 #modal-identidad.visible {
     opacity: 1;
     visibility: visible;
