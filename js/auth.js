@@ -18,12 +18,17 @@ function ocultarModalIdentidad() {
 }
 
 async function confirmarIdentidad() {
+    // 1. Aseguramos que tenemos datos cargados
+    if (!window.familiares || window.familiares.length === 0) {
+        console.log("Datos vacíos, intentando recargar desde fuente...");
+        await cargarDatosGlobales(); // Esta función debe ser la que trae los datos del Sheet
+    }
+
     const usuarioIngresado = document.getElementById('input-usuario-login').value.trim();
     const passwordIngresado = document.getElementById('input-password-inicial').value.trim();
 
-    const lista = window.obtenerListaFamiliares();
-
-    const usuarioEncontrado = lista.find(f => {
+    // 2. Ahora sí, buscamos en la lista actualizada
+    const usuarioEncontrado = window.familiares.find(f => {
         const nombreSheet = f.nombre ? String(f.nombre).trim().toLowerCase() : "";
         const passwordSheet = f.password ? String(f.password).trim() : "";
 
@@ -32,26 +37,15 @@ async function confirmarIdentidad() {
     });
 
     if (usuarioEncontrado) {
-        // 1. Guardamos sesión
         localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
         
-        // 2. Ocultamos el modal
-        const modal = document.getElementById('modal-identidad');
-        modal.classList.add('hidden');
-        modal.style.display = 'none';
-
-        // 3. Actualizamos la etiqueta del usuario
-        const label = document.getElementById('user-label');
-        if (label) label.textContent = usuarioEncontrado.nombre;
-
-        // 4. USAMOS LA FUNCIÓN CORRECTA (navegarA en lugar de cargarVista)
-        // Ya no necesitamos el "asegurarCargaVista" porque navegarA 
-        // ya incluye la lógica de fetch y carga.
-        await navegarA('inicio');
+        // ... el resto de tu lógica de login (ocultar modal, etc.)
+        document.getElementById('modal-identidad').classList.add('hidden');
+        document.getElementById('user-label').textContent = usuarioEncontrado.nombre;
         
-        console.log("Sesión iniciada y vista cargada correctamente.");
+        await navegarA('inicio');
     } else {
-        alert("Usuario o contraseña incorrectos.");
+        alert("Usuario no encontrado o contraseña incorrecta.");
     }
 }
 
