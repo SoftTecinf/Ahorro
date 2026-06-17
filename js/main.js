@@ -28,28 +28,27 @@ function actualizarLabelUsuario() {
 window.appReady = false;
 
 window.addEventListener('DOMContentLoaded', async () => {
-    // 1. Cargamos datos obligatorios
-    await cargarDatosGlobales();
-    
-    // 2. Definimos estado
+    // 1. Cargamos datos
+    await cargarDatosGlobales(); 
+    //console.log("Datos cargados, procediendo a decidir vista...");
+
+    // 2. Decisión de vista
+    const modal = document.getElementById('modal-identidad');
     const usuarioGuardado = localStorage.getItem('app_currentUser');
     const esValido = usuarioGuardado && window.familiares?.some(f => f.nombre === usuarioGuardado);
-    
-    // 3. Mostramos el body solo cuando hayamos tomado la decisión
-    document.body.style.display = 'block'; 
 
     if (esValido) {
-        // SESIÓN ACTIVA: Ocultamos login, mostramos app
-        document.getElementById('modal-identidad').style.display = 'none';
-        document.getElementById('app-container').style.display = 'block';
+        // Usuario logueado
         document.getElementById('user-label').textContent = usuarioGuardado;
-        await navegarA('inicio');
+        modal.classList.remove('visible'); // Ocultar login
+        await navegarA('inicio');          // Cargar vista
     } else {
-        // SIN SESIÓN: Ocultamos app, mostramos login
-        document.getElementById('app-container').style.display = 'none';
-        document.getElementById('modal-identidad').style.display = 'flex';
-        document.getElementById('modal-identidad').classList.add('visible');
+        // Usuario no logueado
+        modal.classList.add('visible');    // Mostrar login
     }
+
+    // 3. ¡LISTO! Ahora mostramos todo de golpe
+    document.body.classList.add('app-lista');
 });
 
 
