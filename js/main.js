@@ -24,34 +24,36 @@ function actualizarLabelUsuario() {
 // ==========================================
 // INICIALIZACIÓN UNIFICADA
 // ==========================================
-// Variable global para saber si estamos listos
 window.appReady = false;
 
 window.addEventListener('DOMContentLoaded', async () => {
-    console.log("🚀 El script arrancó correctamente"); // Añade esto para probar
+    console.log("🚀 El script arrancó correctamente");
     
-    // 1. Cargamos datos
+    // 1. Cargamos datos de forma segura
     await cargarDatosGlobales();
     
     // 2. Definimos elementos
     const appContainer = document.getElementById('app-container');
     const modalLogin = document.getElementById('modal-identidad');
     
-    // 3. Verificamos sesión
+    // 3. Verificamos sesión (CORREGIDO: Quitamos 'window.')
     const usuarioGuardado = localStorage.getItem('app_currentUser');
     const esValido = usuarioGuardado && familiares?.some(f => f.nombre === usuarioGuardado);
     
-    // 4. ENCENDEMOS LA VISTA CORRECTA
+    // 4. ENCENDEMOS LA VISTA CORRECTA (Con escudos protectores contra nulos)
     if (esValido) {
-        // SESIÓN ACTIVA: Apagamos login, prendemos app
-        modalLogin.style.display = 'none';
-        appContainer.style.display = 'block';
-        document.getElementById('user-label').textContent = usuarioGuardado;
+        console.log("Sesión válida detectada para:", usuarioGuardado);
+        if (modalLogin) modalLogin.style.display = 'none';
+        if (appContainer) appContainer.style.display = 'block';
+        
+        const label = document.getElementById('user-label');
+        if (label) label.textContent = usuarioGuardado;
+        
         await navegarA('inicio');
     } else {
-        // SIN SESIÓN: El login ya está visible por defecto, solo aseguramos que la app esté apagada
-        appContainer.style.display = 'none';
-        modalLogin.style.display = 'flex';
+        console.log("Sin sesión activa o usuario inválido. Mostrando Login.");
+        if (appContainer) appContainer.style.display = 'none';
+        if (modalLogin) modalLogin.style.display = 'flex';
     }
 });
 
