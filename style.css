@@ -2,6 +2,7 @@ body {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     visibility: hidden;
+    display: none !important;
 }
 
 /* Solo mostramos cuando todo esté listo */
