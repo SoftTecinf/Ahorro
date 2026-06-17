@@ -5,7 +5,7 @@ window.familiares = JSON.parse(localStorage.getItem('app_familiares')) || [];
 // En tu archivo main.js
 // En main.js, asegúrate que se vea así:
 window.cargarDatosGlobales = async function() {
-    console.log("Conectando a Google Apps Script...");
+    //console.log("Conectando a Google Apps Script...");
     const url = "https://script.google.com/macros/s/AKfycbxTFZLLfvP8cywVA8IzMsVa0BPA9OeLieUV-6Cgg_XNxLZLH6Uxzx_QpfdOzMH3x2wdVQ/exec";
     
     try {
