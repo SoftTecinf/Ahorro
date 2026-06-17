@@ -25,30 +25,31 @@ function actualizarLabelUsuario() {
 // INICIALIZACIÓN UNIFICADA
 // ==========================================
 // Variable global para saber si estamos listos
-//window.appReady = false;
+window.appReady = false;
 
 window.addEventListener('DOMContentLoaded', async () => {
-    // 1. Cargamos datos
-    await cargarDatosGlobales(); 
-    console.log("Datos cargados, procediendo a decidir vista...");
-
-    // 2. Decisión de vista
-    const modal = document.getElementById('modal-identidad');
+    // 1. Cargamos datos obligatorios
+    await cargarDatosGlobales();
+    
+    // 2. Definimos estado
     const usuarioGuardado = localStorage.getItem('app_currentUser');
     const esValido = usuarioGuardado && window.familiares?.some(f => f.nombre === usuarioGuardado);
+    
+    // 3. Mostramos el body solo cuando hayamos tomado la decisión
+    document.body.style.display = 'block'; 
 
     if (esValido) {
-        // Usuario logueado
+        // SESIÓN ACTIVA: Ocultamos login, mostramos app
+        document.getElementById('modal-identidad').style.display = 'none';
+        document.getElementById('app-container').style.display = 'block';
         document.getElementById('user-label').textContent = usuarioGuardado;
-        modal.classList.remove('visible'); // Ocultar login
-        await navegarA('inicio');          // Cargar vista
+        await navegarA('inicio');
     } else {
-        // Usuario no logueado
-        modal.classList.add('visible');    // Mostrar login
+        // SIN SESIÓN: Ocultamos app, mostramos login
+        document.getElementById('app-container').style.display = 'none';
+        document.getElementById('modal-identidad').style.display = 'flex';
+        document.getElementById('modal-identidad').classList.add('visible');
     }
-
-    // 3. ¡LISTO! Ahora mostramos todo de golpe
-    document.body.classList.add('app-lista');
 });
 
 
