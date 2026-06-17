@@ -19,7 +19,7 @@ function ocultarModalIdentidad() {
 
 
 async function procesarRegistro() {
-    const lista = window.obtenerListaFamiliares(); // Llama a la función central
+    const lista = window.obtenerListaFamiliares(); 
     const nombre = document.getElementById('reg-nombre').value.trim();
     const celular = document.getElementById('reg-celular').value.trim();
     const password = document.getElementById('reg-pass').value;
@@ -33,24 +33,28 @@ async function procesarRegistro() {
     }
 
     try {
-        // Dentro de tu función procesarRegistro en auth.js:
         const URL_API = 'https://script.google.com/macros/s/AKfycbxTFZLLfvP8cywVA8IzMsVa0BPA9OeLieUV-6Cgg_XNxLZLH6Uxzx_QpfdOzMH3x2wdVQ/exec';
 
-        // En el fetch de envío:
+        console.log("Enviando datos de registro...");
+
+        // Quitamos 'mode: 'no-cors'' para poder procesar la respuesta JSON correctamente
         const respuesta = await fetch(URL_API, {
             method: 'POST',
-            mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ nombre, celular, password })
         });
+
+        // Ahora sí podemos leer el resultado real del servidor de Google
         const resultado = await respuesta.json();
-        console.log("Datos enviados:", resultado);
+        console.log("Datos enviados y procesados con éxito:", resultado);
+        
+        alert("¡Registro guardado exitosamente!");
+        
     } catch (err) {
-        console.error(err);
-        alert("Error al conectar con la base de datos.");
+        console.error("Error en la petición de registro:", err);
+        alert("Error al conectar con la base de datos. Revisa la consola.");
     }
 }
-
 async function confirmarIdentidad() {
     // 1. Aseguramos que tenemos datos cargados (Usamos fallback por si window no está mapeado)
     const listaFamiliares = window.familiares || familiares;
