@@ -64,7 +64,7 @@ body.app-lista {
     visibility: visible;
 }
 
-/* Oculta todo por defecto de manera total */
+/* Oculta todo por defecto de manera total 
 body.cargando {
     display: none !important;
-}
+}*/
