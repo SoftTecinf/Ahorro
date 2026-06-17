@@ -28,6 +28,10 @@ function actualizarLabelUsuario() {
 window.appReady = false;
 
 window.addEventListener('DOMContentLoaded', async () => {
+    console.log("🚀 El script arrancó correctamente"); // Añade esto para probar
+    
+    // 1. Cargamos datos
+    await cargarDatosGlobales();
     // 1. Cargamos datos
     await cargarDatosGlobales();
     
