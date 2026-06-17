@@ -29,26 +29,28 @@ window.appReady = false;
 
 window.addEventListener('DOMContentLoaded', async () => {
     // 1. Cargamos datos
-    await cargarDatosGlobales(); 
-    //console.log("Datos cargados, procediendo a decidir vista...");
-
-    // 2. Decisión de vista
-    const modal = document.getElementById('modal-identidad');
+    await cargarDatosGlobales();
+    
+    // 2. Definimos elementos
+    const appContainer = document.getElementById('app-container');
+    const modalLogin = document.getElementById('modal-identidad');
+    
+    // 3. Verificamos sesión
     const usuarioGuardado = localStorage.getItem('app_currentUser');
     const esValido = usuarioGuardado && window.familiares?.some(f => f.nombre === usuarioGuardado);
-
+    
+    // 4. ENCENDEMOS LA VISTA CORRECTA
     if (esValido) {
-        // Usuario logueado
+        // SESIÓN ACTIVA: Apagamos login, prendemos app
+        modalLogin.style.display = 'none';
+        appContainer.style.display = 'block';
         document.getElementById('user-label').textContent = usuarioGuardado;
-        modal.classList.remove('visible'); // Ocultar login
-        await navegarA('inicio');          // Cargar vista
+        await navegarA('inicio');
     } else {
-        // Usuario no logueado
-        modal.classList.add('visible');    // Mostrar login
+        // SIN SESIÓN: El login ya está visible por defecto, solo aseguramos que la app esté apagada
+        appContainer.style.display = 'none';
+        modalLogin.style.display = 'flex';
     }
-
-    // 3. ¡LISTO! Ahora mostramos todo de golpe
-    document.body.classList.add('app-lista');
 });
 
 
