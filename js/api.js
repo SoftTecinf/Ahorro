@@ -18,7 +18,7 @@ window.cargarDatosGlobales = async function() {
             celular: fila[2]
         }));
         
-        console.log("Datos cargados exitosamente.");
+        //console.log("Datos cargados exitosamente.");
     } catch (e) {
         console.error("Error al cargar datos:", e);
     }
