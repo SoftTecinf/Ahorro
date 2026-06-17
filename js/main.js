@@ -25,7 +25,7 @@ function actualizarLabelUsuario() {
 // INICIALIZACIÓN UNIFICADA
 // ==========================================
 // Variable global para saber si estamos listos
-window.appReady = false;
+//window.appReady = false;
 
 window.addEventListener('DOMContentLoaded', async () => {
     // 1. Cargamos datos
