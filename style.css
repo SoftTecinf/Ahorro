@@ -1,7 +1,7 @@
 body {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    visibility: hidden;
+   
 }
 
 /* Solo mostramos cuando todo esté listo */
@@ -47,7 +47,6 @@ body.app-lista {
 
 /* Ocultamos el modal */
 #modal-identidad {
-    opacity: 0;
     visibility: hidden;
     position: fixed; /* Asegura que flote sobre todo */
     top: 0; left: 0; right: 0; bottom: 0;
