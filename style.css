@@ -54,7 +54,7 @@ body.app-lista {
     display: flex; /* Para centrar contenido si usas flex */
     align-items: center;
     justify-content: center;
-    transition: opacity 0.05s ease;
+    transition: opacity 0.01s ease;
     z-index: 9999; /* Asegura que esté al frente */
 }
 
