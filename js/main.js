@@ -32,8 +32,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     
     // 1. Cargamos datos
     await cargarDatosGlobales();
-    // 1. Cargamos datos
-    await cargarDatosGlobales();
     
     // 2. Definimos elementos
     const appContainer = document.getElementById('app-container');
