@@ -39,7 +39,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     
     // 3. Verificamos sesión
     const usuarioGuardado = localStorage.getItem('app_currentUser');
-    const esValido = usuarioGuardado && window.familiares?.some(f => f.nombre === usuarioGuardado);
+    const esValido = usuarioGuardado && familiares?.some(f => f.nombre === usuarioGuardado);
     
     // 4. ENCENDEMOS LA VISTA CORRECTA
     if (esValido) {
@@ -116,6 +116,3 @@ window.onload = async function () {
     }
 };
 
-
-
-window.cargarDatosGlobales();
