@@ -79,6 +79,8 @@ async function confirmarIdentidad() {
         // 3. CAPTURAMOS ELEMENTOS
         const modalLogin = document.getElementById('modal-identidad');
         const appContainer = document.getElementById('app-container');
+        const contenedor = document.getElementById('app-container');
+console.log("¿Atrapamos el contenedor o es la nada?", contenedor);
         const userLabel = document.getElementById('user-label');
         
         // 4. IDIOMA UNIFICADO: Apagamos login, prendemos app con style.display
