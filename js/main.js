@@ -85,36 +85,30 @@ async function navegarA(vistaId, event) {
     }
 }
 
-// ESTA LÍNEA VA FUERA DE LA FUNCIÓN
-window.onload = async function () {
-    // 1. Buscamos si hay un nombre de usuario guardado en la libreta del celular/PC
+// 1. Inicia la descarga en segundo plano
+window.cargarDatosGlobales();
+
+// 2. El Portero: Este se ejecuta cuando la página ya cargó
+window.onload = function() {
+    console.log("🕵️‍♀️ [DEBUG] Revisando si hay sesión guardada...");
+    
     const usuarioGuardado = localStorage.getItem('usuarioActivo');
-
+    
     if (usuarioGuardado) {
-        console.log("🔑 [Persistent-Login] Sesión detectada para:", usuarioGuardado);
+        console.log("📍 [DEBUG] Se encontró este usuario en memoria:", usuarioGuardado);
         
-        // 2. Traemos la lista de familiares que ya tenemos en caché para confirmar que existe
-        const listaFamiliares = window.obtenerListaFamiliares();
-        
-        // 3. Verificamos si ese usuario sigue estando en la lista de la app
-        const existeUsuario = listaFamiliares.some(f => f.nombre === usuarioGuardado);
+        // Aquí verificamos contra los datos que ya debieron cargar
+        const lista = window.obtenerListaFamiliares();
+        console.log("📊 [DEBUG] Lista actual en memoria:", lista);
 
-        if (existeUsuario) {
-            console.log("✅ Usuario confirmado en memoria. Saltando Login...");
-            
-            // 🚀 AQUÍ PON EN LUGAR DE ESTAS LÍNEAS TU FUNCIÓN PARA MOSTRAR LA APP (ej. navegarA('inicio'))
-            if (document.getElementById('pantalla-login')) {
-                document.getElementById('pantalla-login').style.display = 'none';
-            }
-            if (document.getElementById('pantalla-principal')) {
-                document.getElementById('pantalla-principal').style.display = 'block';
-            }
-            
+        if (lista.some(u => u.nombre === usuarioGuardado)) {
+            console.log("✅ [DEBUG] ¡Coincidencia encontrada! Saltando al inicio...");
+            // AQUÍ LLAMAS A TU FUNCIÓN QUE MUESTRA LA APP
         } else {
-            // Si por algo borraste a ese usuario de la Sheet, lo sacamos por seguridad
-            console.warn("⚠️ El usuario ya no existe en la base de datos. Limpiando...");
-            localStorage.removeItem('usuarioActivo');
+            console.log("❌ [DEBUG] El usuario guardado ya no existe en la lista.");
         }
+    } else {
+        console.log("ℹ️ [DEBUG] No hay usuario guardado, toca iniciar sesión manual.");
     }
 };
 
