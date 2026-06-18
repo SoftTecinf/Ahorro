@@ -73,7 +73,7 @@ async function confirmarIdentidad() {
     // 3. Si tras la espera de cortesía sigue vacía, forzamos una recarga manual directa
     if (!listaFamiliares || listaFamiliares.length === 0) {
         console.log("🔄 La carga inicial tardó demasiado. Forzando descarga directa...");
-        await cargarDatosGlobales();
+        //await cargarDatosGlobales();
         listaFamiliares = window.familiares || familiares;
     }
 
