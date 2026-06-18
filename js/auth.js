@@ -57,22 +57,23 @@ async function procesarRegistro() {
 }
 
 async function confirmarIdentidad() {
-    // 1. EL TRUCO DE VELOCIDAD: Esperamos EXACTAMENTE lo que le falte al internet para terminar.
-    // Si los datos ya se descargaron mientras escribías, pasará en 0 milisegundos (instantáneo).
-    if (window.cargaInicialPromise) {
-        await window.cargaInicialPromise;
+    // 1. RÁFAGA DE ESPERA: Si no hay datos ni en caché ni en internet, esperamos un momento
+    let intentos = 0;
+    while ((!window.familiares || window.familiares.length === 0) && intentos < 20) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        intentos++;
     }
 
-    // 2. Una vez terminado el viaje, leemos la lista con total seguridad
-    const listaFamiliares = window.familiares || familiares;
+    // 2. Usamos tu función estructurada para jalar la lista con seguridad
+    const listaFamiliares = window.obtenerListaFamiliares();
 
-    // Alerta de pánico por si de verdad falló el internet o el servidor
+    // 3. Control de pánico por si de verdad está vacío (ej. primer inicio sin internet)
     if (!listaFamiliares || listaFamiliares.length === 0) {
         alert("No se pudieron conectar los datos del sistema. Revisa tu conexión a internet.");
         return;
     }
 
-    // 3. Tu lógica de validación de usuario (se queda igual)
+    // 4. Tu lógica de validación (ahora más veloz usando la lista limpia)
     const usuarioIngresado = document.getElementById('input-usuario-login').value.trim();
     const passwordIngresado = document.getElementById('input-password-inicial').value.trim();
 
