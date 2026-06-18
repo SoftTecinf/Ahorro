@@ -28,8 +28,8 @@ window.appReady = false;
 
 window.addEventListener('DOMContentLoaded', async () => {
     // 2. Definimos elementos
-    const appContainer = document.getElementById('app-container');
     const modalLogin = document.getElementById('modal-identidad');
+    const appContainer = document.getElementById('app-container');
     
     // 3. Verificamos sesión
     const usuarioGuardado = localStorage.getItem('app_currentUser');
