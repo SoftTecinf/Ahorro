@@ -32,9 +32,12 @@ window.cargarDatosGlobales = async function() {
 // 🔥 ¡ESTA LÍNEA ES CLAVE! Ejecuta la función en segundo plano nada más abrir la página
 window.cargarDatosGlobales();
 
-// En js/api.js
 window.obtenerListaFamiliares = function() {
-    return window.familiares && window.familiares.length > 0 
-        ? window.familiares 
-        : (JSON.parse(localStorage.getItem('app_familiares')) || []);
+    if (window.familiares && window.familiares.length > 0) {
+        return window.familiares;
+    }
+    // Si la variable global falló o no ha cargado, intentamos leer del caché local
+    const cache = JSON.parse(localStorage.getItem('app_cache_familiares')) || [];
+    console.log("📦 [api.js] Leyendo lista desde el almacenamiento local Caché:", cache);
+    return cache;
 };
