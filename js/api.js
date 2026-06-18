@@ -1,7 +1,6 @@
 // 1. Inicializamos la variable global con lo que haya en caché
 window.familiares = JSON.parse(localStorage.getItem('app_familiares')) || [];
 
-
 // 2. Definimos la función de actualización masiva
 window.cargarDatosGlobales = async function() {
     console.log("🔄 [main.js] Intentando conectar con Google Apps Script...");
