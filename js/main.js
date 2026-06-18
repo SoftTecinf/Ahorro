@@ -89,26 +89,31 @@ async function navegarA(vistaId, event) {
 window.cargarDatosGlobales();
 
 // 2. El Portero: Este se ejecuta cuando la página ya cargó
-window.onload = function() {
-    console.log("🕵️‍♀️ [DEBUG] Revisando si hay sesión guardada...");
-    
-    const usuarioGuardado = localStorage.getItem('usuarioActivo');
-    
-    if (usuarioGuardado) {
-        console.log("📍 [DEBUG] Se encontró este usuario en memoria:", usuarioGuardado);
-        
-        // Aquí verificamos contra los datos que ya debieron cargar
-        const lista = window.obtenerListaFamiliares();
-        console.log("📊 [DEBUG] Lista actual en memoria:", lista);
+window.onload = async function () {
+    // Esperamos un poquito a que la app cargue los datos de internet
+    await window.cargarDatosGlobales(); 
 
-        if (lista.some(u => u.nombre === usuarioGuardado)) {
-            console.log("✅ [DEBUG] ¡Coincidencia encontrada! Saltando al inicio...");
-            // AQUÍ LLAMAS A TU FUNCIÓN QUE MUESTRA LA APP
+    // Ahora sí, buscamos la variable que SÍ existe en tu LocalStorage
+    const usuarioGuardado = localStorage.getItem('app_currentUser');
+
+    if (usuarioGuardado) {
+        console.log("🔑 [DEBUG] Sesión encontrada para:", usuarioGuardado);
+        
+        // Obtenemos la lista que ya descargamos
+        const lista = window.obtenerListaFamiliares();
+        
+        // Verificamos si Elena está en esa lista
+        const existeUsuario = lista.some(f => f.nombre === usuarioGuardado);
+
+        if (existeUsuario) {
+            console.log("✅ [DEBUG] ¡Coincidencia! Entrando directo...");
+            // AQUÍ LLAMA A TU FUNCIÓN QUE OCULTA EL LOGIN (ej. mostrarPantallaApp())
+            document.getElementById('pantalla-login').style.display = 'none';
+            document.getElementById('pantalla-principal').style.display = 'block';
         } else {
-            console.log("❌ [DEBUG] El usuario guardado ya no existe en la lista.");
+            console.log("❌ [DEBUG] El usuario guardado no coincide con la lista.");
         }
     } else {
-        console.log("ℹ️ [DEBUG] No hay usuario guardado, toca iniciar sesión manual.");
+        console.log("ℹ️ [DEBUG] No hay usuario guardado.");
     }
 };
-
