@@ -57,11 +57,11 @@ body.app-lista {
     z-index: 9999; /* Asegura que esté al frente */
 }
 
-/* Clase que activaremos con JS */
+/* Clase que activaremos con JS 
 #modal-identidad.visible {
     opacity: 1;
     visibility: visible;
-}
+}*/
 
 /* Oculta todo por defecto de manera total */
 body.cargando {
