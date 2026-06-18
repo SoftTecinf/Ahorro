@@ -56,7 +56,7 @@ async function procesarRegistro() {
     }
 }
 async function confirmarIdentidad() {
-    // 1. Aseguramos que tenemos datos cargados (Usamos fallback por si window no está mapeado)
+    // 1. Aseguramos que tenemos datos cargados
     const listaFamiliares = window.familiares || familiares;
     if (!listaFamiliares || listaFamiliares.length === 0) {
         console.log("Datos vacíos, intentando recargar desde fuente...");
@@ -76,15 +76,13 @@ async function confirmarIdentidad() {
     if (usuarioEncontrado) {
         localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
         
-        // 3. CAPTURAMOS ELEMENTOS
+        // 3. CAPTURAMOS ELEMENTOS (Limpio y sin duplicados)
         const modalLogin = document.getElementById('modal-identidad');
         const appContainer = document.getElementById('app-container');
-        const contenedor = document.getElementById('app-container');
-console.log("¿Atrapamos el contenedor o es la nada?", contenedor);
         const userLabel = document.getElementById('user-label');
         
-        // 4. IDIOMA UNIFICADO: Apagamos login, prendemos app con style.display
-        if (modalLogin) modalLogin.style.display = 'none';
+        // 4. IDIOMA UNIFICADO: Apagamos la clase del login, prendemos app con style.display
+        if (modalLogin) modalLogin.classList.remove('visible'); // <-- Cambiado para usar tu clase CSS
         if (appContainer) appContainer.style.display = 'block';
         if (userLabel) userLabel.textContent = usuarioEncontrado.nombre;
         
