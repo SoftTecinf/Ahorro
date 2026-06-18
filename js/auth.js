@@ -55,18 +55,21 @@ async function procesarRegistro() {
         alert("Error al conectar con la base de datos. Revisa la consola.");
     }
 }
+
 async function confirmarIdentidad() {
-    // 1. Aseguramos que tenemos datos cargados
-    const listaFamiliares = window.familiares || familiares;
-    if (!listaFamiliares || listaFamiliares.length === 0) {
+    // 1. Primero revisamos la memoria global. Si está vacía, esperamos a que cargue de internet.
+    if (!window.familiares || window.familiares.length === 0) {
         console.log("Datos vacíos, intentando recargar desde fuente...");
         await cargarDatosGlobales();
     }
 
+    // 2. ¡AQUÍ ESTÁ EL TRUCO! Asignamos la lista DESPUÉS de asegurarnos de que ya hay datos
+    const listaFamiliares = window.familiares || familiares;
+
     const usuarioIngresado = document.getElementById('input-usuario-login').value.trim();
     const passwordIngresado = document.getElementById('input-password-inicial').value.trim();
 
-    // 2. Buscamos en la lista
+    // 3. Buscamos en la lista (ahora sí garantizada con datos desde el primer clic)
     const usuarioEncontrado = listaFamiliares.find(f => {
         const nombreSheet = f.nombre ? String(f.nombre).trim().toLowerCase() : "";
         const passwordSheet = f.password ? String(f.password).trim() : "";
@@ -76,17 +79,14 @@ async function confirmarIdentidad() {
     if (usuarioEncontrado) {
         localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
         
-        // 3. CAPTURAMOS ELEMENTOS (Limpio y sin duplicados)
         const modalLogin = document.getElementById('modal-identidad');
         const appContainer = document.getElementById('app-container');
         const userLabel = document.getElementById('user-label');
         
-        // 4. IDIOMA UNIFICADO: Apagamos la clase del login, prendemos app con style.display
-        if (modalLogin) modalLogin.classList.remove('visible'); // <-- Cambiado para usar tu clase CSS
+        if (modalLogin) modalLogin.classList.remove('visible');
         if (appContainer) appContainer.style.display = 'block';
         if (userLabel) userLabel.textContent = usuarioEncontrado.nombre;
         
-        // Redirigimos al inicio de la app
         await navegarA('inicio'); 
     } else {
         alert("Usuario no encontrado o contraseña incorrecta.");
