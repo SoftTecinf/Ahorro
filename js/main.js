@@ -30,7 +30,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     console.log("🚀 El script arrancó correctamente");
     
     // 1. Cargamos datos de forma segura
-    await cargarDatosGlobales();
+   // await cargarDatosGlobales();
     
     // 2. Definimos elementos
     const appContainer = document.getElementById('app-container');
