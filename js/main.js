@@ -59,8 +59,6 @@ async function navegarA(vistaId, event) {
         event.stopPropagation();
     }
 
-    console.log("Navegando a:", vistaId);
-
     // 1. Ocultar todas las vistas (añadir 'hidden')
     document.querySelectorAll('.vista').forEach(v => {
         v.classList.add('hidden');
@@ -73,20 +71,15 @@ async function navegarA(vistaId, event) {
     if (contenedor) {
         // 3. Cargar contenido solo si está vacío
         if (contenedor.innerHTML.trim() === "") {
-            try {
                 const response = await fetch(`${vistaId}.html`);
                 const html = await response.text();
                 contenedor.innerHTML = html;
-                console.log("Contenido cargado para:", vistaId);
-            } catch (err) {
-                console.error("Error al cargar la vista:", err);
-            }
+           
         }
 
         // 4. Hacer visible el contenedor
         contenedor.classList.remove('hidden');
         contenedor.style.display = 'block'; // Forzamos visibilidad
-        console.log("Vista mostrada exitosamente");
     } else {
         console.error("No se encontró el contenedor con ID:", vistaId);
     }
