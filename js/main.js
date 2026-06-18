@@ -35,7 +35,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     // 2. Definimos elementos
     const appContainer = document.getElementById('app-container');
     const modalLogin = document.getElementById('modal-identidad');
-    
+    // AGREGA ESTA LÍNEA DE PRUEBA:
+console.log("🔍 Diagnóstico de elementos:", { appContainer, modalLogin });
     // 3. Verificamos sesión (CORREGIDO: Quitamos 'window.')
     const usuarioGuardado = localStorage.getItem('app_currentUser');
     const esValido = usuarioGuardado && familiares?.some(f => f.nombre === usuarioGuardado);
