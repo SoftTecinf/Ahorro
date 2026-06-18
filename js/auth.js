@@ -57,19 +57,16 @@ async function procesarRegistro() {
 }
 
 async function confirmarIdentidad() {
-    console.log("🔘 [auth.js] Botón 'Entrar a Ahorros' presionado.");
 
     // 1. Sistema de ráfagas: Espera un momento si la descarga de internet sigue en curso
     let intentos = 0;
     while ((!window.familiares || window.familiares.length === 0) && intentos < 15) {
-        console.log(`⏳ [auth.js] Esperando a que bajen los datos de internet... Intento ${intentos + 1}/15`);
         await new Promise(resolve => setTimeout(resolve, 200));
         intentos++;
     }
 
     // 2. Extraemos la lista final
     const listaFamiliares = window.obtenerListaFamiliares();
-    console.log("👥 [auth.js] Lista disponible para validar credenciales:", listaFamiliares);
 
     if (!listaFamiliares || listaFamiliares.length === 0) {
         alert("El sistema aún no tiene datos cargados. Revisa tu conexión a internet o vuelve a intentarlo en 3 segundos.");
@@ -80,8 +77,6 @@ async function confirmarIdentidad() {
     const usuarioIngresado = document.getElementById('input-usuario-login').value.trim();
     const passwordIngresado = document.getElementById('input-password-inicial').value.trim();
     
-    console.log(`🔑 [auth.js] Buscando coincidencia para: Usuario = "${usuarioIngresado}" | Password = "${passwordIngresado}"`);
-
     // 4. Búsqueda exhaustiva
     const usuarioEncontrado = listaFamiliares.find(f => {
         const nombreSheet = f.nombre ? String(f.nombre).trim().toLowerCase() : "";
@@ -90,7 +85,6 @@ async function confirmarIdentidad() {
     });
 
     if (usuarioEncontrado) {
-        console.log("🎉 [auth.js] ¡Acceso concedido para!", usuarioEncontrado.nombre);
         localStorage.setItem('app_currentUser', usuarioEncontrado.nombre);
         
         const modalLogin = document.getElementById('modal-identidad');
@@ -103,7 +97,6 @@ async function confirmarIdentidad() {
         
         await navegarA('inicio'); 
     } else {
-        console.warn("⚠️ [auth.js] Las credenciales no coinciden con ningún registro de la lista.");
         alert("Usuario no encontrado o contraseña incorrecta.");
     }
 }
