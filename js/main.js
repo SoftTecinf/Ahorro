@@ -35,16 +35,15 @@ window.addEventListener('DOMContentLoaded', async () => {
     // 2. Definimos elementos
     const appContainer = document.getElementById('app-container');
     const modalLogin = document.getElementById('modal-identidad');
-    // AGREGA ESTA LÍNEA DE PRUEBA:
-console.log("🔍 Diagnóstico de elementos:", { appContainer, modalLogin });
-    // 3. Verificamos sesión (CORREGIDO: Quitamos 'window.')
+    
+    // 3. Verificamos sesión
     const usuarioGuardado = localStorage.getItem('app_currentUser');
     const esValido = usuarioGuardado && familiares?.some(f => f.nombre === usuarioGuardado);
     
-    // 4. ENCENDEMOS LA VISTA CORRECTA (Con escudos protectores contra nulos)
+    // 4. ENCENDEMOS LA VISTA CORRECTA (Usando la clase .visible del CSS)
     if (esValido) {
         console.log("Sesión válida detectada para:", usuarioGuardado);
-        if (modalLogin) modalLogin.style.display = 'none';
+        if (modalLogin) modalLogin.classList.remove('visible'); // <-- Quitamos la visibilidad
         if (appContainer) appContainer.style.display = 'block';
         
         const label = document.getElementById('user-label');
@@ -54,7 +53,7 @@ console.log("🔍 Diagnóstico de elementos:", { appContainer, modalLogin });
     } else {
         console.log("Sin sesión activa o usuario inválido. Mostrando Login.");
         if (appContainer) appContainer.style.display = 'none';
-        if (modalLogin) modalLogin.style.display = 'flex';
+        if (modalLogin) modalLogin.classList.add('visible'); // <-- ¡Aquí activamos la magia!
     }
 });
 
