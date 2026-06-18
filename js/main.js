@@ -87,21 +87,34 @@ async function navegarA(vistaId, event) {
 
 // ESTA LÍNEA VA FUERA DE LA FUNCIÓN
 window.onload = async function () {
+    // 1. Buscamos si hay un nombre de usuario guardado en la libreta del celular/PC
     const usuarioGuardado = localStorage.getItem('usuarioActivo');
 
     if (usuarioGuardado) {
-        // Validamos con Google Apps Script si el usuario sigue siendo válido
-        google.script.run
-            .withSuccessHandler(validado => {
-                if (validado) {
-                    console.log("Sesión validada por el servidor");
-                    // Aquí restauras tu vista (ej. navegarA('inicio'))
-                } else {
-                    localStorage.removeItem('usuarioActivo');
-                    // Redirigir al login
-                }
-            })
-            .validarSesionServidor(usuarioGuardado); // Esta función debe existir en Code.gs
+        console.log("🔑 [Persistent-Login] Sesión detectada para:", usuarioGuardado);
+        
+        // 2. Traemos la lista de familiares que ya tenemos en caché para confirmar que existe
+        const listaFamiliares = window.obtenerListaFamiliares();
+        
+        // 3. Verificamos si ese usuario sigue estando en la lista de la app
+        const existeUsuario = listaFamiliares.some(f => f.nombre === usuarioGuardado);
+
+        if (existeUsuario) {
+            console.log("✅ Usuario confirmado en memoria. Saltando Login...");
+            
+            // 🚀 AQUÍ PON EN LUGAR DE ESTAS LÍNEAS TU FUNCIÓN PARA MOSTRAR LA APP (ej. navegarA('inicio'))
+            if (document.getElementById('pantalla-login')) {
+                document.getElementById('pantalla-login').style.display = 'none';
+            }
+            if (document.getElementById('pantalla-principal')) {
+                document.getElementById('pantalla-principal').style.display = 'block';
+            }
+            
+        } else {
+            // Si por algo borraste a ese usuario de la Sheet, lo sacamos por seguridad
+            console.warn("⚠️ El usuario ya no existe en la base de datos. Limpiando...");
+            localStorage.removeItem('usuarioActivo');
+        }
     }
 };
 
