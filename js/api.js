@@ -1,5 +1,6 @@
 // 1. Inicializamos la variable global con lo que haya en caché
-window.familiares = JSON.parse(localStorage.getItem('app_familiares')) || [];
+// Inicializamos la variable global con la misma clave de caché que guardamos abajo
+window.familiares = JSON.parse(localStorage.getItem('app_cache_familiares')) || [];
 
 // 2. Definimos la función de actualización masiva
 window.cargarDatosGlobales = async function() {
@@ -12,11 +13,11 @@ window.cargarDatosGlobales = async function() {
         
         console.log("📥 [main.js] Datos crudos recibidos desde Google Sheet:", data);
         
-        // Procesamos filas omitiendo los encabezados
-        window.familiares = data.slice(1).map(fila => ({
-            nombre: fila[0] ? String(fila[0]).trim() : "",
-            password: fila[1] ? String(fila[1]).trim() : "",
-            celular: fila[2] ? String(fila[2]).trim() : ""
+        // CORRECCIÓN: Ya no usamos .slice(1) ni fila[0]. Leemos los objetos directos que manda tu Google Script
+        window.familiares = data.map(usuario => ({
+            nombre: usuario.nombre ? String(usuario.nombre).trim() : "",
+            password: usuario.password ? String(usuario.password).trim() : "",
+            celular: usuario.celular ? String(usuario.celular).trim() : ""
         }));
         
         console.log("✅ [main.js] Usuarios procesados y listos en memoria:", window.familiares);
