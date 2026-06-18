@@ -57,19 +57,36 @@ async function procesarRegistro() {
 }
 
 async function confirmarIdentidad() {
-    // 1. Primero revisamos la memoria global. Si está vacía, esperamos a que cargue de internet.
-    if (!window.familiares || window.familiares.length === 0) {
-        console.log("Datos vacíos, intentando recargar desde fuente...");
-        await cargarDatosGlobales();
+    // 1. Intentamos leer la lista de la memoria
+    let listaFamiliares = window.familiares || familiares;
+
+    // 2. PROTECCIÓN ULTRA-RÁPIDA: Si la lista está vacía, es muy probable que la carga 
+    // inicial de fondo siga viajando por internet. Le damos una micro-espera de respaldo.
+    if (!listaFamiliares || listaFamiliares.length === 0) {
+        console.log("⏳ Los datos aún están viajando de internet. Esperando un segundo...");
+        // Pausamos la ejecución por 1 segundo para permitir que el internet termine de responder
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Volvemos a checar la lista actualizada
+        listaFamiliares = window.familiares || familiares;
     }
 
-    // 2. ¡AQUÍ ESTÁ EL TRUCO! Asignamos la lista DESPUÉS de asegurarnos de que ya hay datos
-    const listaFamiliares = window.familiares || familiares;
+    // 3. Si tras la espera de cortesía sigue vacía, forzamos una recarga manual directa
+    if (!listaFamiliares || listaFamiliares.length === 0) {
+        console.log("🔄 La carga inicial tardó demasiado. Forzando descarga directa...");
+        await cargarDatosGlobales();
+        listaFamiliares = window.familiares || familiares;
+    }
 
+    // 4. Alerta de pánico (Por si de verdad no hay internet o el servidor se cayó)
+    if (!listaFamiliares || listaFamiliares.length === 0) {
+        alert("No se pudieron conectar los datos del sistema. Revisa tu conexión a internet.");
+        return;
+    }
+
+    // [El resto de tu lógica de validación se queda exactamente igual]
     const usuarioIngresado = document.getElementById('input-usuario-login').value.trim();
     const passwordIngresado = document.getElementById('input-password-inicial').value.trim();
 
-    // 3. Buscamos en la lista (ahora sí garantizada con datos desde el primer clic)
     const usuarioEncontrado = listaFamiliares.find(f => {
         const nombreSheet = f.nombre ? String(f.nombre).trim().toLowerCase() : "";
         const passwordSheet = f.password ? String(f.password).trim() : "";
