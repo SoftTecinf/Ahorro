@@ -27,11 +27,6 @@ function actualizarLabelUsuario() {
 window.appReady = false;
 
 window.addEventListener('DOMContentLoaded', async () => {
-    console.log("🚀 El script arrancó correctamente");
-    
-    // 1. Cargamos datos de forma segura
-   // await cargarDatosGlobales();
-    
     // 2. Definimos elementos
     const appContainer = document.getElementById('app-container');
     const modalLogin = document.getElementById('modal-identidad');
@@ -51,7 +46,6 @@ window.addEventListener('DOMContentLoaded', async () => {
         
         await navegarA('inicio');
     } else {
-        console.log("Sin sesión activa o usuario inválido. Mostrando Login.");
         if (appContainer) appContainer.style.display = 'none';
         if (modalLogin) modalLogin.classList.add('visible'); // <-- ¡Aquí activamos la magia!
     }
