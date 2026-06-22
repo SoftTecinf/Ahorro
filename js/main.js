@@ -130,32 +130,27 @@ window.onload = async function () {
 
     // 2. Verificamos sesión
     const usuarioGuardado = localStorage.getItem('app_currentUser');
+    const appContainer = document.getElementById('app-container');
+    const modalIdentidad = document.getElementById('modal-identidad');
+
     if (usuarioGuardado) {
         const lista = window.obtenerListaFamiliares();
         const existeUsuario = lista.some(f => f.nombre === usuarioGuardado);
 
         if (existeUsuario) {
-            // --- AQUÍ ESTÁ EL AJUSTE ---
-            // Usamos los IDs que SÍ existen en tu HTML:
-            const appContainer = document.getElementById('app-container');
-            const modalIdentidad = document.getElementById('modal-identidad');
+            appContainer.style.display = 'block';
+            modalIdentidad.style.display = 'none';
             
-            if (appContainer) {
-                appContainer.style.display = 'block'; // Mostramos la app
-            }
-            
-            if (modalIdentidad) {
-                modalIdentidad.style.display = 'none'; // Ocultamos el login
-            }
-            // ----------------------------
+            // --- NUEVO: Cargamos la vista por defecto (Inicio) ---
+            await navegarA('inicio'); 
             
         } else {
-            console.log("❌ [DEBUG] El usuario guardado no coincide.");
+            // Usuario no válido, forzamos login
+            appContainer.style.display = 'none';
+            modalIdentidad.style.display = 'flex';
         }
     } else {
-        console.log("ℹ️ [DEBUG] No hay usuario guardado.");
-        // Aseguramos que el login esté visible y la app oculta
-        document.getElementById('app-container').style.display = 'none';
-        document.getElementById('modal-identidad').style.display = 'flex';
+        appContainer.style.display = 'none';
+        modalIdentidad.style.display = 'flex';
     }
 };
