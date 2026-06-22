@@ -252,25 +252,7 @@
         </div>
     </div>
 
-    <script>
-    // Este script se ejecuta ANTES de cargar tus archivos JS
-    // para evitar el "parpadeo" de elementos.
-    (function() {
-        const sesion = localStorage.getItem('app_currentUser');
-        const modalLogin = document.getElementById('modal-identidad');
-        const appContainer = document.getElementById('app-container');
-
-        if (sesion) {
-            // Si hay sesión, ocultamos el login y mostramos la app
-            if (modalLogin) modalLogin.style.display = 'none';
-            if (appContainer) appContainer.style.display = 'block';
-        } else {
-            // Si NO hay sesión, forzamos el login
-            if (modalLogin) modalLogin.style.display = 'flex';
-            if (appContainer) appContainer.style.display = 'none';
-        }
-    })();
-</script>
+    
 
     <script src="js/api.js" defer></script>
     <script src="js/main.js" defer></script>
