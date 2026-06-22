@@ -154,3 +154,38 @@ window.onload = async function () {
         modalIdentidad.style.display = 'flex';
     }
 };
+
+window.renderizarTablasDatos = function() {
+    const tablaProyectos = document.getElementById('datos-tabla-proyectos-body');
+    const tablaCuentas = document.getElementById('datos-tabla-cuentas-body');
+
+    // Renderizar Proyectos
+    if (tablaProyectos && window.proyectos) {
+        tablaProyectos.innerHTML = window.proyectos.map(p => `
+            <tr>
+                <td class="p-3 font-semibold">${p.nombre}</td>
+                <td class="p-3">${p.fecha}</td>
+                <td class="p-3">${p.frecuencia}</td>
+                <td class="p-3">$${parseFloat(p.monto).toLocaleString()}</td>
+                <td class="p-3 text-center">${p.plazos}</td>
+                <td class="p-3 text-center">
+                    <button onclick="editarProyecto('${p.id}')" class="text-purple-600 hover:underline">Editar</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    // Renderizar Cuentas (ajusta 'window.cuentas' al nombre de tu variable real)
+    if (tablaCuentas && window.cuentas) {
+        tablaCuentas.innerHTML = window.cuentas.map(c => `
+            <tr>
+                <td class="p-3">${c.banco}</td>
+                <td class="p-3">${c.titular}</td>
+                <td class="p-3">${c.clabe}</td>
+                <td class="p-3 text-center">
+                    <button onclick="editarCuenta('${c.id}')" class="text-blue-600 hover:underline">Editar</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+};
