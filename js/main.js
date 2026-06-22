@@ -38,7 +38,6 @@ const lista = window.obtenerListaFamiliares();
 const esValido = usuarioGuardado && lista.some(f => f.nombre === usuarioGuardado);
 
 if (esValido) {
-    console.log("✅ ¡Sesión validada! Mostrando app...");
     
     // 1. Buscamos los elementos con seguridad
     const appContainer = document.getElementById('app-container');
@@ -65,7 +64,6 @@ if (esValido) {
     // 5. Navegamos al inicio
     await navegarA('inicio');
 } else {
-    console.log("⚠️ No hay sesión, forzando aparición del Login...");
     
     // FORZAMOS LA VISIBILIDAD DEL LOGIN
     const modalLogin = document.getElementById('modal-identidad');
