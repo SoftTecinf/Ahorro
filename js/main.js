@@ -38,18 +38,10 @@ const lista = window.obtenerListaFamiliares();
 const esValido = usuarioGuardado && lista.some(f => f.nombre === usuarioGuardado);
 
 if (esValido) {    
-    // 2. Si encontramos app-container, lo mostramos
-    if (appContainer) {
-        appContainer.style.display = 'block'; 
-        console.log("-> app-container visible");
-    } else {
-        console.error("❌ No se encontró el elemento 'app-container' en el HTML.");
-    }
-    
+       
     // 3. Si encontramos modalLogin, lo ocultamos
     if (modalLogin) {
         modalLogin.style.display = 'none';
-        console.log("-> modal-identidad oculto");
     }
     
     // 4. Actualizamos el nombre
@@ -134,14 +126,10 @@ window.onload = async function () {
     // 2. Verificamos sesión
     const usuarioGuardado = localStorage.getItem('app_currentUser');
     if (usuarioGuardado) {
-        console.log("🔑 [DEBUG] Sesión encontrada para:", usuarioGuardado);
-        
         const lista = window.obtenerListaFamiliares();
         const existeUsuario = lista.some(f => f.nombre === usuarioGuardado);
 
         if (existeUsuario) {
-            console.log("✅ [DEBUG] ¡Coincidencia! Entrando directo...");
-            
             // --- AQUÍ ESTÁ EL AJUSTE ---
             // Usamos los IDs que SÍ existen en tu HTML:
             const appContainer = document.getElementById('app-container');
