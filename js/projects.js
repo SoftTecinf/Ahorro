@@ -24,29 +24,40 @@ function unirseAProyecto(proyectoId) {
 // ==========================================
 // PROYECTOS Y LOGICA DE RENDIMIENTO (DOM)
 // ==========================================
-async function renderizarGridProyectos() {
-    const grid = document.getElementById('grid-proyectos');
-    // Si no encuentra el grid, lo reportamos a la consola para saber por qué
-    if (!grid) {
-        console.warn("❌ El elemento 'grid-proyectos' aún no existe en el DOM.");
-        return;
+window.renderizarTablasDatos = function() {
+    const tablaProyectos = document.getElementById('datos-tabla-proyectos-body');
+    const tablaCuentas = document.getElementById('datos-tabla-cuentas-body');
+
+    // Renderizar Proyectos
+    if (tablaProyectos && window.proyectos) {
+        tablaProyectos.innerHTML = window.proyectos.map(p => `
+            <tr>
+                <td class="p-3 font-semibold">${p.nombre}</td>
+                <td class="p-3">${p.fecha}</td>
+                <td class="p-3">${p.frecuencia}</td>
+                <td class="p-3">$${parseFloat(p.monto).toLocaleString()}</td>
+                <td class="p-3 text-center">${p.plazos}</td>
+                <td class="p-3 text-center">
+                    <button onclick="editarProyecto('${p.id}')" class="text-purple-600 hover:underline">Editar</button>
+                </td>
+            </tr>
+        `).join('');
     }
 
-    // Comprobamos si hay datos
-    console.log("-> Proyectos recibidos:", window.proyectos); 
-
-    if (!window.proyectos || window.proyectos.length === 0) {
-        grid.innerHTML = "<p>No hay proyectos activos.</p>";
-        return;
+    // Renderizar Cuentas (ajusta 'window.cuentas' al nombre de tu variable real)
+    if (tablaCuentas && window.cuentas) {
+        tablaCuentas.innerHTML = window.cuentas.map(c => `
+            <tr>
+                <td class="p-3">${c.banco}</td>
+                <td class="p-3">${c.titular}</td>
+                <td class="p-3">${c.clabe}</td>
+                <td class="p-3 text-center">
+                    <button onclick="editarCuenta('${c.id}')" class="text-blue-600 hover:underline">Editar</button>
+                </td>
+            </tr>
+        `).join('');
     }
-
-    grid.innerHTML = window.proyectos.map(p => `
-        <div class="p-4 border rounded-lg shadow-sm">
-            <h4 class="font-bold">${p.nombre}</h4>
-            <p class="text-sm">Estado: ${p.estatus}</p>
-        </div>
-    `).join('');
-}
+};
 
 function guardarProyecto(event) {
     event.preventDefault();
