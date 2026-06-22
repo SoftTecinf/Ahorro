@@ -77,35 +77,49 @@ if (esValido) {
 
 // main.js
 async function navegarA(vistaId) {
-    console.log("-> Navegando a:", vistaId);
-
-    // 1. Quitamos la clase 'hidden' y forzamos el display a 'block' para TODAS las vistas
-    //    Esto es para resetear el estado de todas.
+  
+    // 1. Ocultar todas las vistas
     document.querySelectorAll('.vista').forEach(v => {
-        v.classList.add('hidden'); // Ocultamos todas
-        v.style.display = 'none';  // Forzamos el ocultado
+        v.classList.add('hidden');
+        v.style.display = 'none';
     });
 
-    // 2. Buscamos el contenedor que queremos mostrar
+    // 2. Localizar el contenedor
     const contenedor = document.getElementById(vistaId);
 
     if (contenedor) {
-        // 3. Cargamos contenido si está vacío
+        // 3. Cargar contenido solo si está vacío
         if (contenedor.innerHTML.trim() === "") {
             try {
                 const response = await fetch(`${vistaId}.html`);
                 const html = await response.text();
                 contenedor.innerHTML = html;
-            } catch (err) { console.error("Error:", err); }
+            } catch (error) {
+                console.error("Error al cargar la vista:", error);
+            }
         }
 
-        // 4. ¡AQUÍ ESTÁ EL CAMBIO IMPORTANTE!
-        //    Eliminamos la clase 'hidden' y borramos el estilo 'display'
-        //    para que el navegador tome el control total.
+        // 4. Hacer visible el contenedor
         contenedor.classList.remove('hidden');
-        contenedor.style.removeProperty('display'); 
+        contenedor.style.display = 'block';
+
+        // --- NUEVO PASO 5: Sincronizar botones de navegación ---
+        const botones = document.querySelectorAll('nav button');
         
-        console.log("-> Vista mostrada:", vistaId);
+        // Quitamos la clase activa a TODOS los botones
+        botones.forEach(btn => {
+            btn.classList.remove('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white', 'shadow-sm');
+            btn.classList.add('text-gray-500', 'hover:bg-purple-50/50');
+        });
+
+        // Ponemos la clase activa solo al botón que clicaste
+        const btnActivo = document.querySelector(`nav button[onclick*="${vistaId}"]`);
+        if (btnActivo) {
+            btnActivo.classList.add('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white', 'shadow-sm');
+            btnActivo.classList.remove('text-gray-500', 'hover:bg-purple-50/50');
+        }
+    } else {
+        console.error("No se encontró el contenedor con ID:", vistaId);
     }
 }
 
