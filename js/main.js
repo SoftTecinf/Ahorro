@@ -38,8 +38,32 @@ const lista = window.obtenerListaFamiliares();
 const esValido = usuarioGuardado && lista.some(f => f.nombre === usuarioGuardado);
 
 if (esValido) {
-    console.log("✅ Sesión válida detectada. Entrando...");
-    // ... tu código para mostrar app y ocultar login
+    console.log("✅ ¡Sesión validada! Mostrando app...");
+    
+    // 1. Buscamos los elementos con seguridad
+    const appContainer = document.getElementById('app-container');
+    const modalLogin = document.getElementById('modal-identidad');
+    
+    // 2. Si encontramos app-container, lo mostramos
+    if (appContainer) {
+        appContainer.style.display = 'block'; 
+        console.log("-> app-container visible");
+    } else {
+        console.error("❌ No se encontró el elemento 'app-container' en el HTML.");
+    }
+    
+    // 3. Si encontramos modalLogin, lo ocultamos
+    if (modalLogin) {
+        modalLogin.style.display = 'none';
+        console.log("-> modal-identidad oculto");
+    }
+    
+    // 4. Actualizamos el nombre
+    const label = document.getElementById('user-label');
+    if (label) label.textContent = usuarioGuardado;
+    
+    // 5. Navegamos al inicio
+    await navegarA('inicio');
 } else {
     console.log("⚠️ No hay sesión, forzando aparición del Login...");
     
