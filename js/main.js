@@ -69,6 +69,7 @@ if (esValido) {
 
 // main.js
 async function navegarA(vistaId) {
+    
     // 1. Ocultar todas las vistas
     document.querySelectorAll('.vista').forEach(v => {
         v.classList.add('hidden');
@@ -91,14 +92,13 @@ async function navegarA(vistaId) {
             }
         }
 
-        // 4. FORZADO DE VISIBILIDAD
+        // 4. FORZADO DE VISIBILIDAD (Aquí está la clave)
         contenedor.classList.remove('hidden');
         contenedor.style.display = 'block';
-        contenedor.style.visibility = 'visible'; 
-        contenedor.style.opacity = '1';          
-
-        // --- 4.5 MODIFICACIÓN: Renderizado específico para proyectos ---
-        // Si la vista es la que contiene el grid, llamamos a tu función de pintar
+        contenedor.style.visibility = 'visible'; // Asegura que no esté invisible
+        contenedor.style.opacity = '1';          // Asegura que no sea transparente
+        
+        // Ahora llamamos al renderizado
         if (typeof window.renderizarGridProyectos === 'function') {
             console.log("-> Ejecutando renderizado de proyectos...");
             window.renderizarGridProyectos();
@@ -118,6 +118,8 @@ async function navegarA(vistaId) {
     } else {
         console.error("ERROR CRÍTICO: No existe el div con ID:", vistaId);
     }
+
+    
 }
 
 // 1. Inicia la descarga en segundo plano
@@ -130,62 +132,32 @@ window.onload = async function () {
 
     // 2. Verificamos sesión
     const usuarioGuardado = localStorage.getItem('app_currentUser');
-    const appContainer = document.getElementById('app-container');
-    const modalIdentidad = document.getElementById('modal-identidad');
-
     if (usuarioGuardado) {
         const lista = window.obtenerListaFamiliares();
         const existeUsuario = lista.some(f => f.nombre === usuarioGuardado);
 
         if (existeUsuario) {
-            appContainer.style.display = 'block';
-            modalIdentidad.style.display = 'none';
+            // --- AQUÍ ESTÁ EL AJUSTE ---
+            // Usamos los IDs que SÍ existen en tu HTML:
+            const appContainer = document.getElementById('app-container');
+            const modalIdentidad = document.getElementById('modal-identidad');
             
-            // --- NUEVO: Cargamos la vista por defecto (Inicio) ---
-            await navegarA('inicio'); 
+            if (appContainer) {
+                appContainer.style.display = 'block'; // Mostramos la app
+            }
+            
+            if (modalIdentidad) {
+                modalIdentidad.style.display = 'none'; // Ocultamos el login
+            }
+            // ----------------------------
             
         } else {
-            // Usuario no válido, forzamos login
-            appContainer.style.display = 'none';
-            modalIdentidad.style.display = 'flex';
+            console.log("❌ [DEBUG] El usuario guardado no coincide.");
         }
     } else {
-        appContainer.style.display = 'none';
-        modalIdentidad.style.display = 'flex';
-    }
-};
-
-window.renderizarTablasDatos = function() {
-    const tablaProyectos = document.getElementById('datos-tabla-proyectos-body');
-    const tablaCuentas = document.getElementById('datos-tabla-cuentas-body');
-
-    // Renderizar Proyectos
-    if (tablaProyectos && window.proyectos) {
-        tablaProyectos.innerHTML = window.proyectos.map(p => `
-            <tr>
-                <td class="p-3 font-semibold">${p.nombre}</td>
-                <td class="p-3">${p.fecha}</td>
-                <td class="p-3">${p.frecuencia}</td>
-                <td class="p-3">$${parseFloat(p.monto).toLocaleString()}</td>
-                <td class="p-3 text-center">${p.plazos}</td>
-                <td class="p-3 text-center">
-                    <button onclick="editarProyecto('${p.id}')" class="text-purple-600 hover:underline">Editar</button>
-                </td>
-            </tr>
-        `).join('');
-    }
-
-    // Renderizar Cuentas (ajusta 'window.cuentas' al nombre de tu variable real)
-    if (tablaCuentas && window.cuentas) {
-        tablaCuentas.innerHTML = window.cuentas.map(c => `
-            <tr>
-                <td class="p-3">${c.banco}</td>
-                <td class="p-3">${c.titular}</td>
-                <td class="p-3">${c.clabe}</td>
-                <td class="p-3 text-center">
-                    <button onclick="editarCuenta('${c.id}')" class="text-blue-600 hover:underline">Editar</button>
-                </td>
-            </tr>
-        `).join('');
+        console.log("ℹ️ [DEBUG] No hay usuario guardado.");
+        // Aseguramos que el login esté visible y la app oculta
+        document.getElementById('app-container').style.display = 'none';
+        document.getElementById('modal-identidad').style.display = 'flex';
     }
 };
