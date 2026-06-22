@@ -128,30 +128,41 @@ window.cargarDatosGlobales();
 
 // 2. El Portero: Este se ejecuta cuando la página ya cargó
 window.onload = async function () {
-    // Esperamos un poquito a que la app cargue los datos de internet
+    // 1. Cargamos datos
     await window.cargarDatosGlobales(); 
 
-    // Ahora sí, buscamos la variable que SÍ existe en tu LocalStorage
+    // 2. Verificamos sesión
     const usuarioGuardado = localStorage.getItem('app_currentUser');
-
     if (usuarioGuardado) {
         console.log("🔑 [DEBUG] Sesión encontrada para:", usuarioGuardado);
         
-        // Obtenemos la lista que ya descargamos
         const lista = window.obtenerListaFamiliares();
-        
-        // Verificamos si Elena está en esa lista
         const existeUsuario = lista.some(f => f.nombre === usuarioGuardado);
 
         if (existeUsuario) {
             console.log("✅ [DEBUG] ¡Coincidencia! Entrando directo...");
-            // AQUÍ LLAMA A TU FUNCIÓN QUE OCULTA EL LOGIN (ej. mostrarPantallaApp())
-            document.getElementById('pantalla-login').style.display = 'none';
-            document.getElementById('pantalla-principal').style.display = 'block';
+            
+            // --- AQUÍ ESTÁ EL AJUSTE ---
+            // Usamos los IDs que SÍ existen en tu HTML:
+            const appContainer = document.getElementById('app-container');
+            const modalIdentidad = document.getElementById('modal-identidad');
+            
+            if (appContainer) {
+                appContainer.style.display = 'block'; // Mostramos la app
+            }
+            
+            if (modalIdentidad) {
+                modalIdentidad.style.display = 'none'; // Ocultamos el login
+            }
+            // ----------------------------
+            
         } else {
-            console.log("❌ [DEBUG] El usuario guardado no coincide con la lista.");
+            console.log("❌ [DEBUG] El usuario guardado no coincide.");
         }
     } else {
         console.log("ℹ️ [DEBUG] No hay usuario guardado.");
+        // Aseguramos que el login esté visible y la app oculta
+        document.getElementById('app-container').style.display = 'none';
+        document.getElementById('modal-identidad').style.display = 'flex';
     }
 };
