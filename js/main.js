@@ -27,28 +27,32 @@ function actualizarLabelUsuario() {
 window.appReady = false;
 
 window.addEventListener('DOMContentLoaded', async () => {
-    // 2. Definimos elementos
-    const modalLogin = document.getElementById('modal-identidad');
-    const appContainer = document.getElementById('app-container');
+// En tu main.js, dentro del DOMContentLoaded
+const appContainer = document.getElementById('app-container');
+const modalLogin = document.getElementById('modal-identidad');
+
+// Verificamos si el usuario existe en el localStorage
+const usuarioGuardado = localStorage.getItem('app_currentUser');
+// Usamos tu función obtenerListaFamiliares() que ya tiene el plan B del caché
+const lista = window.obtenerListaFamiliares(); 
+const esValido = usuarioGuardado && lista.some(f => f.nombre === usuarioGuardado);
+
+if (esValido) {
+    console.log("✅ Sesión válida para:", usuarioGuardado);
+    // Verificamos existencia antes de cambiar estilos
+    if (modalLogin) modalLogin.style.display = 'none';
+    if (appContainer) appContainer.style.display = 'block';
     
-    // 3. Verificamos sesión
-    const usuarioGuardado = localStorage.getItem('app_currentUser');
-    const esValido = usuarioGuardado && familiares?.some(f => f.nombre === usuarioGuardado);
+    const label = document.getElementById('user-label');
+    if (label) label.textContent = usuarioGuardado;
     
-    // 4. ENCENDEMOS LA VISTA CORRECTA (Usando la clase .visible del CSS)
-    if (esValido) {
-        console.log("Sesión válida detectada para:", usuarioGuardado);
-        if (modalLogin) modalLogin.classList.remove('visible'); // <-- Quitamos la visibilidad
-        if (appContainer) appContainer.style.display = 'block';
-        
-        const label = document.getElementById('user-label');
-        if (label) label.textContent = usuarioGuardado;
-        
-        await navegarA('inicio');
-    } else {
-        if (appContainer) appContainer.style.display = 'none';
-        if (modalLogin) modalLogin.classList.add('visible'); // <-- ¡Aquí activamos la magia!
-    }
+    // Si tienes una función de navegación, llámala aquí
+    if (typeof navegarA === 'function') navegarA('inicio');
+} else {
+    // Si no es válido, mostramos el login
+    if (appContainer) appContainer.style.display = 'none';
+    if (modalLogin) modalLogin.style.display = 'flex'; // Cambiamos a flex para que se vea
+}
 });
 
 
