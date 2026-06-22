@@ -26,19 +26,26 @@ function unirseAProyecto(proyectoId) {
 // ==========================================
 async function renderizarGridProyectos() {
     const grid = document.getElementById('grid-proyectos');
-    if (!grid) return;
-
-    try {
-
-        grid.innerHTML = proyectos.map(p => `
-            <div class="p-4 border rounded-lg shadow-sm">
-                <h4 class="font-bold">${p.nombre}</h4>
-                <p class="text-sm">Estado: ${p.estatus}</p>
-            </div>
-        `).join('');
-    } catch (error) {
-        console.error("Error cargando datos:", error);
+    // Si no encuentra el grid, lo reportamos a la consola para saber por qué
+    if (!grid) {
+        console.warn("❌ El elemento 'grid-proyectos' aún no existe en el DOM.");
+        return;
     }
+
+    // Comprobamos si hay datos
+    console.log("-> Proyectos recibidos:", window.proyectos); 
+
+    if (!window.proyectos || window.proyectos.length === 0) {
+        grid.innerHTML = "<p>No hay proyectos activos.</p>";
+        return;
+    }
+
+    grid.innerHTML = window.proyectos.map(p => `
+        <div class="p-4 border rounded-lg shadow-sm">
+            <h4 class="font-bold">${p.nombre}</h4>
+            <p class="text-sm">Estado: ${p.estatus}</p>
+        </div>
+    `).join('');
 }
 
 function guardarProyecto(event) {
