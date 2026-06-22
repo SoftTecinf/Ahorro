@@ -77,7 +77,6 @@ if (esValido) {
 
 // main.js
 async function navegarA(vistaId) {
-    console.log("-> Intentando mostrar:", vistaId);
 
     // 1. Ocultar todas las vistas
     document.querySelectorAll('.vista').forEach(v => {
@@ -91,7 +90,6 @@ async function navegarA(vistaId) {
     if (contenedor) {
         // 3. Cargar contenido SIEMPRE que esté vacío
         if (contenedor.innerHTML.trim() === "") {
-            console.log("-> Descargando contenido para:", vistaId);
             try {
                 const response = await fetch(`${vistaId}.html`);
                 const html = await response.text();
@@ -107,8 +105,7 @@ async function navegarA(vistaId) {
         contenedor.style.display = 'block';
         contenedor.style.visibility = 'visible'; // Asegura que no esté invisible
         contenedor.style.opacity = '1';          // Asegura que no sea transparente
-        
-        console.log("-> Contenedor:", contenedor, "visible.");
+    
 
         // 5. Sincronizar botones
         document.querySelectorAll('nav button').forEach(btn => {
