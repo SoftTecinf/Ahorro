@@ -92,12 +92,18 @@ async function navegarA(vistaId) {
             }
         }
 
-        // 4. FORZADO DE VISIBILIDAD (Aquí está la clave)
+        // 4. FORZADO DE VISIBILIDAD
         contenedor.classList.remove('hidden');
         contenedor.style.display = 'block';
-        contenedor.style.visibility = 'visible'; // Asegura que no esté invisible
-        contenedor.style.opacity = '1';          // Asegura que no sea transparente
-    
+        contenedor.style.visibility = 'visible'; 
+        contenedor.style.opacity = '1';          
+
+        // --- 4.5 MODIFICACIÓN: Renderizado específico para proyectos ---
+        // Si la vista es la que contiene el grid, llamamos a tu función de pintar
+        if (typeof window.renderizarGridProyectos === 'function') {
+            console.log("-> Ejecutando renderizado de proyectos...");
+            window.renderizarGridProyectos();
+        }
 
         // 5. Sincronizar botones
         document.querySelectorAll('nav button').forEach(btn => {
@@ -113,22 +119,6 @@ async function navegarA(vistaId) {
     } else {
         console.error("ERROR CRÍTICO: No existe el div con ID:", vistaId);
     }
-
-    if (contenedor) {
-        if (contenedor.innerHTML.trim() === "") {
-            try {
-                const response = await fetch(`${vistaId}.html`);
-                const html = await response.text();
-                contenedor.innerHTML = html;
-                
-                // --- AQUÍ ESTÁ EL CAMBIO ---
-                // Si la vista cargada es la de configuración o donde están los proyectos,
-                // llamamos a la función de renderizado AHORA que el HTML ya existe.
-                if (typeof window.renderizarGridProyectos === 'function') {
-                    window.renderizarGridProyectos();
-                }
-            } catch (err) { console.error(err); }
-        }
 }
 
 // 1. Inicia la descarga en segundo plano
