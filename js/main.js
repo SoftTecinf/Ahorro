@@ -69,7 +69,6 @@ if (esValido) {
 
 // main.js
 async function navegarA(vistaId) {
-    
     // 1. Ocultar todas las vistas
     document.querySelectorAll('.vista').forEach(v => {
         v.classList.add('hidden');
