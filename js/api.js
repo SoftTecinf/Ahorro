@@ -6,20 +6,19 @@ window.familiares = JSON.parse(localStorage.getItem('app_cache_familiares')) || 
 window.cargarDatosGlobales = async function() {
     const url = "https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec";
     
-    const respuesta = await fetch(url);
-    const data = await respuesta.json(); // <-- Supongamos que aquí vienen { familiares: [...], proyectos: [...], cuentas: [...] }
-    
-    // Asignamos cada cosa a su variable global
-    window.familiares = data.familiares || [];
-    window.proyectos = data.proyectos || [];
-    window.cuentas = data.cuentas || [];
-    
-    // Guardamos en caché
-    localStorage.setItem('app_cache_familiares', JSON.stringify(window.familiares));
-    localStorage.setItem('app_cache_proyectos', JSON.stringify(window.proyectos));
-    localStorage.setItem('app_cache_cuentas', JSON.stringify(window.cuentas));
-    
-    console.log("✅ Datos cargados:", { proyectos: window.proyectos, cuentas: window.cuentas });
+        const respuesta = await fetch(url);
+        const data = await respuesta.json();
+        
+        // CORRECCIÓN: Ya no usamos .slice(1) ni fila[0]. Leemos los objetos directos que manda tu Google Script
+        window.familiares = data.map(usuario => ({
+            nombre: usuario.nombre ? String(usuario.nombre).trim() : "",
+            password: usuario.password ? String(usuario.password).trim() : "",
+            celular: usuario.celular ? String(usuario.celular).trim() : ""
+        }));
+        
+        // Guardamos la copia fresca en el dispositivo
+        localStorage.setItem('app_cache_familiares', JSON.stringify(window.familiares));
+
 };
 
 // 🔥 ¡ESTA LÍNEA ES CLAVE! Ejecuta la función en segundo plano nada más abrir la página
