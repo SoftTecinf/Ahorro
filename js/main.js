@@ -38,44 +38,28 @@ const lista = window.obtenerListaFamiliares();
 const esValido = usuarioGuardado && lista.some(f => f.nombre === usuarioGuardado);
 
 if (esValido) {
+    console.log("✅ ¡Sesión validada! Mostrando app...");
     
-    // 1. Buscamos los elementos con seguridad
-    const appContainer = document.getElementById('app-container');
-    const modalLogin = document.getElementById('modal-identidad');
-    
-    // 2. Si encontramos app-container, lo mostramos
+    // 1. Si encontramos app-container, lo mostramos
     if (appContainer) {
         appContainer.style.display = 'block'; 
         console.log("-> app-container visible");
-    } else {
-        console.error("❌ No se encontró el elemento 'app-container' en el HTML.");
     }
     
-    // 3. Si encontramos modalLogin, lo ocultamos
+    // 2. Si encontramos modalLogin, lo ocultamos para que no tape la app
     if (modalLogin) {
         modalLogin.style.display = 'none';
         console.log("-> modal-identidad oculto");
     }
     
-    // 4. Actualizamos el nombre
-    const label = document.getElementById('user-label');
-    if (label) label.textContent = usuarioGuardado;
-    
-    // 5. Navegamos al inicio
-    await navegarA('inicio');
+    // 3. Cargamos la vista inicial (por ejemplo, 'inicio')
+    // Asegúrate de llamar a tu función de carga aquí:
+    // await navegarA('inicio'); 
+
 } else {
-    
-    // FORZAMOS LA VISIBILIDAD DEL LOGIN
-    const modalLogin = document.getElementById('modal-identidad');
-    const appContainer = document.getElementById('app-container');
-    
-    if (modalLogin) {
-        modalLogin.style.display = 'flex'; // ¡Forzamos que se vea!
-        modalLogin.classList.add('visible'); // Por si usas clases también
-    }
-    if (appContainer) {
-        appContainer.style.display = 'none'; // Aseguramos que la app esté oculta
-    }
+    console.log("⚠️ No hay sesión válida, manteniendo el Login visible.");
+    // Aquí no hacemos nada especial porque el Login ya debería estar visible por defecto
+    if (appContainer) appContainer.style.display = 'none';
 }
 });
 
