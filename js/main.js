@@ -77,8 +77,7 @@ if (esValido) {
 
 // main.js
 async function navegarA(vistaId) {
-  
-    // 1. Ocultar todas las vistas
+    // 1. Ocultar todas las vistas (limpieza visual)
     document.querySelectorAll('.vista').forEach(v => {
         v.classList.add('hidden');
         v.style.display = 'none';
@@ -88,38 +87,23 @@ async function navegarA(vistaId) {
     const contenedor = document.getElementById(vistaId);
 
     if (contenedor) {
-        // 3. Cargar contenido solo si está vacío
+        // 3. Si está vacío, cargamos. SI YA TIENE CONTENIDO, lo dejamos tal cual.
         if (contenedor.innerHTML.trim() === "") {
             try {
                 const response = await fetch(`${vistaId}.html`);
                 const html = await response.text();
                 contenedor.innerHTML = html;
             } catch (error) {
-                console.error("Error al cargar la vista:", error);
+                console.error("Error al cargar:", error);
             }
         }
 
-        // 4. Hacer visible el contenedor
+        // 4. ¡IMPORTANTE! Forzamos la visibilidad SIEMPRE
         contenedor.classList.remove('hidden');
-        contenedor.style.display = 'block';
-
-        // --- NUEVO PASO 5: Sincronizar botones de navegación ---
-        const botones = document.querySelectorAll('nav button');
+        contenedor.style.display = 'block'; 
         
-        // Quitamos la clase activa a TODOS los botones
-        botones.forEach(btn => {
-            btn.classList.remove('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white', 'shadow-sm');
-            btn.classList.add('text-gray-500', 'hover:bg-purple-50/50');
-        });
-
-        // Ponemos la clase activa solo al botón que clicaste
-        const btnActivo = document.querySelector(`nav button[onclick*="${vistaId}"]`);
-        if (btnActivo) {
-            btnActivo.classList.add('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white', 'shadow-sm');
-            btnActivo.classList.remove('text-gray-500', 'hover:bg-purple-50/50');
-        }
-    } else {
-        console.error("No se encontró el contenedor con ID:", vistaId);
+        // --- ADICIONAL: Resaltado de botones ---
+        actualizarBotones(vistaId);
     }
 }
 
