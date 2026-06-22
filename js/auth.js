@@ -101,25 +101,16 @@ async function confirmarIdentidad() {
     }
 }
 
-function cerrarSesion() {
-    console.log("Iniciando proceso de cierre de sesión...");
+window.cerrarSesion = function() {
+    console.log("🔒 Cerrando sesión...");
     
-    // 1. Limpieza de datos
+    // 1. Limpieza de datos en el dispositivo
     localStorage.removeItem('app_currentUser');
-    if (window.familiares) window.familiares = null;
+    window.familiares = []; // Es mejor dejarlo vacío que null
     
-    // 2. Captura de elementos
-    const modalLogin = document.getElementById('modal-identidad');
-    const appContainer = document.getElementById('app-container');
-    const userLabel = document.getElementById('user-label');
-
-    // 3. IDIOMA UNIFICADO: Mostramos login, ocultamos app de inmediato
-    if (modalLogin) modalLogin.style.display = 'flex';
-    if (appContainer) appContainer.style.display = 'none';
-    if (userLabel) userLabel.textContent = "";
-
-    console.log("Sesión destruida visualmente. Reiniciando memoria...");
-    
-    // 4. Limpieza total de memoria volátil
+    // 2. FORZAMOS EL CIERRE INMEDIATO
+    // Al recargar, la página vuelve a su estado original (HTML) 
+    // y el 'main.js' vuelve a ejecutar su lógica de validación. 
+    // Es el camino más corto y seguro.
     location.reload(); 
-}
+};
