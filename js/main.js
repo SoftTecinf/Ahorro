@@ -38,20 +38,22 @@ const lista = window.obtenerListaFamiliares();
 const esValido = usuarioGuardado && lista.some(f => f.nombre === usuarioGuardado);
 
 if (esValido) {
-    console.log("✅ Sesión válida para:", usuarioGuardado);
-    // Verificamos existencia antes de cambiar estilos
-    if (modalLogin) modalLogin.style.display = 'none';
-    if (appContainer) appContainer.style.display = 'block';
-    
-    const label = document.getElementById('user-label');
-    if (label) label.textContent = usuarioGuardado;
-    
-    // Si tienes una función de navegación, llámala aquí
-    if (typeof navegarA === 'function') navegarA('inicio');
+    console.log("✅ Sesión válida detectada. Entrando...");
+    // ... tu código para mostrar app y ocultar login
 } else {
-    // Si no es válido, mostramos el login
-    if (appContainer) appContainer.style.display = 'none';
-    if (modalLogin) modalLogin.style.display = 'flex'; // Cambiamos a flex para que se vea
+    console.log("⚠️ No hay sesión, forzando aparición del Login...");
+    
+    // FORZAMOS LA VISIBILIDAD DEL LOGIN
+    const modalLogin = document.getElementById('modal-identidad');
+    const appContainer = document.getElementById('app-container');
+    
+    if (modalLogin) {
+        modalLogin.style.display = 'flex'; // ¡Forzamos que se vea!
+        modalLogin.classList.add('visible'); // Por si usas clases también
+    }
+    if (appContainer) {
+        appContainer.style.display = 'none'; // Aseguramos que la app esté oculta
+    }
 }
 });
 
