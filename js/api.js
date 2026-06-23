@@ -16,16 +16,15 @@ window.cargarDatosGlobales = async function () {
         celular: usuario.celular ? String(usuario.celular).trim() : ""
     }));
 
-    // 2. Procesar Proyectos (CORREGIDO)
+    // 2. Procesar Proyectos (A prueba de errores de ortografía)
     window.proyectos = (data.proyectos || []).map(p => ({
-        id: p.Id || "",
-        nombre: p.Nombre || "",
-        // Fíjate que aquí usamos el nombre exacto de la columna en Google Sheets
-        fecha: p.Fechainicio || "",
-        frecuencia: p.Frecuencia || "",
-        monto: p.Monto || 0,
-        plazos: p.Plazos || 0,
-        cuota: p.Cuota || 0
+        // Intentamos buscar por varios nombres posibles que suelen ocurrir
+        id: p.Id || p.id || "",
+        nombre: p.Nombre || p.nombre || "",
+        fecha: p.Fechainicio || p.Fechainicio || p.FechaInicio || "Sin fecha",
+        frecuencia: p.Frecuencia || p.frecuencia || "",
+        monto: p.Monto || p.monto || 0,
+        plazos: p.Plazos || p.plazos || 0
     }));
 
     // 3. Procesar Cuentas
