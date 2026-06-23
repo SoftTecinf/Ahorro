@@ -93,7 +93,6 @@ window.renderizarGridProyectos = function() {
         </tr>
     `).join('');
     
-    console.log("✅ Tabla renderizada con éxito.");
 }
 
 function editarProyecto(id) {
