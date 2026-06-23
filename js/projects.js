@@ -93,7 +93,7 @@ window.renderizarGridProyectos = function() {
     tbody.innerHTML = window.proyectos.map(p => `
         <tr class="hover:bg-purple-50/50 transition-colors">
             <td class="p-3 font-medium text-purple-900">${p.nombre}</td>
-            <td class="p-3">${p.fecha}</td>
+            <td class="p-3">${p.FechaInicio}</td>
             <td class="p-3 capitalize">${p.frecuencia}</td>
             <td class="p-3 font-semibold">$${parseFloat(p.monto).toLocaleString()}</td>
             <td class="p-3 text-center">${p.plazos}</td>
