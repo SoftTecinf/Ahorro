@@ -51,70 +51,66 @@ window.guardarProyecto = async function(event) {
     event.preventDefault();
     if (!currentUser) return alert("Error: No se detectó un usuario activo.");
 
-    const idInput = document.getElementById('datos-proyecto-id').value;
+    // 1. Captura de datos
     const nombre = document.getElementById('datos-nombre-proyecto').value.trim();
     const fechaInicio = document.getElementById('datos-fecha-inicio').value;
-    const monto = parseFloat(document.getElementById('datos-monto').value) || 0;
-    const plazos = parseInt(document.getElementById('datos-plazos').value) || 1;
+    const monto = document.getElementById('datos-monto').value;
+    const plazos = document.getElementById('datos-plazos').value;
     const frecuencia = document.getElementById('datos-frecuencia').value;
-    const cuotaCalculada = monto / plazos;
 
-    let proyectoData;
-
-    if (idInput) {
-        // ACTUALIZAR PROYECTO
-        const proyectoExistente = proyectos.find(p => p.id == idInput);
-        if (proyectoExistente) {
-            proyectoExistente.nombre = nombre;
-            proyectoExistente.fechaInicio = fechaInicio;
-            proyectoExistente.monto = monto;
-            proyectoExistente.plazos = plazos;
-            proyectoExistente.frecuencia = frecuencia;
-            proyectoExistente.cuota = cuotaCalculada;
-            proyectoData = proyectoExistente; // Usamos el existente
-        }
-        mostrarModal(`¡Proyecto "${nombre}" actualizado correctamente!`);
-    } else {
-        // NUEVO PROYECTO
-        proyectoData = {
-            tipo: "proyecto", // Importante para tu doPost
-            id: Date.now(),
-            adminName: currentUser,
-            nombre: nombre,
-            fechaInicio: fechaInicio,
-            monto: monto,
-            plazos: plazos,
-            frecuencia: frecuencia,
-            cuota: cuotaCalculada,
-            idCuentaVinculada: null,
-            participantes: [currentUser],
-            historialDepositos: {}
-        };
-        proyectos.push(proyectoData);
-        mostrarModal(`¡Proyecto "${nombre}" guardado con éxito!`);
+    // 2. VALIDACIÓN: Si algún campo crítico está vacío, detenemos todo
+    if (!nombre || !fechaInicio || !monto || !plazos || !frecuencia) {
+        alert("⚠️ Por favor, completa todos los campos antes de guardar.");
+        return; // Esto impide que el código siga y envíe datos vacíos
     }
 
-    // 1. Guardar localmente
-    localStorage.setItem('app_proyectos', JSON.stringify(proyectos));
+    // Si pasamos la validación, procedemos con los cálculos
+    const montoNum = parseFloat(monto);
+    const plazosNum = parseInt(plazos);
+    const cuotaCalculada = montoNum / plazosNum;
+    const idInput = document.getElementById('datos-proyecto-id').value;
 
-    // 2. ENVIAR A GOOGLE SHEETS
+    // ... (resto de tu lógica de creación del objeto 'nuevo')
+    
+    const nuevo = {
+        tipo: "proyecto",
+        id: idInput ? idInput : Date.now(),
+        adminName: currentUser,
+        nombre: nombre,
+        fechaInicio: fechaInicio,
+        monto: montoNum,
+        plazos: plazosNum,
+        frecuencia: frecuencia,
+        cuota: cuotaCalculada,
+        idCuentaVinculada: null,
+        participantes: [currentUser],
+        historialDepositos: {}
+    };
+
+    // 3. Envío seguro a Google Sheets
     try {
         await fetch('https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec', {
             method: 'POST',
             mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(proyectoData)
+            body: JSON.stringify(nuevo)
         });
-        console.log("Datos sincronizados con Google Sheets");
+        
+        // Solo si el envío es exitoso, actualizamos la vista
+        proyectos.push(nuevo);
+        localStorage.setItem('app_proyectos', JSON.stringify(proyectos));
+        mostrarModal(`¡Proyecto "${nombre}" guardado con éxito!`);
+        
+        cancelarEdicionProyecto();
+        renderizarGridProyectos();
+        renderizarInicioProyectos();
+        
     } catch (error) {
-        console.error("Error al sincronizar con Google:", error);
+        console.error("Error al sincronizar:", error);
+        alert("Hubo un error al guardar en la nube. Intenta de nuevo.");
     }
-
-    // 3. Finalizar
-    cancelarEdicionProyecto();
-    renderizarGridProyectos();
-    renderizarInicioProyectos();
 }
+
 
 function editarProyecto(id) {
     const p = proyectos.find(x => x.id == id);
