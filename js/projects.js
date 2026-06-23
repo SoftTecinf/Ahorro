@@ -36,7 +36,7 @@ window.guardarProyecto = async function(event) {
     const frecuencia = document.getElementById('datos-frecuencia').value;
 
     // VALIDACIÓN CRÍTICA: Si algo está vacío, NO guardamos
-    if (!nombre || !fecha || !monto || !plazos || !frecuencia) {
+    if (!nombre || !fechaInicio || !monto || !plazos || !frecuencia) {
         alert("⚠️ Por favor, llena todos los campos del proyecto.");
         return; // Detiene la ejecución aquí
     }
