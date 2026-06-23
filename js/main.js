@@ -86,6 +86,11 @@ async function navegarA(vistaId) {
                 const response = await fetch(`${vistaId}.html`);
                 const html = await response.text();
                 contenedor.innerHTML = html;
+                
+                // --- AQUÍ ESTÁ LA CLAVE ---
+                // Esperamos un tiempo mínimo (50ms) para que el navegador cree los elementos
+                await new Promise(resolve => setTimeout(resolve, 50)); 
+                
             } catch (error) {
                 console.error("Error al cargar:", error);
                 contenedor.innerHTML = "<p class='p-4 text-red-500'>Error al cargar contenido.</p>";
