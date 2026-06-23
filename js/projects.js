@@ -65,7 +65,7 @@ window.guardarProyecto = async function(event) {
             body: JSON.stringify(nuevoProyecto)
         });
         
-        alert("¡Proyecto guardado con éxito!");
+        mostrarModal("¡Proyecto guardado con éxito!");
         // Aquí recargamos los datos
         await cargarDatosGlobales(); 
         renderizarGridProyectos();
