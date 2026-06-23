@@ -15,7 +15,7 @@ window.cargarDatosGlobales = async function () {
         password: usuario.password ? String(usuario.password).trim() : "",
         celular: usuario.celular ? String(usuario.celular).trim() : ""
     }));
-    
+
 
     // 2. Procesar Proyectos (A prueba de errores de ortografía)
     window.proyectos = (data.proyectos || []).map(p => ({
@@ -40,8 +40,6 @@ window.cargarDatosGlobales = async function () {
     localStorage.setItem('app_cache_familiares', JSON.stringify(window.familiares));
     localStorage.setItem('app_cache_proyectos', JSON.stringify(window.proyectos));
     localStorage.setItem('app_cache_cuentas', JSON.stringify(window.cuentas));
-
-    console.log("✅ Datos sincronizados correctamente.");
 };
 
 // 🔥 ¡ESTA LÍNEA ES CLAVE! Ejecuta la función en segundo plano nada más abrir la página
