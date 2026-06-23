@@ -24,15 +24,14 @@ function unirseAProyecto(proyectoId) {
 // ==========================================
 // PROYECTOS Y LOGICA DE RENDIMIENTO (DOM)
 // ==========================================
-async function renderizarGridProyectos() {
+window.renderizarGridProyectos = function() {
     const grid = document.getElementById('grid-proyectos');
-    // Si no encuentra el grid, lo reportamos a la consola para saber por qué
+    
     if (!grid) {
         console.warn("❌ El elemento 'grid-proyectos' aún no existe en el DOM.");
         return;
     }
 
-    // Comprobamos si hay datos
     console.log("-> Proyectos recibidos:", window.proyectos); 
 
     if (!window.proyectos || window.proyectos.length === 0) {
