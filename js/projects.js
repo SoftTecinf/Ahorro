@@ -24,6 +24,54 @@ function unirseAProyecto(proyectoId) {
 // ==========================================
 // PROYECTOS Y LOGICA DE RENDIMIENTO (DOM)
 // ==========================================
+window.guardarProyecto = async function(event) {
+    event.preventDefault();
+    
+    // Capturamos los valores
+    const nombre = document.getElementById('datos-nombre-proyecto').value.trim();
+    const fecha = document.getElementById('datos-fecha-inicio').value;
+    const monto = document.getElementById('datos-monto').value;
+    const plazos = document.getElementById('datos-plazos').value;
+    const frecuencia = document.getElementById('datos-frecuencia').value;
+
+    // VALIDACIÓN CRÍTICA: Si algo está vacío, NO guardamos
+    if (!nombre || !fecha || !monto || !plazos || !frecuencia) {
+        alert("⚠️ Por favor, llena todos los campos del proyecto.");
+        return; // Detiene la ejecución aquí
+    }
+
+    // Si todo está bien, creamos el objeto
+    const nuevoProyecto = {
+        tipo: "proyecto",
+        id: Date.now(),
+        nombre: nombre,
+        fechaInicio: fecha,
+        frecuencia: frecuencia,
+        monto: parseFloat(monto),
+        plazos: parseInt(plazos),
+        cuota: parseFloat(monto) / parseInt(plazos),
+        adminName: window.currentUser || "Elena",
+        participantes: [window.currentUser || "Elena"],
+        historialDepositos: {}
+    };
+
+    // Enviamos a Google Sheets
+    try {
+        await fetch('https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec', {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(nuevoProyecto)
+        });
+        
+        alert("¡Proyecto guardado con éxito!");
+        // Aquí recargamos los datos
+        await cargarDatosGlobales(); 
+        renderizarGridProyectos();
+    } catch (e) {
+        alert("Error al guardar en la nube.");
+    }
+};
 window.renderizarGridProyectos = function() {
     const grid = document.getElementById('grid-proyectos');
     
@@ -45,70 +93,6 @@ window.renderizarGridProyectos = function() {
             <p class="text-sm">Estado: ${p.estatus}</p>
         </div>
     `).join('');
-}
-
-window.guardarProyecto = async function(event) {
-    event.preventDefault();
-    if (!currentUser) return alert("Error: No se detectó un usuario activo.");
-
-    // 1. Captura de datos
-    const nombre = document.getElementById('datos-nombre-proyecto').value.trim();
-    const fechaInicio = document.getElementById('datos-fecha-inicio').value;
-    const monto = document.getElementById('datos-monto').value;
-    const plazos = document.getElementById('datos-plazos').value;
-    const frecuencia = document.getElementById('datos-frecuencia').value;
-
-    // 2. VALIDACIÓN: Si algún campo crítico está vacío, detenemos todo
-    if (!nombre || !fechaInicio || !monto || !plazos || !frecuencia) {
-        alert("⚠️ Por favor, completa todos los campos antes de guardar.");
-        return; // Esto impide que el código siga y envíe datos vacíos
-    }
-
-    // Si pasamos la validación, procedemos con los cálculos
-    const montoNum = parseFloat(monto);
-    const plazosNum = parseInt(plazos);
-    const cuotaCalculada = montoNum / plazosNum;
-    const idInput = document.getElementById('datos-proyecto-id').value;
-
-    // ... (resto de tu lógica de creación del objeto 'nuevo')
-    
-    const nuevo = {
-        tipo: "proyecto",
-        id: idInput ? idInput : Date.now(),
-        adminName: currentUser,
-        nombre: nombre,
-        fechaInicio: fechaInicio,
-        monto: montoNum,
-        plazos: plazosNum,
-        frecuencia: frecuencia,
-        cuota: cuotaCalculada,
-        idCuentaVinculada: null,
-        participantes: [currentUser],
-        historialDepositos: {}
-    };
-
-    // 3. Envío seguro a Google Sheets
-    try {
-        await fetch('https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec', {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(nuevo)
-        });
-        
-        // Solo si el envío es exitoso, actualizamos la vista
-        proyectos.push(nuevo);
-        localStorage.setItem('app_proyectos', JSON.stringify(proyectos));
-        mostrarModal(`¡Proyecto "${nombre}" guardado con éxito!`);
-        
-        cancelarEdicionProyecto();
-        renderizarGridProyectos();
-        renderizarInicioProyectos();
-        
-    } catch (error) {
-        console.error("Error al sincronizar:", error);
-        alert("Hubo un error al guardar en la nube. Intenta de nuevo.");
-    }
 }
 
 
