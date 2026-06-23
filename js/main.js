@@ -181,3 +181,25 @@ window.onload = async function () {
         document.getElementById('modal-identidad').style.display = 'flex';
     }
 };
+
+const montoInput = document.getElementById('monto-input');
+
+montoInput.addEventListener('input', (e) => {
+    let valor = e.target.value;
+    
+    // 1. Eliminar todo lo que no sea número
+    valor = valor.replace(/\D/g, "");
+    
+    // 2. Convertir a formato moneda
+    if (valor.length > 0) {
+        valor = new Intl.NumberFormat('es-MX', {
+            style: 'currency',
+            currency: 'MXN',
+            minimumFractionDigits: 0
+        }).format(valor);
+        
+        e.target.value = valor;
+    } else {
+        e.target.value = "";
+    }
+});
