@@ -16,14 +16,16 @@ window.cargarDatosGlobales = async function() {
         celular: usuario.celular ? String(usuario.celular).trim() : ""
     }));
     
-    // 2. Procesar Proyectos
+    // 2. Procesar Proyectos (CORREGIDO)
     window.proyectos = (data.proyectos || []).map(p => ({
         id: p.id || "",
-        nombre: p.nombre || "",
-        fecha: p.fecha || "",
-        frecuencia: p.frecuencia || "",
-        monto: p.monto || 0,
-        plazos: p.plazos || 0
+        nombre: p.nombre || "",             // Debe coincidir con la columna B
+        fecha: p.fechaInicio || "",        // Tu columna C se llama FechaInicio
+        frecuencia: p.frecuencia || "",    // Columna D
+        monto: parseFloat(p.monto) || 0,   // Columna E
+        plazos: parseInt(p.plazos) || 0,   // Columna F
+        cuota: parseFloat(p.cuota) || 0,   // Columna G
+        adminName: p.adminName || ""       // Columna H
     }));
 
     // 3. Procesar Cuentas
