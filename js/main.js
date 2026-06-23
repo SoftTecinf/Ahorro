@@ -27,49 +27,49 @@ function actualizarLabelUsuario() {
 window.appReady = false;
 
 window.addEventListener('DOMContentLoaded', async () => {
-// En tu main.js, dentro del DOMContentLoaded
-const appContainer = document.getElementById('app-container');
-const modalLogin = document.getElementById('modal-identidad');
-
-// Verificamos si el usuario existe en el localStorage
-const usuarioGuardado = localStorage.getItem('app_currentUser');
-// Usamos tu función obtenerListaFamiliares() que ya tiene el plan B del caché
-const lista = window.obtenerListaFamiliares(); 
-const esValido = usuarioGuardado && lista.some(f => f.nombre === usuarioGuardado);
-
-if (esValido) {    
-       
-    // 3. Si encontramos modalLogin, lo ocultamos
-    if (modalLogin) {
-        modalLogin.style.display = 'none';
-    }
-    
-    // 4. Actualizamos el nombre
-    const label = document.getElementById('user-label');
-    if (label) label.textContent = usuarioGuardado;
-    
-    // 5. Navegamos al inicio
-    await navegarA('inicio');
-} else {
-    
-    // FORZAMOS LA VISIBILIDAD DEL LOGIN
-    const modalLogin = document.getElementById('modal-identidad');
+    // En tu main.js, dentro del DOMContentLoaded
     const appContainer = document.getElementById('app-container');
-    
-    if (modalLogin) {
-        modalLogin.style.display = 'flex'; // ¡Forzamos que se vea!
-        modalLogin.classList.add('visible'); // Por si usas clases también
+    const modalLogin = document.getElementById('modal-identidad');
+
+    // Verificamos si el usuario existe en el localStorage
+    const usuarioGuardado = localStorage.getItem('app_currentUser');
+    // Usamos tu función obtenerListaFamiliares() que ya tiene el plan B del caché
+    const lista = window.obtenerListaFamiliares();
+    const esValido = usuarioGuardado && lista.some(f => f.nombre === usuarioGuardado);
+
+    if (esValido) {
+
+        // 3. Si encontramos modalLogin, lo ocultamos
+        if (modalLogin) {
+            modalLogin.style.display = 'none';
+        }
+
+        // 4. Actualizamos el nombre
+        const label = document.getElementById('user-label');
+        if (label) label.textContent = usuarioGuardado;
+
+        // 5. Navegamos al inicio
+        await navegarA('inicio');
+    } else {
+
+        // FORZAMOS LA VISIBILIDAD DEL LOGIN
+        const modalLogin = document.getElementById('modal-identidad');
+        const appContainer = document.getElementById('app-container');
+
+        if (modalLogin) {
+            modalLogin.style.display = 'flex'; // ¡Forzamos que se vea!
+            modalLogin.classList.add('visible'); // Por si usas clases también
+        }
+        if (appContainer) {
+            appContainer.style.display = 'none'; // Aseguramos que la app esté oculta
+        }
     }
-    if (appContainer) {
-        appContainer.style.display = 'none'; // Aseguramos que la app esté oculta
-    }
-}
 });
 
 
 // main.js
 async function navegarA(vistaId) {
-    
+
     // 1. Ocultar todas las vistas
     document.querySelectorAll('.vista').forEach(v => {
         v.classList.add('hidden');
@@ -86,11 +86,11 @@ async function navegarA(vistaId) {
                 const response = await fetch(`${vistaId}.html`);
                 const html = await response.text();
                 contenedor.innerHTML = html;
-                
+
                 // --- AQUÍ ESTÁ LA CLAVE ---
                 // Esperamos un tiempo mínimo (50ms) para que el navegador cree los elementos
-                await new Promise(resolve => setTimeout(resolve, 50)); 
-                
+                await new Promise(resolve => setTimeout(resolve, 50));
+
             } catch (error) {
                 console.error("Error al cargar:", error);
                 contenedor.innerHTML = "<p class='p-4 text-red-500'>Error al cargar contenido.</p>";
@@ -102,12 +102,29 @@ async function navegarA(vistaId) {
         contenedor.style.display = 'block';
         contenedor.style.visibility = 'visible'; // Asegura que no esté invisible
         contenedor.style.opacity = '1';          // Asegura que no sea transparente
-        
+
         // Ahora llamamos al renderizado
         if (typeof window.renderizarGridProyectos === 'function') {
             console.log("-> Ejecutando renderizado de proyectos...");
             window.renderizarGridProyectos();
         }
+
+        let intentos = 0;
+        const verificarDOM = setInterval(() => {
+            const grid = document.getElementById('grid-proyectos');
+            intentos++;
+
+            if (grid) {
+                clearInterval(verificarDOM); // Si ya existe, dejamos de buscar
+                if (typeof window.renderizarGridProyectos === 'function') {
+                    console.log("-> Renderizando tras confirmar DOM...");
+                    window.renderizarGridProyectos();
+                }
+            } else if (intentos > 10) {
+                clearInterval(verificarDOM); // Si después de 1 segundo no existe, paramos
+                console.error("CRÍTICO: No se encontró 'grid-proyectos' en el DOM.");
+            }
+        }, 100);
 
         // 5. Sincronizar botones
         document.querySelectorAll('nav button').forEach(btn => {
@@ -124,7 +141,7 @@ async function navegarA(vistaId) {
         console.error("ERROR CRÍTICO: No existe el div con ID:", vistaId);
     }
 
-    
+
 }
 
 // 1. Inicia la descarga en segundo plano
@@ -133,7 +150,7 @@ window.cargarDatosGlobales();
 // 2. El Portero: Este se ejecuta cuando la página ya cargó
 window.onload = async function () {
     // 1. Cargamos datos
-    await window.cargarDatosGlobales(); 
+    await window.cargarDatosGlobales();
 
     // 2. Verificamos sesión
     const usuarioGuardado = localStorage.getItem('app_currentUser');
@@ -146,16 +163,16 @@ window.onload = async function () {
             // Usamos los IDs que SÍ existen en tu HTML:
             const appContainer = document.getElementById('app-container');
             const modalIdentidad = document.getElementById('modal-identidad');
-            
+
             if (appContainer) {
                 appContainer.style.display = 'block'; // Mostramos la app
             }
-            
+
             if (modalIdentidad) {
                 modalIdentidad.style.display = 'none'; // Ocultamos el login
             }
             // ----------------------------
-            
+
         } else {
             console.log("❌ [DEBUG] El usuario guardado no coincide.");
         }
