@@ -35,7 +35,6 @@ async function procesarRegistro() {
     try {
         const URL_API = 'https://script.google.com/macros/s/AKfycbxTFZLLfvP8cywVA8IzMsVa0BPA9OeLieUV-6Cgg_XNxLZLH6Uxzx_QpfdOzMH3x2wdVQ/exec';
 
-        console.log("Enviando datos de registro...");
 
         // Quitamos 'mode: 'no-cors'' para poder procesar la respuesta JSON correctamente
         const respuesta = await fetch(URL_API, {
@@ -46,7 +45,6 @@ async function procesarRegistro() {
 
         // Ahora sí podemos leer el resultado real del servidor de Google
         const resultado = await respuesta.json();
-        console.log("Datos enviados y procesados con éxito:", resultado);
         
         alert("¡Registro guardado exitosamente!");
         
