@@ -47,7 +47,7 @@ window.renderizarGridProyectos = function() {
     `).join('');
 }
 
-function guardarProyecto(event) {
+window.guardarProyecto = async function(event) {
     event.preventDefault();
     if (!currentUser) return alert("Error: No se detectó un usuario activo.");
 
@@ -59,7 +59,10 @@ function guardarProyecto(event) {
     const frecuencia = document.getElementById('datos-frecuencia').value;
     const cuotaCalculada = monto / plazos;
 
+    let proyectoData;
+
     if (idInput) {
+        // ACTUALIZAR PROYECTO
         const proyectoExistente = proyectos.find(p => p.id == idInput);
         if (proyectoExistente) {
             proyectoExistente.nombre = nombre;
@@ -68,10 +71,13 @@ function guardarProyecto(event) {
             proyectoExistente.plazos = plazos;
             proyectoExistente.frecuencia = frecuencia;
             proyectoExistente.cuota = cuotaCalculada;
+            proyectoData = proyectoExistente; // Usamos el existente
         }
         mostrarModal(`¡Proyecto "${nombre}" actualizado correctamente!`);
     } else {
-        const nuevo = {
+        // NUEVO PROYECTO
+        proyectoData = {
+            tipo: "proyecto", // Importante para tu doPost
             id: Date.now(),
             adminName: currentUser,
             nombre: nombre,
@@ -84,11 +90,27 @@ function guardarProyecto(event) {
             participantes: [currentUser],
             historialDepositos: {}
         };
-        proyectos.push(nuevo);
+        proyectos.push(proyectoData);
         mostrarModal(`¡Proyecto "${nombre}" guardado con éxito!`);
     }
 
+    // 1. Guardar localmente
     localStorage.setItem('app_proyectos', JSON.stringify(proyectos));
+
+    // 2. ENVIAR A GOOGLE SHEETS
+    try {
+        await fetch('https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec', {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(proyectoData)
+        });
+        console.log("Datos sincronizados con Google Sheets");
+    } catch (error) {
+        console.error("Error al sincronizar con Google:", error);
+    }
+
+    // 3. Finalizar
     cancelarEdicionProyecto();
     renderizarGridProyectos();
     renderizarInicioProyectos();
