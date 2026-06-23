@@ -72,27 +72,38 @@ window.guardarProyecto = async function(event) {
         alert("Error al guardar en la nube.");
     }
 };
+
 window.renderizarGridProyectos = function() {
-    const grid = document.getElementById('grid-proyectos');
+    // 1. Buscamos el cuerpo de la tabla, NO el contenedor padre
+    const tbody = document.getElementById('datos-tabla-proyectos-body');
     
-    if (!grid) {
-        console.warn("❌ El elemento 'grid-proyectos' aún no existe en el DOM.");
+    if (!tbody) {
+        console.warn("❌ El cuerpo de la tabla 'datos-tabla-proyectos-body' no existe en el DOM.");
         return;
     }
 
-    console.log("-> Proyectos recibidos:", window.proyectos); 
+    console.log("-> Renderizando tabla con:", window.proyectos); 
 
     if (!window.proyectos || window.proyectos.length === 0) {
-        grid.innerHTML = "<p>No hay proyectos activos.</p>";
+        tbody.innerHTML = "<tr><td colspan='6' class='p-4 text-center'>No hay proyectos registrados.</td></tr>";
         return;
     }
 
-    grid.innerHTML = window.proyectos.map(p => `
-        <div class="p-4 border rounded-lg shadow-sm">
-            <h4 class="font-bold">${p.nombre}</h4>
-            <p class="text-sm">Estado: ${p.estatus}</p>
-        </div>
+    // 2. Generamos las filas de la tabla
+    tbody.innerHTML = window.proyectos.map(p => `
+        <tr class="hover:bg-purple-50/50 transition-colors">
+            <td class="p-3 font-medium text-purple-900">${p.nombre}</td>
+            <td class="p-3">${p.fecha}</td>
+            <td class="p-3 capitalize">${p.frecuencia}</td>
+            <td class="p-3 font-semibold">$${parseFloat(p.monto).toLocaleString()}</td>
+            <td class="p-3 text-center">${p.plazos}</td>
+            <td class="p-3 text-center">
+                <button onclick="editarProyecto('${p.id}')" class="text-purple-600 hover:text-purple-800 font-bold">Editar</button>
+            </td>
+        </tr>
     `).join('');
+    
+    console.log("✅ Tabla renderizada correctamente.");
 }
 
 
