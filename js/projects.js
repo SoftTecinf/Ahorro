@@ -24,6 +24,7 @@ function unirseAProyecto(proyectoId) {
 // ==========================================
 // PROYECTOS Y LOGICA DE RENDIMIENTO (DOM)
 // ==========================================
+
 window.guardarProyecto = async function(event) {
     event.preventDefault();
     
