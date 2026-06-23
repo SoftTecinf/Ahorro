@@ -75,26 +75,15 @@ window.guardarProyecto = async function(event) {
 };
 
 window.renderizarGridProyectos = function() {
-    // 1. Buscamos el cuerpo de la tabla, NO el contenedor padre
     const tbody = document.getElementById('datos-tabla-proyectos-body');
     
-    if (!tbody) {
-        console.warn("❌ El cuerpo de la tabla 'datos-tabla-proyectos-body' no existe en el DOM.");
-        return;
-    }
+    if (!tbody) return;
 
-    console.log("-> Renderizando tabla con:", window.proyectos); 
-
-    if (!window.proyectos || window.proyectos.length === 0) {
-        tbody.innerHTML = "<tr><td colspan='6' class='p-4 text-center'>No hay proyectos registrados.</td></tr>";
-        return;
-    }
-
-    // 2. Generamos las filas de la tabla
+    // Usamos los nombres exactos que vimos en la consola: p.nombre, p.fecha, p.frecuencia, etc.
     tbody.innerHTML = window.proyectos.map(p => `
         <tr class="hover:bg-purple-50/50 transition-colors">
             <td class="p-3 font-medium text-purple-900">${p.nombre}</td>
-            <td class="p-3">${p.fechaInicio}</td>
+            <td class="p-3">${p.fecha ? p.fecha.split('T')[0] : 'Sin fecha'}</td> 
             <td class="p-3 capitalize">${p.frecuencia}</td>
             <td class="p-3 font-semibold">$${parseFloat(p.monto).toLocaleString()}</td>
             <td class="p-3 text-center">${p.plazos}</td>
@@ -104,9 +93,8 @@ window.renderizarGridProyectos = function() {
         </tr>
     `).join('');
     
-    console.log("✅ Tabla renderizada correctamente.");
+    console.log("✅ Tabla renderizada con éxito.");
 }
-
 
 function editarProyecto(id) {
     const p = proyectos.find(x => x.id == id);
