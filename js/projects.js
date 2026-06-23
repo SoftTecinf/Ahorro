@@ -46,7 +46,7 @@ window.guardarProyecto = async function(event) {
         tipo: "proyecto",
         id: Date.now(),
         nombre: nombre,
-        fechaInicio: fecha,
+        fechaInicio: fechaInicio,
         frecuencia: frecuencia,
         monto: parseFloat(monto),
         plazos: parseInt(plazos),
