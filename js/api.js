@@ -15,6 +15,7 @@ window.cargarDatosGlobales = async function () {
         password: usuario.password ? String(usuario.password).trim() : "",
         celular: usuario.celular ? String(usuario.celular).trim() : ""
     }));
+    
 
     // 2. Procesar Proyectos (A prueba de errores de ortografía)
     window.proyectos = (data.proyectos || []).map(p => ({
