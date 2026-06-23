@@ -25,13 +25,14 @@ function unirseAProyecto(proyectoId) {
 // PROYECTOS Y LOGICA DE RENDIMIENTO (DOM)
 // ==========================================
 
-window.guardarProyecto = async function(event) {
+window.guardarProyecto = async function (event) {
     event.preventDefault();
-    
+
     // Capturamos los valores
     const nombre = document.getElementById('datos-nombre-proyecto').value.trim();
     const fechaInicio = document.getElementById('datos-fecha-inicio').value;
-    const monto = document.getElementById('datos-monto').value;
+    const montoFormateado = document.getElementById('datos-monto').value;
+    const montoLimpio = parseFloat(montoFormateado.replace(/[^0-9]/g, ''));
     const plazos = document.getElementById('datos-plazos').value;
     const frecuencia = document.getElementById('datos-frecuencia').value;
 
@@ -48,7 +49,7 @@ window.guardarProyecto = async function(event) {
         nombre: nombre,
         fechaInicio: fechaInicio,
         frecuencia: frecuencia,
-        monto: parseFloat(monto),
+        monto: montoLimpio,
         plazos: parseInt(plazos),
         cuota: parseFloat(monto) / parseInt(plazos),
         adminName: window.currentUser || "Elena",
@@ -64,19 +65,19 @@ window.guardarProyecto = async function(event) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(nuevoProyecto)
         });
-        
+
         mostrarModal("¡Proyecto guardado con éxito!");
         // Aquí recargamos los datos
-        await cargarDatosGlobales(); 
+        await cargarDatosGlobales();
         renderizarGridProyectos();
     } catch (e) {
         alert("Error al guardar en la nube.");
     }
 };
 
-window.renderizarGridProyectos = function() {
+window.renderizarGridProyectos = function () {
     const tbody = document.getElementById('datos-tabla-proyectos-body');
-    
+
     if (!tbody) return;
 
     // Usamos los nombres exactos que vimos en la consola: p.nombre, p.fecha, p.frecuencia, etc.
@@ -92,7 +93,7 @@ window.renderizarGridProyectos = function() {
             </td>
         </tr>
     `).join('');
-    
+
 }
 
 function editarProyecto(id) {
@@ -328,7 +329,7 @@ async function actualizarSelectoresConfig() {
         console.warn("Proyectos aún no disponibles.");
         return;
     }
-    
+
     const misProyectos = cacheProyectos.filter(p => p.adminName === currentUser);
     // ... resto del código
 }
