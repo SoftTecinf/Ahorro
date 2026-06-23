@@ -105,7 +105,6 @@ async function navegarA(vistaId) {
 
         // Ahora llamamos al renderizado
         if (typeof window.renderizarGridProyectos === 'function') {
-            console.log("-> Ejecutando renderizado de proyectos...");
             window.renderizarGridProyectos();
         }
 
@@ -117,7 +116,6 @@ async function navegarA(vistaId) {
             if (grid) {
                 clearInterval(verificarDOM); // Si ya existe, dejamos de buscar
                 if (typeof window.renderizarGridProyectos === 'function') {
-                    console.log("-> Renderizando tras confirmar DOM...");
                     window.renderizarGridProyectos();
                 }
             } else if (intentos > 10) {
