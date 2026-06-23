@@ -28,21 +28,25 @@ function unirseAProyecto(proyectoId) {
 window.guardarProyecto = async function (event) {
     event.preventDefault();
 
-    // Capturamos los valores
+    // 1. Capturamos los valores
     const nombre = document.getElementById('datos-nombre-proyecto').value.trim();
     const fechaInicio = document.getElementById('datos-fecha-inicio').value;
+    
+    // Capturamos el valor formateado del input
     const montoFormateado = document.getElementById('datos-monto').value;
+    // Limpiamos el valor para obtener el número puro
     const montoLimpio = parseFloat(montoFormateado.replace(/[^0-9]/g, ''));
+
     const plazos = document.getElementById('datos-plazos').value;
     const frecuencia = document.getElementById('datos-frecuencia').value;
 
-    // VALIDACIÓN CRÍTICA: Si algo está vacío, NO guardamos
-    if (!nombre || !fechaInicio || !monto || !plazos || !frecuencia) {
-        alert("⚠️ Por favor, llena todos los campos del proyecto.");
-        return; // Detiene la ejecución aquí
+    // 2. VALIDACIÓN CRÍTICA: Usamos montoLimpio en lugar de monto
+    if (!nombre || !fechaInicio || isNaN(montoLimpio) || !plazos || !frecuencia) {
+        alert("⚠️ Por favor, llena todos los campos correctamente.");
+        return; 
     }
 
-    // Si todo está bien, creamos el objeto
+    // 3. Si todo está bien, creamos el objeto
     const nuevoProyecto = {
         tipo: "proyecto",
         id: Date.now(),
@@ -51,7 +55,8 @@ window.guardarProyecto = async function (event) {
         frecuencia: frecuencia,
         monto: montoLimpio,
         plazos: parseInt(plazos),
-        cuota: parseFloat(monto) / parseInt(plazos),
+        // Usamos montoLimpio para el cálculo de la cuota
+        cuota: montoLimpio / parseInt(plazos),
         adminName: window.currentUser || "Elena",
         participantes: [window.currentUser || "Elena"],
         historialDepositos: {}
