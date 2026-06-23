@@ -18,12 +18,14 @@ window.cargarDatosGlobales = async function () {
 
     // 2. Procesar Proyectos (CORREGIDO)
     window.proyectos = (data.proyectos || []).map(p => ({
-        id: p.Id || "",             // Debe coincidir con el encabezado de tu columna A
-        nombre: p.Nombre || "",      // Columna B
-        fecha: p.Fechainicio || "",  // Columna C
-        frecuencia: p.Frecuencia || "", // Columna D
-        monto: p.Monto || 0,         // Columna E
-        plazos: p.Plazos || 0        // Columna F
+        id: p.Id || "",
+        nombre: p.Nombre || "",
+        // Fíjate que aquí usamos el nombre exacto de la columna en Google Sheets
+        fecha: p.Fechainicio || "",
+        frecuencia: p.Frecuencia || "",
+        monto: p.Monto || 0,
+        plazos: p.Plazos || 0,
+        cuota: p.Cuota || 0
     }));
 
     // 3. Procesar Cuentas
