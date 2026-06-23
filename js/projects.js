@@ -74,9 +74,11 @@ window.guardarProyecto = async function (event) {
         mostrarModal("¡Proyecto guardado con éxito!");
         // Aquí recargamos los datos
         await cargarDatosGlobales();
-        renderizarGridProyectos();
-    } catch (e) {
-        alert("Error al guardar en la nube.");
+        window.renderizarGridProyectos();
+        alert("¡Proyecto guardado con éxito!");
+        
+    } catch (error) {
+        console.error("Error al guardar:", error);
     }
 };
 
