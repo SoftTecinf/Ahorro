@@ -35,7 +35,7 @@ window.guardarProyecto = async function (event) {
     // Capturamos el valor formateado del input
     const montoFormateado = document.getElementById('datos-monto').value;
     // Limpiamos el valor para obtener el número puro
-    const montoLimpio = parseFloat(montoFormateado.replace(/[^0-9]/g, ''));
+    const montoLimpio = parseFloat(montoFormateado.replace(/[^0-9]/g, '')) || 0;
 
     const plazos = document.getElementById('datos-plazos').value;
     const frecuencia = document.getElementById('datos-frecuencia').value;
@@ -83,6 +83,25 @@ window.guardarProyecto = async function (event) {
         console.error("Error al guardar:", error);
     }
 };
+
+const inputMonto = document.getElementById('datos-monto');
+
+inputMonto.addEventListener('input', (e) => {
+    // 1. Obtenemos solo los números
+    let valor = e.target.value.replace(/\D/g, "");
+    
+    // 2. Aplicamos formato de moneda (MXN)
+    if (valor !== "") {
+        let numero = parseInt(valor);
+        e.target.value = new Intl.NumberFormat('es-MX', {
+            style: 'currency',
+            currency: 'MXN',
+            maximumFractionDigits: 0
+        }).format(numero);
+    } else {
+        e.target.value = "";
+    }
+});
 
 window.renderizarGridProyectos = function () {
     const tbody = document.getElementById('datos-tabla-proyectos-body');
