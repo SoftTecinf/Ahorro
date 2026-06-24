@@ -91,7 +91,7 @@ window.guardarProyecto = async function (event) {
 
 
 window.renderizarGridProyectos = function () {
-    const tbody = document.getElementById('grid-proyectos');
+    const tbody = document.getElementById('datos-tabla-proyectos-body');
 
     // 1. Verificación de seguridad
     if (!tbody) return;
