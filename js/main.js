@@ -69,7 +69,6 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 // main.js
 async function navegarA(vistaId) {
-
     // 1. Ocultar todas las vistas
     document.querySelectorAll('.vista').forEach(v => {
         v.classList.add('hidden');
@@ -84,53 +83,34 @@ async function navegarA(vistaId) {
         if (contenedor.innerHTML.trim() === "") {
             try {
                 const response = await fetch(`${vistaId}.html`);
-                const html = await response.text();
+                const html = await response.text(); // La variable 'html' nace aquí
                 contenedor.innerHTML = html;
+                
+                // Inicializar eventos justo después de cargar el HTML
+                if (typeof window.inicializarEventos === 'function') {
+                    window.inicializarEventos();
+                }
 
-                // --- AQUÍ ESTÁ LA CLAVE ---
-                // Esperamos un tiempo mínimo (50ms) para que el navegador cree los elementos
                 await new Promise(resolve => setTimeout(resolve, 50));
-
             } catch (error) {
                 console.error("Error al cargar:", error);
                 contenedor.innerHTML = "<p class='p-4 text-red-500'>Error al cargar contenido.</p>";
+                return; // Salimos si hubo error
             }
         }
 
-        // ... dentro de navegarA, después de cargar el HTML:
-        contenedor.innerHTML = html;
-
-        // AGREGA ESTO AQUÍ:
-        window.inicializarEventos();
-
-        await new Promise(resolve => setTimeout(resolve, 50));
-
-        // 4. FORZADO DE VISIBILIDAD (Aquí está la clave)
+        // 4. FORZADO DE VISIBILIDAD
         contenedor.classList.remove('hidden');
         contenedor.style.display = 'block';
-        contenedor.style.visibility = 'visible'; // Asegura que no esté invisible
-        contenedor.style.opacity = '1';          // Asegura que no sea transparente
+        contenedor.style.visibility = 'visible';
+        contenedor.style.opacity = '1';
 
-        // Ahora llamamos al renderizado
+        // 5. Renderizado seguro
         if (typeof window.renderizarGridProyectos === 'function') {
             window.renderizarGridProyectos();
         }
 
-        // En lugar de un setInterval que siempre lanza error, usa una lógica más limpia:
-        const grid = document.getElementById('grid-proyectos');
-
-        if (grid) {
-            // Si el elemento existe, renderizamos
-            if (typeof window.renderizarGridProyectos === 'function') {
-                window.renderizarGridProyectos();
-            }
-        } else {
-            // Si no existe, NO lanzamos un error, simplemente salimos.
-            // Esto es normal si estamos en Inicio o Configuración.
-            console.log("Estamos en una página sin tabla de proyectos, omitiendo renderizado.");
-        }
-
-        // 5. Sincronizar botones
+        // 6. Sincronizar botones
         document.querySelectorAll('nav button').forEach(btn => {
             btn.classList.remove('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white', 'shadow-sm');
             btn.classList.add('text-gray-500', 'hover:bg-purple-50/50');
@@ -139,13 +119,11 @@ async function navegarA(vistaId) {
         const btnActivo = document.querySelector(`nav button[onclick*="${vistaId}"]`);
         if (btnActivo) {
             btnActivo.classList.add('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white', 'shadow-sm');
-            btnActivo.classList.remove('text-gray-500', 'hover:bg-purple-50/50');
+            btn.classList.remove('text-gray-500', 'hover:bg-purple-50/50');
         }
     } else {
         console.error("ERROR CRÍTICO: No existe el div con ID:", vistaId);
     }
-
-
 }
 
 // 1. Inicia la descarga en segundo plano
