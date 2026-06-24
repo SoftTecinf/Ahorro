@@ -49,6 +49,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
         // 5. Navegamos al inicio
         await navegarA('inicio');
+        actualizarLabelUsuario();
     } else {
 
         // FORZAMOS LA VISIBILIDAD DEL LOGIN
