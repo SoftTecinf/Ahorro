@@ -179,16 +179,9 @@ async function renderizarInicioProyectos() {
     // 4. Inyectamos las tarjetas usando el HTML que definimos
     contenedor.innerHTML = misProyectos.map(p => `
         <button onclick="verResumenProyectoInmediato(${p.id})" class="w-full text-left p-4 rounded-2xl border border-purple-50 hover:border-purple-300 bg-purple-50/10 hover:bg-white transition-all cursor-pointer flex justify-between items-center group">
-        <div class="bg-white p-6 rounded-3xl border border-purple-100 shadow-sm hover:shadow-md transition-all">
-            <div class="flex justify-between items-start">
-                <div class="flex items-center gap-3">
-                    <span class="text-2xl">💎</span>
-                    <div>
-                        <h3 class="text-lg font-bold text-gray-900">${p.nombre}</h3>
-                        <p class="text-sm text-gray-400">Meta: $${parseFloat(p.monto).toLocaleString()}</p>
-                    </div>
-                </div>
-            </div>
+        <div>
+            <h3 class="text-lg font-bold text-gray-900">${p.nombre}</h3>
+            <p class="text-sm text-gray-400">Meta: $${parseFloat(p.monto).toLocaleString()}</p>
         </div>
         <span class="text-xs font-bold text-purple-600 bg-white shadow-3xs px-2.5 py-1 rounded-lg group-hover:bg-purple-600 group-hover:text-white transition-all">Ver 🔮</span>
         </button>
