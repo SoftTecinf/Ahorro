@@ -97,6 +97,14 @@ async function navegarA(vistaId) {
             }
         }
 
+        // ... dentro de navegarA, después de cargar el HTML:
+        contenedor.innerHTML = html;
+
+        // AGREGA ESTO AQUÍ:
+        window.inicializarEventos();
+
+        await new Promise(resolve => setTimeout(resolve, 50));
+
         // 4. FORZADO DE VISIBILIDAD (Aquí está la clave)
         contenedor.classList.remove('hidden');
         contenedor.style.display = 'block';
@@ -181,20 +189,24 @@ window.onload = async function () {
 };
 
 
-const inputMonto = document.getElementById('datos-monto');
-inputMonto.addEventListener('input', (e) => {
-    // 1. Obtenemos solo los números
-    let valor = e.target.value.replace(/\D/g, "");
+// Función para inicializar los eventos específicos de la página
+window.inicializarEventos = function () {
+    const inputMonto = document.getElementById('datos-monto');
 
-    // 2. Aplicamos formato de moneda (MXN)
-    if (valor !== "") {
-        let numero = parseInt(valor);
-        e.target.value = new Intl.NumberFormat('es-MX', {
-            style: 'currency',
-            currency: 'MXN',
-            maximumFractionDigits: 0
-        }).format(numero);
-    } else {
-        e.target.value = "";
+    // Solo si existe el input en la página actual, le añadimos el evento
+    if (inputMonto) {
+        inputMonto.addEventListener('input', (e) => {
+            let valor = e.target.value.replace(/\D/g, "");
+            if (valor !== "") {
+                let numero = parseInt(valor);
+                e.target.value = new Intl.NumberFormat('es-MX', {
+                    style: 'currency',
+                    currency: 'MXN',
+                    maximumFractionDigits: 0
+                }).format(numero);
+            } else {
+                e.target.value = "";
+            }
+        });
     }
-});
+};
