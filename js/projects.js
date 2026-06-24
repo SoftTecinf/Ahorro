@@ -28,36 +28,64 @@ function unirseAProyecto(proyectoId) {
 window.guardarProyecto = async function (event) {
     event.preventDefault();
 
-    // 1. CAPTURA: Obtenemos los valores y LIMPIAMOS el monto
-    const nombre = document.getElementById('nombre-proyecto').value;
-    const montoConFormato = document.getElementById('datos-monto').value; 
-    const montoLimpio = montoConFormato.replace(/[^0-9]/g, ""); // ¡Esto es clave! Elimina todo lo que no sea número
-    const plazos = document.getElementById('numero-plazos').value;
-    const frecuencia = document.getElementById('frecuencia-pagos').value;
+    // 1. Capturamos los valores
+    const nombre = document.getElementById('datos-nombre-proyecto').value.trim();
+    const fechaInicio = document.getElementById('datos-fecha-inicio').value;
 
-    // 2. CREACIÓN:
+    // Capturamos el valor formateado del input
+    const montoFormateado = document.getElementById('datos-monto').value;
+    // Limpiamos el valor para obtener el número puro
+    const montoLimpio = parseFloat(montoFormateado.replace(/[^0-9]/g, '')) || 0;
+
+    const plazos = document.getElementById('datos-plazos').value;
+    const frecuencia = document.getElementById('datos-frecuencia').value;
+
+    const usuarioActual = window.currentUser || localStorage.getItem('usuarioGuardado');
+
+    // 2. VALIDACIÓN CRÍTICA: Usamos montoLimpio en lugar de monto
+    if (!nombre || !fechaInicio || isNaN(montoLimpio) || !plazos || !frecuencia) {
+        alert("⚠️ Por favor, llena todos los campos correctamente.");
+        return;
+    }
+
+    // 3. Si todo está bien, creamos el objeto
     const nuevoProyecto = {
-        id: Date.now().toString(),
+        tipo: "proyecto",
+        id: Date.now(),
         nombre: nombre,
-        fechaInicio: new Date().toISOString(),
+        fechaInicio: fechaInicio,
         frecuencia: frecuencia,
-        monto: montoLimpio, // Guardamos SOLO el número (ej: 15820)
-        plazos: plazos,
-        adminName: window.currentUser || localStorage.getItem('app_currentUser') || "Elena",
-        participantes: [window.currentUser || localStorage.getItem('app_currentUser') || "Elena"]
+        monto: montoLimpio,
+        plazos: parseInt(plazos),
+        // Usamos montoLimpio para el cálculo de la cuota
+        cuota: montoLimpio / parseInt(plazos),
+        // Aquí usamos la variable del usuario logueado
+        adminName: usuarioActual,
+        participantes: [usuarioActual],
+        historialDepositos: {}
     };
 
-    // 3. GUARDADO:
-    window.proyectos.push(nuevoProyecto);
-    localStorage.setItem('app_proyectos', JSON.stringify(window.proyectos));
+    // Enviamos a Google Sheets
+    try {
+        await fetch('https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec', {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(nuevoProyecto)
+        });
 
-    // 4. LIMPIEZA DEL FORMULARIO:
-    document.getElementById('nombre-proyecto').value = '';
-    document.getElementById('datos-monto').value = '';
-    document.getElementById('numero-plazos').value = '';
+        mostrarModal("¡Proyecto guardado con éxito!");
+        // Aquí recargamos los datos
+        document.getElementById('nombre-proyecto').value = '';
+        document.getElementById('datos-monto').value = '';
+        document.getElementById('numero-plazos').value = '';
+        
+        await cargarDatosGlobales();
+        window.renderizarGridProyectos();
 
-    // 5. RENDERIZADO:
-    window.renderizarGridProyectos();
+    } catch (error) {
+        console.error("Error al guardar:", error);
+    }
 };
 
 
