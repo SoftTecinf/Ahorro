@@ -31,7 +31,7 @@ window.guardarProyecto = async function (event) {
     // 1. Capturamos los valores
     const nombre = document.getElementById('datos-nombre-proyecto').value.trim();
     const fechaInicio = document.getElementById('datos-fecha-inicio').value;
-    
+
     // Capturamos el valor formateado del input
     const montoFormateado = document.getElementById('datos-monto').value;
     // Limpiamos el valor para obtener el número puro
@@ -45,7 +45,7 @@ window.guardarProyecto = async function (event) {
     // 2. VALIDACIÓN CRÍTICA: Usamos montoLimpio en lugar de monto
     if (!nombre || !fechaInicio || isNaN(montoLimpio) || !plazos || !frecuencia) {
         alert("⚠️ Por favor, llena todos los campos correctamente.");
-        return; 
+        return;
     }
 
     // 3. Si todo está bien, creamos el objeto
@@ -60,7 +60,7 @@ window.guardarProyecto = async function (event) {
         // Usamos montoLimpio para el cálculo de la cuota
         cuota: montoLimpio / parseInt(plazos),
         // Aquí usamos la variable del usuario logueado
-        adminName: usuarioActual, 
+        adminName: usuarioActual,
         participantes: [usuarioActual],
         historialDepositos: {}
     };
@@ -76,9 +76,13 @@ window.guardarProyecto = async function (event) {
 
         mostrarModal("¡Proyecto guardado con éxito!");
         // Aquí recargamos los datos
+        document.getElementById('nombre-proyecto').value = '';
+        document.getElementById('datos-monto').value = '';
+        document.getElementById('numero-plazos').value = '';
+        
         await cargarDatosGlobales();
         window.renderizarGridProyectos();
-        
+
     } catch (error) {
         console.error("Error al guardar:", error);
     }
