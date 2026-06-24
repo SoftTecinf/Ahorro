@@ -76,64 +76,42 @@ async function navegarA(vistaId) {
         v.style.display = 'none';
     });
 
-    // 2. Localizar el contenedor
     const contenedor = document.getElementById(vistaId);
+    if (!contenedor) return console.error("No existe el ID:", vistaId);
 
-    if (contenedor) {
-        // 3. Cargar contenido SIEMPRE que esté vacío
-        if (contenedor.innerHTML.trim() === "") {
-            try {
-                const response = await fetch(`${vistaId}.html`);
-                const html = await response.text(); // La variable 'html' nace aquí
-                contenedor.innerHTML = html;
-
-                // Inicializar eventos justo después de cargar el HTML
-                if (typeof window.inicializarEventos === 'function') {
-                    window.inicializarEventos();
-                }
-
-                await new Promise(resolve => setTimeout(resolve, 50));
-            } catch (error) {
-                console.error("Error al cargar:", error);
-                contenedor.innerHTML = "<p class='p-4 text-red-500'>Error al cargar contenido.</p>";
-                return; // Salimos si hubo error
-            }
+    // 2. Cargar contenido si está vacío
+    if (contenedor.innerHTML.trim() === "") {
+        try {
+            const response = await fetch(`${vistaId}.html`);
+            const html = await response.text();
+            contenedor.innerHTML = html;
+        } catch (error) {
+            console.error("Error al cargar:", error);
+            return;
         }
+    }
 
-        // 4. FORZADO DE VISIBILIDAD
-        contenedor.classList.remove('hidden');
-        contenedor.style.display = 'block';
-        contenedor.style.visibility = 'visible';
-        contenedor.style.opacity = '1';
+    // 3. FORZADO DE VISIBILIDAD (Ya está aquí el HTML)
+    contenedor.classList.remove('hidden');
+    contenedor.style.display = 'block';
 
-        // 5. Renderizado seguro
-        if (typeof window.renderizarGridProyectos === 'function') {
-            window.renderizarGridProyectos();
-        }
+    // 4. AQUÍ LLAMAMOS AL RENDERIZADO (Ya existe el HTML y los IDs)
+    if (vistaId === 'inicio' && typeof renderizarInicioProyectos === 'function') {
+        renderizarInicioProyectos();
+    } else if (vistaId === 'datos' && typeof window.renderizarGridProyectos === 'function') {
+        window.renderizarGridProyectos();
+    }
 
-        // 6. Sincronizar botones
-        document.querySelectorAll('nav button').forEach(button => { // <-- definimos 'button'
-            // Usa 'button' en lugar de 'btn'
-            button.classList.remove('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white', 'shadow-sm');
-            button.classList.add('text-gray-500', 'hover:bg-purple-50/50');
-        });
+    // 5. Sincronizar botones (Tu lógica de UI)
+    document.querySelectorAll('nav button').forEach(button => {
+        button.classList.remove('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white', 'shadow-sm');
+        button.classList.add('text-gray-500', 'hover:bg-purple-50/50');
+    });
 
-        // Y para el botón activo:
-        const btnActivo = document.querySelector(`nav button[onclick*="${vistaId}"]`);
-        if (btnActivo) {
-            btnActivo.classList.add('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white', 'shadow-sm');
-            btnActivo.classList.remove('text-gray-500', 'hover:bg-purple-50/50');
-        }
-
-        // UNA VEZ QUE EL HTML ESTÁ EN PANTALLA:
-        if (vistaId === 'inicio') {
-            renderizarInicioProyectos();
-        } else if (vistaId === 'datos') {
-            window.renderizarGridProyectos();
-        }
-
-    } else {
-        console.error("ERROR CRÍTICO: No existe el div con ID:", vistaId);
+    const btnActivo = document.querySelector(`nav button[onclick*="${vistaId}"]`);
+    if (btnActivo) {
+        btnActivo.classList.add('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white', 'shadow-sm');
+        btnActivo.classList.remove('text-gray-500', 'hover:bg-purple-50/50');
     }
 }
 
