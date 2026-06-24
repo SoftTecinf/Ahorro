@@ -49,7 +49,6 @@ window.guardarProyecto = async function (event) {
     }
 
     // 3. Si todo está bien, creamos el objeto
-    
     const nuevoProyecto = {
         tipo: "proyecto",
         id: Date.now(),
