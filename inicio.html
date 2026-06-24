@@ -1,11 +1,11 @@
 <section id="inicio" class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-    <div id="sec-inicio"  class="md:col-span-1 space-y-6">
-        <div class="bg-white p-6 rounded-3xl neon-card">
-            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <span class="text-purple-500">💎</span> Tus Planes de Ahorro
-            </h2>
-            <div id="inicio-lista-proyectos" class="grid grid-cols-1 gap-3"></div>
+    <div id="sec-inicio" class="md:col-span-1 space-y-6">
+        <div id="inicio-resumen-proyecto" class="hidden fixed inset-0 z-50 bg-white/95 p-6 overflow-y-auto">
+            <div class="max-w-lg mx-auto">
+                <button onclick="document.getElementById('inicio-resumen-proyecto').classList.add('hidden')"
+                    class="mb-4 text-xs font-bold text-gray-400">← Volver a mis planes</button>
+            </div>
         </div>
 
         <div id="contenedor-invitaciones"
