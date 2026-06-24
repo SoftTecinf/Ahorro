@@ -65,7 +65,7 @@ window.guardarProyecto = async function (event) {
     };
 
     try {
-        await fetch('URL_DE_TU_SCRIPT', { /* ... tu fetch ... */ });
+        await fetch('https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec');
 
         mostrarModal("¡Proyecto guardado con éxito!");
 
