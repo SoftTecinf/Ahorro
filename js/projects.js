@@ -40,7 +40,7 @@ window.guardarProyecto = async function (event) {
     const plazos = document.getElementById('datos-plazos').value;
     const frecuencia = document.getElementById('datos-frecuencia').value;
 
-    const usuarioActual = window.currentUser || "Usuario Desconocido";
+    const usuarioActual = window.currentUser || localStorage.getItem('usuarioGuardado');
 
     // 2. VALIDACIÓN CRÍTICA: Usamos montoLimpio en lugar de monto
     if (!nombre || !fechaInicio || isNaN(montoLimpio) || !plazos || !frecuencia) {
