@@ -4,7 +4,8 @@
 // VARIABLES GLOBALES
 // ==========================================
 let familiares = JSON.parse(localStorage.getItem('app_familiares')) || [];
-let proyectos = [];
+let proyectos = JSON.parse(localStorage.getItem('app_proyectos')) || [];
+window.proyectos = proyectos;
 let cuentasBancarias = [];
 let invitacionesPendientes = [];
 let currentUser = localStorage.getItem('app_currentUser') || '';
