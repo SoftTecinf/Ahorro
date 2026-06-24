@@ -86,7 +86,7 @@ window.guardarProyecto = async function (event) {
 
 
 window.renderizarGridProyectos = function () {
-    const tbody = document.getElementById('datos-tabla-proyectos-body');
+    const tbody = document.getElementById('grid-proyectos');
 
     if (!tbody) return;
 
