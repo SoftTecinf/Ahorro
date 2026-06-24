@@ -16,12 +16,10 @@ let currentUser = localStorage.getItem('app_currentUser') || '';
 
 function actualizarLabelUsuario() {
     const label = document.getElementById('user-label');
-    const usuario = localStorage.getItem('app_currentUser');
     if (label) {
-        label.innerText = usuario ? usuario : "Invitado";
+        label.textContent = currentUser ? `👤 ${currentUser}` : "No identificado";
     }
 }
-
 // ==========================================
 // INICIALIZACIÓN UNIFICADA
 // ==========================================
