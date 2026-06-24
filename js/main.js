@@ -108,21 +108,19 @@ async function navegarA(vistaId) {
             window.renderizarGridProyectos();
         }
 
-        let intentos = 0;
-        const verificarDOM = setInterval(() => {
-            const grid = document.getElementById('grid-proyectos');
-            intentos++;
+        // En lugar de un setInterval que siempre lanza error, usa una lógica más limpia:
+        const grid = document.getElementById('grid-proyectos');
 
-            if (grid) {
-                clearInterval(verificarDOM); // Si ya existe, dejamos de buscar
-                if (typeof window.renderizarGridProyectos === 'function') {
-                    window.renderizarGridProyectos();
-                }
-            } else if (intentos > 10) {
-                clearInterval(verificarDOM); // Si después de 1 segundo no existe, paramos
-                console.error("CRÍTICO: No se encontró 'grid-proyectos' en el DOM.");
+        if (grid) {
+            // Si el elemento existe, renderizamos
+            if (typeof window.renderizarGridProyectos === 'function') {
+                window.renderizarGridProyectos();
             }
-        }, 100);
+        } else {
+            // Si no existe, NO lanzamos un error, simplemente salimos.
+            // Esto es normal si estamos en Inicio o Configuración.
+            console.log("Estamos en una página sin tabla de proyectos, omitiendo renderizado.");
+        }
 
         // 5. Sincronizar botones
         document.querySelectorAll('nav button').forEach(btn => {
@@ -187,7 +185,7 @@ const inputMonto = document.getElementById('datos-monto');
 inputMonto.addEventListener('input', (e) => {
     // 1. Obtenemos solo los números
     let valor = e.target.value.replace(/\D/g, "");
-    
+
     // 2. Aplicamos formato de moneda (MXN)
     if (valor !== "") {
         let numero = parseInt(valor);
