@@ -40,6 +40,8 @@ window.guardarProyecto = async function (event) {
     const plazos = document.getElementById('datos-plazos').value;
     const frecuencia = document.getElementById('datos-frecuencia').value;
 
+    const usuarioActual = window.currentUser || "Usuario Desconocido";
+
     // 2. VALIDACIÓN CRÍTICA: Usamos montoLimpio en lugar de monto
     if (!nombre || !fechaInicio || isNaN(montoLimpio) || !plazos || !frecuencia) {
         alert("⚠️ Por favor, llena todos los campos correctamente.");
@@ -47,6 +49,7 @@ window.guardarProyecto = async function (event) {
     }
 
     // 3. Si todo está bien, creamos el objeto
+    
     const nuevoProyecto = {
         tipo: "proyecto",
         id: Date.now(),
@@ -57,8 +60,9 @@ window.guardarProyecto = async function (event) {
         plazos: parseInt(plazos),
         // Usamos montoLimpio para el cálculo de la cuota
         cuota: montoLimpio / parseInt(plazos),
-        adminName: window.currentUser || "Elena",
-        participantes: [window.currentUser || "Elena"],
+        // Aquí usamos la variable del usuario logueado
+        adminName: usuarioActual, 
+        participantes: [usuarioActual],
         historialDepositos: {}
     };
 
@@ -75,7 +79,6 @@ window.guardarProyecto = async function (event) {
         // Aquí recargamos los datos
         await cargarDatosGlobales();
         window.renderizarGridProyectos();
-        alert("¡Proyecto guardado con éxito!");
         
     } catch (error) {
         console.error("Error al guardar:", error);
