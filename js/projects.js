@@ -692,12 +692,7 @@ function calcularFechaPlazo(fechaInicioStr, numeroPlazo, frecuencia) {
     return date.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
-function actualizarLabelUsuario() {
-    const label = document.getElementById('label-usuario-actual');
-    if (label) {
-        label.textContent = currentUser ? `👤 ${currentUser}` : "No identificado";
-    }
-}
+
 
 function mostrarModal(msg) {
     const m = document.getElementById('success-modal');
