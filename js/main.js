@@ -85,7 +85,7 @@ async function navegarA(vistaId) {
                 const response = await fetch(`${vistaId}.html`);
                 const html = await response.text(); // La variable 'html' nace aquí
                 contenedor.innerHTML = html;
-                
+
                 // Inicializar eventos justo después de cargar el HTML
                 if (typeof window.inicializarEventos === 'function') {
                     window.inicializarEventos();
@@ -111,15 +111,17 @@ async function navegarA(vistaId) {
         }
 
         // 6. Sincronizar botones
-        document.querySelectorAll('nav button').forEach(btn => {
-            btn.classList.remove('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white', 'shadow-sm');
-            btn.classList.add('text-gray-500', 'hover:bg-purple-50/50');
+        document.querySelectorAll('nav button').forEach(button => { // <-- definimos 'button'
+            // Usa 'button' en lugar de 'btn'
+            button.classList.remove('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white', 'shadow-sm');
+            button.classList.add('text-gray-500', 'hover:bg-purple-50/50');
         });
 
+        // Y para el botón activo:
         const btnActivo = document.querySelector(`nav button[onclick*="${vistaId}"]`);
         if (btnActivo) {
             btnActivo.classList.add('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white', 'shadow-sm');
-            btn.classList.remove('text-gray-500', 'hover:bg-purple-50/50');
+            btnActivo.classList.remove('text-gray-500', 'hover:bg-purple-50/50');
         }
     } else {
         console.error("ERROR CRÍTICO: No existe el div con ID:", vistaId);
