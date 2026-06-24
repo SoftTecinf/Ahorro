@@ -115,6 +115,7 @@ async function navegarA(vistaId) {
     }
 }
 
+
 // 1. Inicia la descarga en segundo plano
 window.cargarDatosGlobales();
 
