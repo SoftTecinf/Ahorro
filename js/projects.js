@@ -85,7 +85,6 @@ window.guardarProyecto = async function (event) {
 };
 
 const inputMonto = document.getElementById('datos-monto');
-
 inputMonto.addEventListener('input', (e) => {
     // 1. Obtenemos solo los números
     let valor = e.target.value.replace(/\D/g, "");
