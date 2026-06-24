@@ -163,23 +163,32 @@ function eliminarProyectoCompleto(id) {
 // VISTA PRINCIPAL (TARJETAS LATERALES DE PROYECTO)
 // ==========================================
 async function renderizarInicioProyectos() {
+    // 1. Buscamos el contenedor donde quieres que aparezcan las tarjetas
     const contenedor = document.getElementById('inicio-container');
     if (!contenedor) return;
 
-    // PONEMOS UN MENSAJE POR DEFECTO PARA QUE EL USUARIO VEA ALGO
-    contenedor.innerHTML = '<p class="text-gray-400 p-4">No hay proyectos activos aún.</p>';
+    // 2. Filtramos tus proyectos (asegúrate de que 'proyectos' sea global)
+    const misProyectos = window.proyectos.filter(p => p.adminName === window.currentUser);
 
-    try {
-
-        const misProyectos = proyectos.filter(p => p.adminName === currentUser);
-
-        if (misProyectos.length > 0) {
-            // SOLO SI HAY DATOS, REEMPLAZAMOS EL CONTENIDO
-            contenedor.innerHTML = misProyectos.map(p => `...tu html aquí...`).join('');
-        }
-    } catch (error) {
-        console.error("Error cargando:", error);
+    // 3. Si no hay proyectos, mostramos un mensaje amigable
+    if (misProyectos.length === 0) {
+        contenedor.innerHTML = '<p class="text-gray-400 p-4 text-center">Aún no tienes proyectos de ahorro activos.</p>';
+        return;
     }
+
+    // 4. Inyectamos las tarjetas usando el HTML que definimos
+    contenedor.innerHTML = misProyectos.map(p => `
+        <div class="bg-white p-6 rounded-2xl border border-purple-100 shadow-sm hover:shadow-md transition-all">
+            <h3 class="text-lg font-bold text-purple-950">${p.nombre}</h3>
+            <p class="text-xs text-purple-400 uppercase tracking-widest font-semibold mt-1">${p.frecuencia}</p>
+            <div class="mt-4 space-y-2">
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-500">Ahorro Total</span>
+                    <span class="font-bold">$${parseFloat(p.monto).toLocaleString()}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
 }
 
 function verResumenProyectoInmediato(id) {
