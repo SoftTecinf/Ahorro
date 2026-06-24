@@ -88,23 +88,29 @@ window.guardarProyecto = async function (event) {
 window.renderizarGridProyectos = function () {
     const tbody = document.getElementById('grid-proyectos');
 
+    // 1. Verificación de seguridad
     if (!tbody) return;
 
-    // Usamos los nombres exactos que vimos en la consola: p.nombre, p.fecha, p.frecuencia, etc.
+    // 2. Manejo de estado vacío
+    if (!window.proyectos || window.proyectos.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-500">No hay proyectos registrados.</td></tr>`;
+        return;
+    }
+
+    // 3. Renderizado con nombres de variables consistentes
     tbody.innerHTML = window.proyectos.map(p => `
         <tr class="hover:bg-purple-50/50 transition-colors">
-            <td class="p-3 font-medium text-purple-900">${p.nombre}</td>
-            <td class="p-3">${p.fecha ? p.fecha.split('T')[0] : 'Sin fecha'}</td> 
-            <td class="p-3 capitalize">${p.frecuencia}</td>
-            <td class="p-3 font-semibold">$${parseFloat(p.monto).toLocaleString()}</td>
-            <td class="p-3 text-center">${p.plazos}</td>
+            <td class="p-3 font-medium text-purple-900">${p.nombre || 'Sin nombre'}</td>
+            <td class="p-3">${p.fechaInicio ? p.fechaInicio.split('T')[0] : 'Sin fecha'}</td> 
+            <td class="p-3 capitalize">${p.frecuencia || '-'}</td>
+            <td class="p-3 font-semibold">$${(parseFloat(p.monto) || 0).toLocaleString()}</td>
+            <td class="p-3 text-center">${p.plazos || 0}</td>
             <td class="p-3 text-center">
                 <button onclick="editarProyecto('${p.id}')" class="text-purple-600 hover:text-purple-800 font-bold">Editar</button>
             </td>
         </tr>
     `).join('');
-
-}
+};
 
 function editarProyecto(id) {
     const p = proyectos.find(x => x.id == id);
