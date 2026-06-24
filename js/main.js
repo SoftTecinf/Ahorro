@@ -182,23 +182,20 @@ window.onload = async function () {
     }
 };
 
-const montoInput = document.getElementById('monto-input');
 
-montoInput.addEventListener('input', (e) => {
-    let valor = e.target.value;
+const inputMonto = document.getElementById('datos-monto');
+inputMonto.addEventListener('input', (e) => {
+    // 1. Obtenemos solo los números
+    let valor = e.target.value.replace(/\D/g, "");
     
-    // 1. Eliminar todo lo que no sea número
-    valor = valor.replace(/\D/g, "");
-    
-    // 2. Convertir a formato moneda
-    if (valor.length > 0) {
-        valor = new Intl.NumberFormat('es-MX', {
+    // 2. Aplicamos formato de moneda (MXN)
+    if (valor !== "") {
+        let numero = parseInt(valor);
+        e.target.value = new Intl.NumberFormat('es-MX', {
             style: 'currency',
             currency: 'MXN',
-            minimumFractionDigits: 0
-        }).format(valor);
-        
-        e.target.value = valor;
+            maximumFractionDigits: 0
+        }).format(numero);
     } else {
         e.target.value = "";
     }
