@@ -43,7 +43,7 @@ window.guardarProyecto = async function (event) {
 
     // 2. CORRECCIÓN DEL USUARIO: Verifica qué llave usa tu app para el login
     // Revisa en Application -> Local Storage qué llave guarda el nombre del usuario
-    const usuarioActual = window.currentUser || localStorage.getItem('app_currentUser'); 
+    const usuarioActual = window.currentUser || localStorage.getItem('app_currentUser');
 
     if (!nombre || !fechaInicio || !montoLimpio || !plazos || !usuarioActual) {
         alert("⚠️ Faltan datos o no has iniciado sesión correctamente.");
@@ -65,7 +65,7 @@ window.guardarProyecto = async function (event) {
     };
 
     try {
-         await fetch('https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec', {
+        await fetch('https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec', {
             method: 'POST',
             mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
@@ -111,7 +111,7 @@ window.renderizarGridProyectos = function () {
     tbody.innerHTML = window.proyectos.map(p => {
         // Aseguramos que el monto sea un número
         const montoNumerico = parseFloat(p.monto) || 0;
-        
+
         return `
         <tr class="hover:bg-purple-50/50 transition-colors border-b">
             <td class="p-3 font-medium text-purple-900">${p.nombre || 'Sin nombre'}</td>
@@ -177,15 +177,22 @@ async function renderizarInicioProyectos() {
     }
 
     // 4. Inyectamos las tarjetas usando el HTML que definimos
-    contenedor.innerHTML = proyectosParticipando.map(p => `
-                <button onclick="verResumenProyectoInmediato(${p.id})" class="w-full text-left p-4 rounded-2xl border border-purple-50 hover:border-purple-300 bg-purple-50/10 hover:bg-white transition-all cursor-pointer flex justify-between items-center group">
+    contenedor.innerHTML = misProyectos.map(p => `
+        <button onclick="verResumenProyectoInmediato(${p.id})" class="w-full text-left p-4 rounded-2xl border border-purple-50 hover:border-purple-300 bg-purple-50/10 hover:bg-white transition-all cursor-pointer flex justify-between items-center group">
+        <div class="bg-white p-6 rounded-3xl border border-purple-100 shadow-sm hover:shadow-md transition-all">
+            <div class="flex justify-between items-start">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">💎</span>
                     <div>
-                        <h4 class="font-bold text-gray-900 group-hover:text-purple-700">${p.nombre}</h4>
-                        <p class="text-[11px] font-medium text-gray-400 mt-0.5">Meta: ${formatearMXN(p.monto)}</p>
+                        <h3 class="text-lg font-bold text-gray-900">${p.nombre}</h3>
+                        <p class="text-sm text-gray-400">Meta: $${parseFloat(p.monto).toLocaleString()}</p>
                     </div>
-                    <span class="text-xs font-bold text-purple-600 bg-white shadow-3xs px-2.5 py-1 rounded-lg group-hover:bg-purple-600 group-hover:text-white transition-all">Ver 🔮</span>
-                </button>
-            `).join('');
+                </div>
+            </div>
+        </div>
+        <span class="text-xs font-bold text-purple-600 bg-white shadow-3xs px-2.5 py-1 rounded-lg group-hover:bg-purple-600 group-hover:text-white transition-all">Ver 🔮</span>
+        </button>
+    `).join('');
 }
 
 function verResumenProyectoInmediato(id) {
