@@ -162,19 +162,21 @@ function eliminarProyectoCompleto(id) {
 // ==========================================
 // VISTA PRINCIPAL (TARJETAS LATERALES DE PROYECTO)
 // ==========================================
-window.renderizarInicioProyectos = function () {
-    const contenedor = document.getElementById('inicio-container'); // Asegúrate que sea este ID
+async function renderizarInicioProyectos() {
+    // 1. Buscamos el contenedor donde quieres que aparezcan las tarjetas
+    const contenedor = document.getElementById('sec-inicio');
     if (!contenedor) return;
 
-    // Filtramos los proyectos del usuario logueado
-    const misProyectos = (window.proyectos || []).filter(p => p.adminName === window.currentUser);
+    // 2. Filtramos tus proyectos (asegúrate de que 'proyectos' sea global)
+    const misProyectos = window.proyectos.filter(p => p.adminName === window.currentUser);
 
+    // 3. Si no hay proyectos, mostramos un mensaje amigable
     if (misProyectos.length === 0) {
         contenedor.innerHTML = '<p class="text-gray-400 p-4 text-center">Aún no tienes proyectos de ahorro activos.</p>';
         return;
     }
 
-    // Aquí usamos el formato que se ve en tu imagen
+    // 4. Inyectamos las tarjetas usando el HTML que definimos
     contenedor.innerHTML = misProyectos.map(p => `
         <div class="bg-white p-6 rounded-3xl border border-purple-100 shadow-sm hover:shadow-md transition-all">
             <div class="flex justify-between items-start">
@@ -192,7 +194,7 @@ window.renderizarInicioProyectos = function () {
             </div>
         </div>
     `).join('');
-};
+}
 
 function verResumenProyectoInmediato(id) {
     const p = proyectos.find(x => x.id == id);
