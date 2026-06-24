@@ -28,27 +28,28 @@ function unirseAProyecto(proyectoId) {
 window.guardarProyecto = async function (event) {
     event.preventDefault();
 
-    // 1. Capturamos los valores
-    const nombre = document.getElementById('datos-nombre-proyecto').value.trim();
-    const fechaInicio = document.getElementById('datos-fecha-inicio').value;
+    // 1. CAPTURA: Asegúrate de usar los IDs que tienes en tu HTML
+    const inputNombre = document.getElementById('datos-nombre-proyecto');
+    const inputFecha = document.getElementById('datos-fecha-inicio');
+    const inputMonto = document.getElementById('datos-monto');
+    const inputPlazos = document.getElementById('datos-plazos');
+    const inputFrecuencia = document.getElementById('datos-frecuencia');
 
-    // Capturamos el valor formateado del input
-    const montoFormateado = document.getElementById('datos-monto').value;
-    // Limpiamos el valor para obtener el número puro
-    const montoLimpio = parseFloat(montoFormateado.replace(/[^0-9]/g, '')) || 0;
+    const nombre = inputNombre.value.trim();
+    const fechaInicio = inputFecha.value;
+    const montoLimpio = parseFloat(inputMonto.value.replace(/[^0-9]/g, '')) || 0;
+    const plazos = inputPlazos.value;
+    const frecuencia = inputFrecuencia.value;
 
-    const plazos = document.getElementById('datos-plazos').value;
-    const frecuencia = document.getElementById('datos-frecuencia').value;
+    // 2. CORRECCIÓN DEL USUARIO: Verifica qué llave usa tu app para el login
+    // Revisa en Application -> Local Storage qué llave guarda el nombre del usuario
+    const usuarioActual = window.currentUser || localStorage.getItem('app_currentUser'); 
 
-    const usuarioActual = window.currentUser || localStorage.getItem('usuarioGuardado');
-
-    // 2. VALIDACIÓN CRÍTICA: Usamos montoLimpio en lugar de monto
-    if (!nombre || !fechaInicio || isNaN(montoLimpio) || !plazos || !frecuencia) {
-        alert("⚠️ Por favor, llena todos los campos correctamente.");
+    if (!nombre || !fechaInicio || !montoLimpio || !plazos || !usuarioActual) {
+        alert("⚠️ Faltan datos o no has iniciado sesión correctamente.");
         return;
     }
 
-    // 3. Si todo está bien, creamos el objeto
     const nuevoProyecto = {
         tipo: "proyecto",
         id: Date.now(),
@@ -57,29 +58,24 @@ window.guardarProyecto = async function (event) {
         frecuencia: frecuencia,
         monto: montoLimpio,
         plazos: parseInt(plazos),
-        // Usamos montoLimpio para el cálculo de la cuota
         cuota: montoLimpio / parseInt(plazos),
-        // Aquí usamos la variable del usuario logueado
         adminName: usuarioActual,
         participantes: [usuarioActual],
         historialDepositos: {}
     };
 
-    // Enviamos a Google Sheets
     try {
-        await fetch('https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec', {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(nuevoProyecto)
-        });
+        await fetch('URL_DE_TU_SCRIPT', { /* ... tu fetch ... */ });
 
         mostrarModal("¡Proyecto guardado con éxito!");
-        // Aquí recargamos los datos
-        document.getElementById('nombre-proyecto').value = '';
-        document.getElementById('datos-monto').value = '';
-        document.getElementById('numero-plazos').value = '';
-        
+
+        // 3. LIMPIEZA CORRECTA: Usando los mismos IDs de arriba
+        inputNombre.value = '';
+        inputFecha.value = '';
+        inputMonto.value = '';
+        inputPlazos.value = '';
+        inputFrecuencia.value = 'Quincenal'; // o el valor por defecto
+
         await cargarDatosGlobales();
         window.renderizarGridProyectos();
 
