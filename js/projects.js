@@ -164,7 +164,7 @@ function eliminarProyectoCompleto(id) {
 // ==========================================
 async function renderizarInicioProyectos() {
     // 1. Buscamos el contenedor donde quieres que aparezcan las tarjetas
-    const contenedor = document.getElementById('sec-inicio');
+    const contenedor = document.getElementById('inicio-lista-proyectos');
     if (!contenedor) return;
 
     // 2. Filtramos tus proyectos (asegúrate de que 'proyectos' sea global)
