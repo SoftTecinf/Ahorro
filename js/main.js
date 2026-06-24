@@ -124,6 +124,14 @@ async function navegarA(vistaId) {
             btnActivo.classList.add('bg-gradient-to-r', 'from-purple-600', 'to-blue-500', 'text-white', 'shadow-sm');
             btnActivo.classList.remove('text-gray-500', 'hover:bg-purple-50/50');
         }
+
+        // UNA VEZ QUE EL HTML ESTÁ EN PANTALLA:
+        if (vistaId === 'inicio') {
+            renderizarInicioProyectos();
+        } else if (vistaId === 'datos') {
+            window.renderizarGridProyectos();
+        }
+
     } else {
         console.error("ERROR CRÍTICO: No existe el div con ID:", vistaId);
     }
