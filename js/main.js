@@ -25,6 +25,7 @@ function actualizarLabelUsuario() {
 // ==========================================
 window.appReady = false;
 
+
 window.addEventListener('DOMContentLoaded', async () => {
     // En tu main.js, dentro del DOMContentLoaded
     const appContainer = document.getElementById('app-container');
