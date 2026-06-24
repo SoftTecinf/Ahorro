@@ -102,19 +102,29 @@ window.renderizarGridProyectos = function () {
         return;
     }
 
-    // 3. Renderizado con nombres de variables consistentes
-    tbody.innerHTML = window.proyectos.map(p => `
-        <tr class="hover:bg-purple-50/50 transition-colors">
+    // Definimos el formateador de moneda una sola vez fuera del map
+    const formateador = new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        currency: 'MXN',
+        minimumFractionDigits: 0
+    });
+
+    tbody.innerHTML = window.proyectos.map(p => {
+        // Aseguramos que el monto sea un número
+        const montoNumerico = parseFloat(p.monto) || 0;
+        
+        return `
+        <tr class="hover:bg-purple-50/50 transition-colors border-b">
             <td class="p-3 font-medium text-purple-900">${p.nombre || 'Sin nombre'}</td>
-            <td class="p-3">${p.fechaInicio ? p.fechaInicio.split('T')[0] : 'Sin fecha'}</td> 
-            <td class="p-3 capitalize">${p.frecuencia || '-'}</td>
-            <td class="p-3 font-semibold">$${(parseFloat(p.monto) || 0).toLocaleString()}</td>
-            <td class="p-3 text-center">${p.plazos || 0}</td>
+            <td class="p-3 text-gray-600">${p.fecha ? p.fecha.split('T')[0] : 'Sin fecha'}</td> 
+            <td class="p-3 capitalize text-gray-600">${p.frecuencia || '-'}</td>
+            <td class="p-3 font-bold text-purple-700">${formateador.format(montoNumerico)}</td>
+            <td class="p-3 text-center text-gray-600">${p.plazos || 0}</td>
             <td class="p-3 text-center">
-                <button onclick="editarProyecto('${p.id}')" class="text-purple-600 hover:text-purple-800 font-bold">Editar</button>
+                <button onclick="editarProyecto('${p.id}')" class="text-purple-600 hover:text-purple-800 font-bold underline">Editar</button>
             </td>
-        </tr>
-    `).join('');
+        </tr>`;
+    }).join('');
 };
 
 function editarProyecto(id) {
