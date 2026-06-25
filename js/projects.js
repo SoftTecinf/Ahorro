@@ -428,7 +428,7 @@ function abrirModalAbonos(nombre, proyectoId) {
     const idBuscado = String(proyectoId).trim();
 
     // 2. Buscamos el proyecto
-    const p = proyectos.find(x => String(x.id).trim() === idBuscado);
+    const p = proyectos.find(x => String(proyectoId).trim() === idBuscado);
 
     if (!p) {
         console.error("1.-No se encontró el proyecto con ID:", proyectoId);
