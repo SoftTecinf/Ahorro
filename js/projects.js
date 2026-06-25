@@ -429,6 +429,7 @@ function abrirModalAbonos(nombre, proyectoId) {
     console.error(proyectoId);
     // 2. Buscamos el proyecto
     const p = proyectos.find(x => String(proyectoId).trim() === idBuscado);
+     console.error(p);
 
     if (!p) {
         console.error("1.-No se encontró el proyecto con ID:", proyectoId);
