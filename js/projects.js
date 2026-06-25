@@ -230,7 +230,7 @@ function verResumenProyectoInmediato(id) {
         return `
         <div class="bg-gray-50/60 p-3.5 rounded-2xl border border-gray-100 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
             <div>
-                <p class="text-sm font-bold text-gray-800">${name} ${name === p.adminName ? '👑' : ''}</p>
+                <p class="text-sm font-bold text-gray-800">$${name.trim().toLowerCase() === String(p.adminName).trim().toLowerCase() ? '👑' : ''}</p>
                 <p class="text-xs text-purple-600 font-semibold mt-0.5">Ahorrado: ${formatearMXN(totalAhorrado)}</p>
             </div>
             <div class="flex items-center gap-2">
