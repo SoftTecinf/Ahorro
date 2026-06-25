@@ -193,7 +193,7 @@ function verResumenProyectoInmediato(id) {
     // Usamos window.proyectos para asegurar que accedemos a la variable global
     // Convertimos ambos a String para evitar problemas de tipo (Número vs String)
     const p = (window.proyectos || []).find(x => String(x.id) === String(id));
-    
+
     // Debug para saber qué pasa exactamente
     if (!p) {
         console.error("No se encontró el proyecto. ID buscado:", id);
@@ -203,7 +203,7 @@ function verResumenProyectoInmediato(id) {
 
     const contenedor = document.getElementById('inicio-resumen-proyecto');
     const contenido = document.getElementById('resumen-contenido');
-    
+
     // Si falta algún elemento HTML, avisamos
     if (!contenedor || !contenido) {
         console.error("Error: Elementos HTML no encontrados");
@@ -218,24 +218,35 @@ function verResumenProyectoInmediato(id) {
         if (c) txtCuenta = `🏦 ${c.banco} — Clabe: ${c.cuenta}`;
     }
 
-    let htmlParticipantes = p.participantes.map(name => {
-        const depositos = p.historialDepositos[name] || [];
-        const totalAhorrado = depositos.reduce((acc, d) => acc + d.monto, 0);
+    // Usamos el operador || [] para que, si participantes no existe, use un array vacío
+    // y así evitamos que el .map falle.
+    const listaParticipantes = p.participantes || [];
+
+    let htmlParticipantes = listaParticipantes.map(name => {
+        // También protegemos historialDepositos por si no está definido
+        const historial = p.historialDepositos || {};
+        const depositos = historial[name] || [];
+        const totalAhorrado = depositos.reduce((acc, d) => acc + (d.monto || 0), 0);
 
         return `
         <div class="bg-gray-50/60 p-3.5 rounded-2xl border border-gray-100 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
-        <div>
-        <p class="text-sm font-bold text-gray-800">${name} ${name === p.adminName ? '👑' : ''}</p>
-        <p class="text-xs text-purple-600 font-semibold mt-0.5">Ahorrado: ${formatearMXN(totalAhorrado)}</p>
+            <div>
+                <p class="text-sm font-bold text-gray-800">${name} ${name === p.adminName ? '👑' : ''}</p>
+                <p class="text-xs text-purple-600 font-semibold mt-0.5">Ahorrado: ${formatearMXN(totalAhorrado)}</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="abrirModalAbonos('${name}', ${p.id})" class="text-xs font-bold bg-white border text-gray-700 px-3 py-1.5 rounded-xl shadow-3xs hover:bg-purple-50 cursor-pointer">
+                    📊 Historial / Abonar
+                </button>
+            </div>
         </div>
-        <div class="flex items-center gap-2">
-        <button onclick="abrirModalAbonos('${name}', ${p.id})" class="text-xs font-bold bg-white border text-gray-700 px-3 py-1.5 rounded-xl shadow-3xs hover:bg-purple-50 cursor-pointer">
-        📊 Historial / Abonar
-        </button>
-        </div>
-        </div>
-        `;
-        }).join('');
+    `;
+    }).join('');
+
+    // Opcional: Si está vacío, mostramos un mensaje para no dejar el hueco vacío
+    if (listaParticipantes.length === 0) {
+        htmlParticipantes = '<p class="text-xs text-gray-400 italic text-center py-2">No hay participantes aún.</p>';
+    }
 
     contenido.innerHTML = `
     <button onclick="document.getElementById('inicio-resumen-proyecto').classList.add('hidden')" 
