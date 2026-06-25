@@ -17,16 +17,28 @@ window.cargarDatosGlobales = async function () {
     }));
 
 
-    // 2. Procesar Proyectos (A prueba de errores de ortografía)
-    window.proyectos = (data.proyectos || []).map(p => ({
-        // Intentamos buscar por varios nombres posibles que suelen ocurrir
-        id: p.Id || p.id || "",
-        nombre: p.Nombre || p.nombre || "",
-        fecha: p.Fechainicio || p.Fechainicio || p.FechaInicio || "Sin fecha",
-        frecuencia: p.Frecuencia || p.frecuencia || "",
-        monto: p.Monto || p.monto || 0,
-        plazos: p.Plazos || p.plazos || 0
-    }));
+    // 2. Procesar Proyectos (Copia todo y corrige solo lo necesario)
+    window.proyectos = (data.proyectos || []).map(p => {
+        // Convertimos las claves a minúsculas para normalizar
+        // Esto hace que 'Monto', 'monto' o 'MONTO' funcionen igual
+        const norm = Object.keys(p).reduce((acc, key) => {
+            acc[key.toLowerCase()] = p[key];
+            return acc;
+        }, {});
+
+        return {
+            ...norm, // <-- Esto trae TODAS tus columnas de Sheets automáticamente
+            id: norm.id || "",
+            nombre: norm.nombre || "",
+            // Convertimos a números de forma segura
+            monto: parseFloat(norm.monto) || 0,
+            plazos: parseInt(norm.plazos) || 0,
+            cuota: parseFloat(norm.cuota) || 0, // ¡Ahora esto sí existirá!
+            // Procesamos los datos complejos
+            participantes: typeof norm.participantes === 'string' ? JSON.parse(norm.participantes || '[]') : (norm.participantes || []),
+            historialDepositos: typeof norm.historialdepositos === 'string' ? JSON.parse(norm.historialdepositos || '{}') : (norm.historialdepositos || {})
+        };
+    });
 
     // 3. Procesar Cuentas
     window.cuentas = (data.cuentas || []).map(c => ({
