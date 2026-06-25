@@ -255,12 +255,12 @@ function verResumenProyectoInmediato(id) {
             <p class="text-xs text-gray-400 mt-0.5">Frecuencia: <span class="font-bold text-gray-600">${p.frecuencia}</span> | Plazos: <span class="font-bold text-gray-600">${p.plazos}</span></p>
         </div>
 
-        ${ (p.adminname && currentUser && String(p.adminname).trim().toLowerCase() === String(currentUser).trim().toLowerCase()) ? `
+        ${(p.adminname && currentUser && String(p.adminname).trim().toLowerCase() === String(currentUser).trim().toLowerCase()) ? `
         <button onclick="abrirModalInvitacionExpress(${p.id})" 
                 class="bg-green-50 hover:bg-green-100 border border-green-200 text-green-700 text-xs font-bold px-3 py-2 rounded-xl flex items-center gap-1 cursor-pointer shadow-3xs">
             ➕ Invitar Familiar
         </button>
-    ` : '' }
+    ` : ''}
     </div>
     <div class="grid grid-cols-2 gap-4 mb-6">
         <div class="bg-purple-50/40 p-3 rounded-xl border border-purple-50">
@@ -427,13 +427,18 @@ let nombreIntegranteModalActivo = "";
 function abrirModalAbonos(nombre, proyectoId) {
     // 1. Aseguramos que proyectoId sea un String limpio y comparamos con String(x.id)
     const p = proyectos.find(x => String(x.id) === String(proyectoId));
-    
+
     if (!p) {
         console.error("No se encontró el proyecto. ID buscado:", idBuscado);
         console.log("Lista de proyectos disponibles:", proyectos);
         alert("Error: No se pudieron cargar los datos del plan. Por favor, recarga la página.");
         return;
     }
+
+    // Justo después del if (!p) ...
+    console.log("¡Proyecto encontrado!", p);
+    // Y al final de la función, fuerza el estilo:
+    document.getElementById('modal-deposito-familiar').style.display = 'flex'; // O 'block'
 
     idProyectoModalActivo = idBuscado;
     nombreIntegranteModalActivo = nombre;
