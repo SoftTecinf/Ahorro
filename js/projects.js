@@ -240,8 +240,8 @@ function verResumenProyectoInmediato(id) {
                 </button>
             </div>
         </div>
-    `;
-    }).join('');
+        `;
+        }).join('');
 
     contenido.innerHTML = `
     <button onclick="document.getElementById('inicio-resumen-proyecto').classList.add('hidden')" 
