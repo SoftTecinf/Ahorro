@@ -235,10 +235,11 @@ function verResumenProyectoInmediato(id) {
                 <p class="text-xs text-purple-600 font-semibold mt-0.5">Ahorrado: ${formatearMXN(totalAhorrado)}</p>
             </div>
             <div class="flex items-center gap-2">
-                <button onclick="abrirModalAbonos('${name}', '${p.id}')" 
-                    class="text-xs font-bold bg-white border text-gray-700 px-3 py-1.5 rounded-xl shadow-3xs hover:bg-purple-50 cursor-pointer">
-                📊 Historial / Abonar
-            </button>
+                <button type="button" 
+                        onclick="abrirModalAbonos(String('${name}').replace(/'/g, '\\\''), '${p.id}')" 
+                        class="text-xs font-bold bg-white border border-gray-200 text-gray-700 px-3 py-1.5 rounded-xl shadow-3xs hover:bg-purple-50 hover:border-purple-200 transition-all cursor-pointer">
+                    📊 Historial / Abonar
+                </button>
             </div>
         </div>
     `;
