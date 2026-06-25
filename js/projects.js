@@ -166,12 +166,13 @@ async function renderizarInicioProyectos() {
     // 1. Buscamos el contenedor donde quieres que aparezcan las tarjetas
     const contenedor = document.getElementById('inicio-lista-proyectos');
     if (!contenedor) return;
+    const proyectosParticipando = proyectos.filter(p => p.participantes && p.participantes.includes(currentUser));
 
-    if(proyectosParticipando.length === 0) {
-                contenedor.innerHTML = '<p class="text-xs text-gray-400 italic text-center py-4">No estás asignado a ningún proyecto activo actualmente.</p>';
-                document.getElementById('inicio-resumen-proyecto').classList.add('hidden');
-                return;
-            }
+    if (proyectosParticipando.length === 0) {
+        contenedor.innerHTML = '<p class="text-xs text-gray-400 italic text-center py-4">No estás asignado a ningún proyecto activo actualmente.</p>';
+        document.getElementById('inicio-resumen-proyecto').classList.add('hidden');
+        return;
+    }
 
     // 2. Filtramos tus proyectos (asegúrate de que 'proyectos' sea global)
     const misProyectos = window.proyectos.filter(p => p.adminName === window.currentUser);
