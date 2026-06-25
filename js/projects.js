@@ -221,16 +221,17 @@ function verResumenProyectoInmediato(id) {
     // Usamos el operador || [] para que, si participantes no existe, use un array vacío
     // y así evitamos que el .map falle.
     const listaParticipantes = p.participantes || [];
+
     let htmlParticipantes = listaParticipantes.map(name => {
         const historial = p.historialDepositos || {};
         const depositos = historial[name] || [];
         const totalAhorrado = depositos.reduce((acc, d) => acc + (d.monto || 0), 0);
-        console.error(p.adminName, name);
-        
+         console.error('Admin', p.adminName);
+         console.error('name', name);
         return `
         <div class="bg-gray-50/60 p-3.5 rounded-2xl border border-gray-100 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
             <div>
-                <p class="text-sm font-bold text-gray-800">${name.trim().toLowerCase() === String(p.adminName).trim().toLowerCase() ? '👑' : ''}</p>
+                <p class="text-sm font-bold text-gray-800">${name === p.adminName ? '👑' : ''}</p>
                 <p class="text-xs text-purple-600 font-semibold mt-0.5">Ahorrado: ${formatearMXN(totalAhorrado)}</p>
             </div>
             <div class="flex items-center gap-2">
@@ -240,10 +241,9 @@ function verResumenProyectoInmediato(id) {
                 </button>
             </div>
         </div>
-        `;
-        }).join('');
+    `;
+    }).join('');
 
-         
     contenido.innerHTML = `
     <button onclick="document.getElementById('inicio-resumen-proyecto').classList.add('hidden')" 
             class="md:hidden text-[10px] font-bold text-gray-400 mb-2">← Ocultar detalle</button>
