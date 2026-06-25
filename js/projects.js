@@ -111,22 +111,24 @@ window.renderizarGridProyectos = function () {
     tbody.innerHTML = window.proyectos.map(p => {
         // Aseguramos que el monto sea un número
         const montoNumerico = parseFloat(p.monto) || 0;
-
+        console.error('fechas',p.fecha, p.fechaInicio);
         return `
-        <tr class="hover:bg-purple-50/50 transition-colors border-b">
-            <td class="p-3 font-medium text-purple-900">${p.nombre || 'Sin nombre'}</td>
-            <td class="p-3 text-gray-600">${p.fecha ? p.fecha.split('T')[0] : 'Sin fecha'}</td> 
-            <td class="p-3 capitalize text-gray-600">${p.frecuencia || '-'}</td>
-            <td class="p-3 font-bold text-purple-700">${formateador.format(montoNumerico)}</td>
-            <td class="p-3 text-center text-gray-600">${p.plazos || 0}</td>
-            <td class="p-3 text-center">
-                <button onclick="editarProyecto('${p.id}')" class="text-purple-600 hover:text-purple-800 font-bold underline">Editar</button>
-            </td>
-        </tr>`;
+        <tr class="hover:bg-purple-50/30 transition-colors">
+                    <td class="p-3 font-bold text-gray-900">${p.nombre}</td>
+                    <td class="p-3 text-gray-600">${p.fecha ? p.fecha.split('T')[0] : 'Sin fecha'}</td> 
+                    <td class="p-3 font-medium text-purple-700">${p.frecuencia}</td>
+                    <td class="p-3 font-semibold text-gray-800">${formatearMXN(p.monto)}</td>
+                    <td class="p-3 text-center font-medium">${p.plazos}</td>
+                    <td class="p-3 text-center space-x-2">
+                        <button onclick="editarProyecto(${p.id})" class="text-xs bg-yellow-100 text-yellow-800 font-bold px-2.5 py-1 rounded-lg hover:bg-yellow-200 cursor-pointer">Editar</button>
+                        <button onclick="eliminarProyectoCompleto(${p.id})" class="text-xs bg-red-50 text-red-600 px-2.5 py-1 rounded-lg hover:bg-red-100 cursor-pointer">Eliminar</button>
+                    </td>
+                </tr>`;
     }).join('');
 };
 
 function editarProyecto(id) {
+    console.error(id);
     const p = proyectos.find(x => x.id == id);
     if (!p) return;
 
