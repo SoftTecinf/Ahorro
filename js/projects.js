@@ -190,10 +190,25 @@ async function renderizarInicioProyectos() {
 }
 
 function verResumenProyectoInmediato(id) {
-    const p = proyectos.find(x => x.id == id);
+    // Usamos window.proyectos para asegurar que accedemos a la variable global
+    // Convertimos ambos a String para evitar problemas de tipo (Número vs String)
+    const p = (window.proyectos || []).find(x => String(x.id) === String(id));
+    
+    // Debug para saber qué pasa exactamente
+    if (!p) {
+        console.error("No se encontró el proyecto. ID buscado:", id);
+        console.log("Proyectos disponibles en memoria:", window.proyectos);
+        return;
+    }
+
     const contenedor = document.getElementById('inicio-resumen-proyecto');
     const contenido = document.getElementById('resumen-contenido');
-    if (!p || !contenedor || !contenido) return;
+    
+    // Si falta algún elemento HTML, avisamos
+    if (!contenedor || !contenido) {
+        console.error("Error: Elementos HTML no encontrados");
+        return;
+    }
 
     contenedor.classList.remove('hidden');
 
@@ -208,19 +223,19 @@ function verResumenProyectoInmediato(id) {
         const totalAhorrado = depositos.reduce((acc, d) => acc + d.monto, 0);
 
         return `
-<div class="bg-gray-50/60 p-3.5 rounded-2xl border border-gray-100 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
-<div>
-<p class="text-sm font-bold text-gray-800">${name} ${name === p.adminName ? '👑' : ''}</p>
-<p class="text-xs text-purple-600 font-semibold mt-0.5">Ahorrado: ${formatearMXN(totalAhorrado)}</p>
-</div>
-<div class="flex items-center gap-2">
-<button onclick="abrirModalAbonos('${name}', ${p.id})" class="text-xs font-bold bg-white border text-gray-700 px-3 py-1.5 rounded-xl shadow-3xs hover:bg-purple-50 cursor-pointer">
-📊 Historial / Abonar
-</button>
-</div>
-</div>
-`;
-    }).join('');
+        <div class="bg-gray-50/60 p-3.5 rounded-2xl border border-gray-100 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+        <div>
+        <p class="text-sm font-bold text-gray-800">${name} ${name === p.adminName ? '👑' : ''}</p>
+        <p class="text-xs text-purple-600 font-semibold mt-0.5">Ahorrado: ${formatearMXN(totalAhorrado)}</p>
+        </div>
+        <div class="flex items-center gap-2">
+        <button onclick="abrirModalAbonos('${name}', ${p.id})" class="text-xs font-bold bg-white border text-gray-700 px-3 py-1.5 rounded-xl shadow-3xs hover:bg-purple-50 cursor-pointer">
+        📊 Historial / Abonar
+        </button>
+        </div>
+        </div>
+        `;
+        }).join('');
 
     contenido.innerHTML = `
     <button onclick="document.getElementById('inicio-resumen-proyecto').classList.add('hidden')" 
