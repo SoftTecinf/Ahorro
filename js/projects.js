@@ -228,8 +228,6 @@ function verResumenProyectoInmediato(id) {
         const totalAhorrado = depositos.reduce((acc, d) => acc + (d.monto || 0), 0);
         const admin = p.adminname || p.adminName || "";
         
-         console.error('Admin', admin);
-         console.error('name', name);
         return `
         <div class="bg-gray-50/60 p-3.5 rounded-2xl border border-gray-100 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
             <div>
