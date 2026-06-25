@@ -196,7 +196,7 @@ function verResumenProyectoInmediato(id) {
 
     // Debug para saber qué pasa exactamente
     if (!p) {
-        console.error("No se encontró el proyecto. ID buscado:", p.id);
+        console.error("No se encontró el proyecto. ID buscado:", id);
         console.log("Proyectos disponibles en memoria:", window.proyectos);
         return;
     }
@@ -431,7 +431,7 @@ function abrirModalAbonos(nombre, proyectoId) {
     const p = proyectos.find(x => String(x.id).trim() === idBuscado);
 
     if (!p) {
-        console.error("No se encontró el proyecto con ID:", idBuscado);
+        console.error("1.-No se encontró el proyecto con ID:", proyectoId);
         console.log("Lista de proyectos disponibles:", proyectos);
         alert("Error: No se pudieron cargar los datos del plan.");
         return;
