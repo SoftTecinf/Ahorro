@@ -426,20 +426,9 @@ let nombreIntegranteModalActivo = "";
 function abrirModalAbonos(nombre, proyectoId) {
     // 1. Definimos el ID buscado de forma segura y consistente
     const idBuscado = String(proyectoId).trim();
-    console.error(proyectoId);
+    
     // 2. Buscamos el proyecto
     const p = proyectos.find(x => String(proyectoId).trim() === idBuscado);
-     console.error(p);
-
-    if (!p) {
-        console.error("1.-No se encontró el proyecto con ID:", proyectoId);
-        console.log("Lista de proyectos disponibles:", proyectos);
-        alert("Error: No se pudieron cargar los datos del plan.");
-        return;
-    }
-
-    // 3. Si llega aquí, es que SÍ encontró el proyecto
-    console.log("¡Proyecto encontrado!", p);
 
     idProyectoModalActivo = idBuscado;
     nombreIntegranteModalActivo = nombre;
@@ -563,21 +552,21 @@ function renderizarListaAbonosModal() {
     }
 
     contenedor.innerHTML = listado.slice().reverse().map(d => `
-<div class="p-3 bg-gray-50 rounded-xl border border-gray-100 flex justify-between items-center text-xs">
-<div>
-<p class="font-bold text-gray-900">${formatearMXN(d.monto)} <span class="font-normal text-gray-400">(${d.metodo})</span></p>
-<p class="text-[10px] text-gray-500 mt-0.5">${revertirFechaMX(d.fecha)}</p>
-</div>
-<div class="flex items-center gap-1.5">
-${d.comprobanteUrl ? `
-<button onclick="verFotoComprobante('${d.comprobanteUrl}')" class="bg-purple-100 text-purple-700 font-bold px-2 py-1 rounded text-[10px] cursor-pointer">🖼️ Ticket</button>
-` : ''}
-${nombreIntegranteModalActivo === currentUser ? `
-<button onclick="eliminarAbonoReal('${d.id}')" class="text-red-500 font-bold text-lg px-1 cursor-pointer">&times;</button>
-` : ''}
-</div>
-</div>
-`).join('');
+    <div class="p-3 bg-gray-50 rounded-xl border border-gray-100 flex justify-between items-center text-xs">
+        <div>
+            <p class="font-bold text-gray-900">${formatearMXN(d.monto)} <span class="font-normal text-gray-400">(${d.metodo})</span></p>
+            <p class="text-[10px] text-gray-500 mt-0.5">${revertirFechaMX(d.fecha)}</p>
+        </div>
+        <div class="flex items-center gap-1.5">
+            ${d.comprobanteUrl ? `
+            <button onclick="verFotoComprobante('${d.comprobanteUrl}')" class="bg-purple-100 text-purple-700 font-bold px-2 py-1 rounded text-[10px] cursor-pointer">🖼️ Ticket</button>
+            ` : ''}
+            ${nombreIntegranteModalActivo === currentUser ? `
+            <button onclick="eliminarAbonoReal('${d.id}')" class="text-red-500 font-bold text-lg px-1 cursor-pointer">&times;</button>
+            ` : ''}
+        </div>
+    </div>
+    `).join('');
 }
 
 function verFotoComprobante(base64Data) {
@@ -744,17 +733,24 @@ function calcularFechaPlazo(fechaInicioStr, numeroPlazo, frecuencia) {
 
 
 
-function mostrarModal(msg) {
+/*function mostrarModal(msg) {
     const m = document.getElementById('success-modal');
     const txt = document.getElementById('success-message');
     if (m && txt) {
         txt.textContent = msg;
         m.classList.remove('hidden');
     }
-}
+}*/
 
 function cerrarModal() {
-    document.getElementById('success-modal').classList.add('hidden');
+    // Cambia 'success-modal' por 'modal-deposito-familiar'
+    const modal = document.getElementById('modal-deposito-familiar');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none'; // Asegura que se oculte
+    } else {
+        console.error("No se encontró el modal para cerrar con ID: modal-deposito-familiar");
+    }
 }
 
 
