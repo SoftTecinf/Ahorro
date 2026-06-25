@@ -115,7 +115,7 @@ window.renderizarGridProyectos = function () {
         return `
         <tr class="hover:bg-purple-50/30 transition-colors">
                     <td class="p-3 font-bold text-gray-900">${p.nombre}</td>
-                    <td class="p-3 text-gray-600 font-medium">${revertirFechaMX(p.fecha)}</td>
+                    <td class="p-3 text-gray-600">${p.fecha ? p.fecha.split('T')[0] : 'Sin fecha'}</td> 
                     <td class="p-3 font-medium text-purple-700">${p.frecuencia}</td>
                     <td class="p-3 font-semibold text-gray-800">${formatearMXN(p.monto)}</td>
                     <td class="p-3 text-center font-medium">${p.plazos}</td>
