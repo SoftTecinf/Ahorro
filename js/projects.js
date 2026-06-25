@@ -166,14 +166,6 @@ async function renderizarInicioProyectos() {
     // 1. Buscamos el contenedor donde quieres que aparezcan las tarjetas
     const contenedor = document.getElementById('inicio-lista-proyectos');
     if (!contenedor) return;
-    
-    const proyectosParticipando = proyectos.filter(p => p.participantes && p.participantes.includes(currentUser));
-
-    if (proyectosParticipando.length === 0) {
-        contenedor.innerHTML = '<p class="text-xs text-gray-400 italic text-center py-4">No estás asignado a ningún proyecto activo actualmente.</p>';
-        document.getElementById('inicio-resumen-proyecto').classList.add('hidden');
-        return;
-    }
 
     // 2. Filtramos tus proyectos (asegúrate de que 'proyectos' sea global)
     const misProyectos = window.proyectos.filter(p => p.adminName === window.currentUser);
@@ -184,11 +176,17 @@ async function renderizarInicioProyectos() {
         return;
     }
 
+    if (misProyectos.length === 0) {
+        contenedor.innerHTML = '<p class="text-xs text-gray-400 italic text-center py-4">No estás asignado a ningún proyecto activo actualmente.</p>';
+        document.getElementById('inicio-resumen-proyecto').classList.add('hidden');
+        return;
+    }
+
     // 4. Inyectamos las tarjetas usando el HTML que definimos
     contenedor.innerHTML = misProyectos.map(p => `
         <button onclick="verResumenProyectoInmediato(${p.id})" class="w-full text-left p-4 rounded-2xl border border-purple-50 hover:border-purple-300 bg-purple-50/10 hover:bg-white transition-all cursor-pointer flex justify-between items-center group">
         <div>
-            <h3 class="text-lg font-bold text-gray-900">${p.nombre}</h3>
+            <h4 class="text-lg font-bold text-gray-900">${p.nombre}</h4>
             <p class="text-sm text-gray-400">Meta: $${parseFloat(p.monto).toLocaleString()}</p>
         </div>
         <span class="text-xs font-bold text-purple-600 bg-white shadow-3xs px-2.5 py-1 rounded-lg group-hover:bg-purple-600 group-hover:text-white transition-all">Ver 🔮</span>
