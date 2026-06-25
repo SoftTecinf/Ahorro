@@ -268,8 +268,8 @@ function verResumenProyectoInmediato(id) {
 <p class="text-lg font-extrabold text-purple-950">${formatearMXN(p.monto)}</p>
 </div>
 <div class="bg-blue-50/40 p-3 rounded-xl border border-blue-50">
-<p class="text-[10px] font-bold uppercase text-gray-400">Cuota Fija Sugerida</p>
-<p class="text-lg font-extrabold text-blue-950">${formatearMXN(p.cuota)}</p>
+    <p class="text-[10px] font-bold uppercase text-gray-400">Cuota Fija Sugerida</p>
+    <p class="text-lg font-extrabold text-blue-950">${formatearMXN(parseFloat(p.cuota) || 0)}</p>
 </div>
 </div>
 
