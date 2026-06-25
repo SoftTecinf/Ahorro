@@ -35,7 +35,7 @@ window.cargarDatosGlobales = async function () {
         titular: c.titular || "",
         clabe: c.clabe || ""
     }));
-    
+
     // Guardamos en caché
     localStorage.setItem('app_cache_familiares', JSON.stringify(window.familiares));
     localStorage.setItem('app_cache_proyectos', JSON.stringify(window.proyectos));
@@ -44,6 +44,7 @@ window.cargarDatosGlobales = async function () {
     // AQUÍ ES LA CLAVE: Llama al renderizado solo cuando los datos ya existen
     renderizarInicioProyectos();
 };
+
 
 // 🔥 ¡ESTA LÍNEA ES CLAVE! Ejecuta la función en segundo plano nada más abrir la página
 window.cargarDatosGlobales();
