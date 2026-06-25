@@ -382,7 +382,7 @@ function guardarConfiguracionProyecto(event) {
         proyecto.idCuentaVinculada = idCta || null;
         localStorage.setItem('app_proyectos', JSON.stringify(proyectos));
         mostrarModal("¡Vínculos y cuentas asignadas al proyecto correctamente! ✨");
-        navegarA('sec-inicio');
+        navegarA('inicio');
     }
 }
 
