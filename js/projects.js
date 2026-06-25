@@ -221,7 +221,8 @@ function verResumenProyectoInmediato(id) {
     // Usamos el operador || [] para que, si participantes no existe, use un array vacío
     // y así evitamos que el .map falle.
     const listaParticipantes = p.participantes || [];
-    // 1. Asegúrate de obtener el ID del proyecto directamente del objeto p
+    
+    //Asegúrate de obtener el ID del proyecto directamente del objeto p
     const idProyectoActual = String(p.id).trim();
 
     let htmlParticipantes = listaParticipantes.map(name => {
