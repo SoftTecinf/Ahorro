@@ -285,6 +285,7 @@ function verResumenProyectoInmediato(id) {
     <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">👥 Progreso por Integrante</h4>
     <div class="space-y-2.5">${htmlParticipantes}</div>
     `;
+    
     // Opcional: Si está vacío, mostramos un mensaje para no dejar el hueco vacío
     if (listaParticipantes.length === 0) {
         htmlParticipantes = '<p class="text-xs text-gray-400 italic text-center py-2">No hay participantes aún.</p>';
