@@ -35,7 +35,7 @@ window.cargarDatosGlobales = async function () {
         titular: c.titular || "",
         clabe: c.clabe || ""
     }));
-
+    
     // Guardamos en caché
     localStorage.setItem('app_cache_familiares', JSON.stringify(window.familiares));
     localStorage.setItem('app_cache_proyectos', JSON.stringify(window.proyectos));
