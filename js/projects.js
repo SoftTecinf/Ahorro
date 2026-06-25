@@ -273,12 +273,12 @@ function verResumenProyectoInmediato(id) {
         </div>
     </div>
 
-<div class="mb-6 p-3.5 bg-slate-900 text-slate-100 rounded-2xl shadow-inner text-xs flex items-center justify-between">
-<div>
-<span class="block text-[9px] uppercase font-bold text-slate-400 tracking-wider">Cuenta para Aportes</span>
-<span class="font-semibold tracking-wide">${txtCuenta}</span>
-</div>
-</div>
+    <div class="mb-6 p-3.5 bg-slate-900 text-slate-100 rounded-2xl shadow-inner text-xs flex items-center justify-between">
+        <div>
+            <span class="block text-[9px] uppercase font-bold text-slate-400 tracking-wider">Cuenta para Aportes</span>
+            <span class="font-semibold tracking-wide">${txtCuenta}</span>
+        </div>
+    </div>
 
 <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">👥 Progreso por Integrante</h4>
 <div class="space-y-2.5">${htmlParticipantes}</div>
