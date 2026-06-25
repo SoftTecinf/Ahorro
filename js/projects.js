@@ -425,19 +425,22 @@ let idProyectoModalActivo = null;
 let nombreIntegranteModalActivo = "";
 
 function abrirModalAbonos(nombre, proyectoId) {
-    // Depuración: Verifica qué hay en la lista global
-    const p = proyectos.find(x => String(x.id) === String(proyectoId));
+    // 1. Aseguramos que proyectoId sea un String limpio y comparamos con String(x.id)
+    const idBuscado = String(proyectoId).trim();
+    const p = proyectos.find(x => String(x.id).trim() === idBuscado);
     
     if (!p) {
-        console.error("No se encontró el proyecto con ID:", proyectoId);
-        console.log("Lista actual de proyectos:", proyectos); // Esto nos dirá si están ahí o no
+        console.error("No se encontró el proyecto. ID buscado:", idBuscado);
+        console.log("Lista de proyectos disponibles:", proyectos);
+        alert("Error: No se pudieron cargar los datos del plan. Por favor, recarga la página.");
         return;
     }
 
-    idProyectoModalActivo = proyectoId;
+    idProyectoModalActivo = idBuscado;
     nombreIntegranteModalActivo = nombre;
 
     try {
+        // 2. Actualización de elementos básicos
         document.getElementById('modal-titulo-nombre').textContent = `Historial de ${nombre}`;
         document.getElementById('modal-subtitulo-proyecto').textContent = `Plan: ${p.nombre}`;
         document.getElementById('modal-cuota-fija-texto').textContent = formatearMXN(p.cuota);
@@ -447,19 +450,22 @@ function abrirModalAbonos(nombre, proyectoId) {
         calcularMontoPorAbonos();
         renderizarListaAbonosModal();
 
+        // 3. Control de visibilidad del formulario
         const formAbono = document.getElementById('form-nuevo-deposito');
-        if (nombre !== currentUser) {
-            formAbono.classList.add('hidden');
-        } else {
-            formAbono.classList.remove('hidden');
+        if (formAbono) {
+            if (nombre.trim().toLowerCase() !== currentUser.trim().toLowerCase()) {
+                formAbono.classList.add('hidden');
+            } else {
+                formAbono.classList.remove('hidden');
+            }
         }
 
-        // --- AQUÍ ESTÁ EL PUNTO CRÍTICO ---
+        // 4. Activación del modal
         const modal = document.getElementById('modal-deposito-familiar');
         if (modal) {
             modal.classList.remove('hidden');
         } else {
-            console.error("ERROR: No existe el elemento con ID 'modal-deposito-familiar' en tu HTML.");
+            console.error("ERROR CRÍTICO: No existe el elemento con ID 'modal-deposito-familiar' en tu HTML.");
         }
     } catch (error) {
         console.error("Error al configurar el modal:", error);
