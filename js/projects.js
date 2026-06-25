@@ -425,26 +425,26 @@ let idProyectoModalActivo = null;
 let nombreIntegranteModalActivo = "";
 
 function abrirModalAbonos(nombre, proyectoId) {
-    // 1. Aseguramos que proyectoId sea un String limpio y comparamos con String(x.id)
-    const p = proyectos.find(x => String(x.id) === String(proyectoId));
-
+    // 1. Definimos el ID buscado de forma segura y consistente
+    const idBuscado = String(proyectoId).trim();
+    
+    // 2. Buscamos el proyecto
+    const p = proyectos.find(x => String(x.id).trim() === idBuscado);
+    
     if (!p) {
-        console.error("No se encontró el proyecto. ID buscado:", idBuscado);
+        console.error("No se encontró el proyecto con ID:", idBuscado);
         console.log("Lista de proyectos disponibles:", proyectos);
-        alert("Error: No se pudieron cargar los datos del plan. Por favor, recarga la página.");
+        alert("Error: No se pudieron cargar los datos del plan.");
         return;
     }
 
-    // Justo después del if (!p) ...
+    // 3. Si llega aquí, es que SÍ encontró el proyecto
     console.log("¡Proyecto encontrado!", p);
-    // Y al final de la función, fuerza el estilo:
-    document.getElementById('modal-deposito-familiar').style.display = 'flex'; // O 'block'
 
     idProyectoModalActivo = idBuscado;
     nombreIntegranteModalActivo = nombre;
 
     try {
-        // 2. Actualización de elementos básicos
         document.getElementById('modal-titulo-nombre').textContent = `Historial de ${nombre}`;
         document.getElementById('modal-subtitulo-proyecto').textContent = `Plan: ${p.nombre}`;
         document.getElementById('modal-cuota-fija-texto').textContent = formatearMXN(p.cuota);
@@ -454,7 +454,6 @@ function abrirModalAbonos(nombre, proyectoId) {
         calcularMontoPorAbonos();
         renderizarListaAbonosModal();
 
-        // 3. Control de visibilidad del formulario
         const formAbono = document.getElementById('form-nuevo-deposito');
         if (formAbono) {
             if (nombre.trim().toLowerCase() !== currentUser.trim().toLowerCase()) {
@@ -464,12 +463,13 @@ function abrirModalAbonos(nombre, proyectoId) {
             }
         }
 
-        // 4. Activación del modal
         const modal = document.getElementById('modal-deposito-familiar');
         if (modal) {
+            // Quitamos 'hidden' y forzamos el display por si acaso
             modal.classList.remove('hidden');
+            modal.style.display = 'flex'; 
         } else {
-            console.error("ERROR CRÍTICO: No existe el elemento con ID 'modal-deposito-familiar' en tu HTML.");
+            console.error("ERROR CRÍTICO: No existe el elemento con ID 'modal-deposito-familiar'");
         }
     } catch (error) {
         console.error("Error al configurar el modal:", error);
