@@ -221,9 +221,10 @@ function verResumenProyectoInmediato(id) {
     // Usamos el operador || [] para que, si participantes no existe, use un array vacío
     // y así evitamos que el .map falle.
     const listaParticipantes = p.participantes || [];
+    // 1. Asegúrate de obtener el ID del proyecto directamente del objeto p
+    const idProyectoActual = String(p.id).trim();
 
     let htmlParticipantes = listaParticipantes.map(name => {
-        // También protegemos historialDepositos por si no está definido
         const historial = p.historialDepositos || {};
         const depositos = historial[name] || [];
         const totalAhorrado = depositos.reduce((acc, d) => acc + (d.monto || 0), 0);
@@ -235,10 +236,10 @@ function verResumenProyectoInmediato(id) {
                 <p class="text-xs text-purple-600 font-semibold mt-0.5">Ahorrado: ${formatearMXN(totalAhorrado)}</p>
             </div>
             <div class="flex items-center gap-2">
-                <button onclick="abrirModalAbonos('${name}', '${p.id}')" 
-                    class="text-xs font-bold bg-white border text-gray-700 px-3 py-1.5 rounded-xl shadow-3xs hover:bg-purple-50 cursor-pointer">
-                📊 Historial / Abonar
-            </button>
+                <button onclick="abrirModalAbonos('${name}', '${idProyectoActual}')" 
+                        class="text-xs font-bold bg-white border text-gray-700 px-3 py-1.5 rounded-xl shadow-3xs hover:bg-purple-50 cursor-pointer">
+                    📊 Historial / Abonar
+                </button>
             </div>
         </div>
     `;
@@ -427,10 +428,10 @@ let nombreIntegranteModalActivo = "";
 function abrirModalAbonos(nombre, proyectoId) {
     // 1. Definimos el ID buscado de forma segura y consistente
     const idBuscado = String(proyectoId).trim();
-    
+
     // 2. Buscamos el proyecto
     const p = proyectos.find(x => String(x.id).trim() === idBuscado);
-    
+
     if (!p) {
         console.error("No se encontró el proyecto con ID:", idBuscado);
         console.log("Lista de proyectos disponibles:", proyectos);
@@ -467,7 +468,7 @@ function abrirModalAbonos(nombre, proyectoId) {
         if (modal) {
             // Quitamos 'hidden' y forzamos el display por si acaso
             modal.classList.remove('hidden');
-            modal.style.display = 'flex'; 
+            modal.style.display = 'flex';
         } else {
             console.error("ERROR CRÍTICO: No existe el elemento con ID 'modal-deposito-familiar'");
         }
