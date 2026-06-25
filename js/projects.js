@@ -466,12 +466,17 @@ function abrirModalAbonos(nombre, proyectoId) {
 }
 
 function cerrarModalDeposito() {
+    console.log("¡Click detectado! Intentando cerrar...");
     const modal = document.getElementById('modal-deposito-familiar');
-    if (modal) modal.classList.add('hidden');
+    if (modal) {
+        modal.classList.add('hidden');
+        console.log("Modal ocultado con éxito.");
+    } else {
+        console.error("Error: Modal no encontrado.");
+    }
     idProyectoModalActivo = null;
     nombreIntegranteModalActivo = "";
 }
-
 function calcularMontoPorAbonos() {
     const p = proyectos.find(x => x.id == idProyectoModalActivo);
     const tipoAbono = document.getElementById('deposito-cantidad-abonos').value;
@@ -552,21 +557,21 @@ function renderizarListaAbonosModal() {
     }
 
     contenedor.innerHTML = listado.slice().reverse().map(d => `
-    <div class="p-3 bg-gray-50 rounded-xl border border-gray-100 flex justify-between items-center text-xs">
-        <div>
-            <p class="font-bold text-gray-900">${formatearMXN(d.monto)} <span class="font-normal text-gray-400">(${d.metodo})</span></p>
-            <p class="text-[10px] text-gray-500 mt-0.5">${revertirFechaMX(d.fecha)}</p>
-        </div>
-        <div class="flex items-center gap-1.5">
-            ${d.comprobanteUrl ? `
-            <button onclick="verFotoComprobante('${d.comprobanteUrl}')" class="bg-purple-100 text-purple-700 font-bold px-2 py-1 rounded text-[10px] cursor-pointer">🖼️ Ticket</button>
-            ` : ''}
-            ${nombreIntegranteModalActivo === currentUser ? `
-            <button onclick="eliminarAbonoReal('${d.id}')" class="text-red-500 font-bold text-lg px-1 cursor-pointer">&times;</button>
-            ` : ''}
-        </div>
-    </div>
-    `).join('');
+<div class="p-3 bg-gray-50 rounded-xl border border-gray-100 flex justify-between items-center text-xs">
+<div>
+<p class="font-bold text-gray-900">${formatearMXN(d.monto)} <span class="font-normal text-gray-400">(${d.metodo})</span></p>
+<p class="text-[10px] text-gray-500 mt-0.5">${revertirFechaMX(d.fecha)}</p>
+</div>
+<div class="flex items-center gap-1.5">
+${d.comprobanteUrl ? `
+<button onclick="verFotoComprobante('${d.comprobanteUrl}')" class="bg-purple-100 text-purple-700 font-bold px-2 py-1 rounded text-[10px] cursor-pointer">🖼️ Ticket</button>
+` : ''}
+${nombreIntegranteModalActivo === currentUser ? `
+<button onclick="eliminarAbonoReal('${d.id}')" class="text-red-500 font-bold text-lg px-1 cursor-pointer">&times;</button>
+` : ''}
+</div>
+</div>
+`).join('');
 }
 
 function verFotoComprobante(base64Data) {
@@ -733,24 +738,17 @@ function calcularFechaPlazo(fechaInicioStr, numeroPlazo, frecuencia) {
 
 
 
-/*function mostrarModal(msg) {
+function mostrarModal(msg) {
     const m = document.getElementById('success-modal');
     const txt = document.getElementById('success-message');
     if (m && txt) {
         txt.textContent = msg;
         m.classList.remove('hidden');
     }
-}*/
+}
 
 function cerrarModal() {
-    // Cambia 'success-modal' por 'modal-deposito-familiar'
-    const modal = document.getElementById('modal-deposito-familiar');
-    if (modal) {
-        modal.classList.add('hidden');
-        modal.style.display = 'none'; // Asegura que se oculte
-    } else {
-        console.error("No se encontró el modal para cerrar con ID: modal-deposito-familiar");
-    }
+    document.getElementById('success-modal').classList.add('hidden');
 }
 
 
