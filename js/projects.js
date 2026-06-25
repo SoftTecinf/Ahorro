@@ -221,11 +221,11 @@ function verResumenProyectoInmediato(id) {
     // Usamos el operador || [] para que, si participantes no existe, use un array vacío
     // y así evitamos que el .map falle.
     const listaParticipantes = p.participantes || [];
-
     let htmlParticipantes = listaParticipantes.map(name => {
         const historial = p.historialDepositos || {};
         const depositos = historial[name] || [];
         const totalAhorrado = depositos.reduce((acc, d) => acc + (d.monto || 0), 0);
+console.error(p.adminName, name);
         return `
         <div class="bg-gray-50/60 p-3.5 rounded-2xl border border-gray-100 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
             <div>
@@ -242,7 +242,7 @@ function verResumenProyectoInmediato(id) {
         `;
         }).join('');
 
-         console.error(p.adminName, name);
+         
     contenido.innerHTML = `
     <button onclick="document.getElementById('inicio-resumen-proyecto').classList.add('hidden')" 
             class="md:hidden text-[10px] font-bold text-gray-400 mb-2">← Ocultar detalle</button>
