@@ -223,18 +223,21 @@ function verResumenProyectoInmediato(id) {
     }).join('');
 
     contenido.innerHTML = `
-<div class="flex justify-between items-start border-b border-gray-100 pb-4 mb-4">
-<div>
-<span class="text-[10px] uppercase font-black text-purple-600 tracking-widest bg-purple-50 px-2 py-0.5 rounded Sundae">Plan Activo</span>
-<h3 class="text-2xl font-black text-gray-900 mt-1">${p.nombre}</h3>
-<p class="text-xs text-gray-400 mt-0.5">Frecuencia: <span class="font-bold text-gray-600">${p.frecuencia}</span> | Plazos: <span class="font-bold text-gray-600">${p.plazos}</span></p>
-</div>
-${p.adminName === currentUser ? `
-<button onclick="abrirModalInvitacionExpress(${p.id})" class="bg-green-50 hover:bg-green-100 border border-green-200 text-green-700 text-xs font-bold px-3 py-2 rounded-xl flex items-center gap-1 cursor-pointer shadow-3xs">
-➕ Invitar Familiar
-</button>
-` : ''}
-</div>
+    <button onclick="document.getElementById('inicio-resumen-proyecto').classList.add('hidden')" 
+            class="md:hidden text-[10px] font-bold text-gray-400 mb-2">← Ocultar detalle</button>
+        
+    <div class="flex justify-between items-start border-b border-gray-100 pb-4 mb-4">
+    <div>
+    <span class="text-[10px] uppercase font-black text-purple-600 tracking-widest bg-purple-50 px-2 py-0.5 rounded Sundae">Plan Activo</span>
+    <h3 class="text-2xl font-black text-gray-900 mt-1">${p.nombre}</h3>
+    <p class="text-xs text-gray-400 mt-0.5">Frecuencia: <span class="font-bold text-gray-600">${p.frecuencia}</span> | Plazos: <span class="font-bold text-gray-600">${p.plazos}</span></p>
+    </div>
+    ${p.adminName === currentUser ? `
+    <button onclick="abrirModalInvitacionExpress(${p.id})" class="bg-green-50 hover:bg-green-100 border border-green-200 text-green-700 text-xs font-bold px-3 py-2 rounded-xl flex items-center gap-1 cursor-pointer shadow-3xs">
+    ➕ Invitar Familiar
+    </button>
+    ` : ''}
+    </div>
 
 <div class="grid grid-cols-2 gap-4 mb-6">
 <div class="bg-purple-50/40 p-3 rounded-xl border border-purple-50">
