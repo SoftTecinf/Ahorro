@@ -196,7 +196,7 @@ function verResumenProyectoInmediato(id) {
 
     // Debug para saber qué pasa exactamente
     if (!p) {
-        console.error("No se encontró el proyecto. ID buscado:", id);
+        console.error("No se encontró el proyecto. ID buscado:", p.id);
         console.log("Proyectos disponibles en memoria:", window.proyectos);
         return;
     }
