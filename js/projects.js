@@ -262,16 +262,16 @@ function verResumenProyectoInmediato(id) {
     ` : ''}
     </div>
 
-<div class="grid grid-cols-2 gap-4 mb-6">
-<div class="bg-purple-50/40 p-3 rounded-xl border border-purple-50">
-<p class="text-[10px] font-bold uppercase text-gray-400">Meta Colectiva</p>
-<p class="text-lg font-extrabold text-purple-950">${formatearMXN(p.monto)}</p>
-</div>
-<div class="bg-blue-50/40 p-3 rounded-xl border border-blue-50">
-    <p class="text-[10px] font-bold uppercase text-gray-400">Cuota Fija Sugerida</p>
-    <p class="text-lg font-extrabold text-blue-950">${formatearMXN(parseFloat(p.cuota) || 0)}</p>
-</div>
-</div>
+    <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="bg-purple-50/40 p-3 rounded-xl border border-purple-50">
+            <p class="text-[10px] font-bold uppercase text-gray-400">Meta Colectiva</p>
+            <p class="text-lg font-extrabold text-purple-950">${formatearMXN(p.monto)}</p>
+        </div>
+        <div class="bg-blue-50/40 p-3 rounded-xl border border-blue-50">
+            <p class="text-[10px] font-bold uppercase text-gray-400">Cuota Fija Sugerida</p>
+            <p class="text-lg font-extrabold text-blue-950">${formatearMXN(parseFloat(p.cuota) || 0)}</p>
+        </div>
+    </div>
 
 <div class="mb-6 p-3.5 bg-slate-900 text-slate-100 rounded-2xl shadow-inner text-xs flex items-center justify-between">
 <div>
