@@ -254,6 +254,7 @@ function verResumenProyectoInmediato(id) {
             <p class="text-xs text-gray-400 mt-0.5">Frecuencia: <span class="font-bold text-gray-600">${p.frecuencia}</span> | Plazos: <span class="font-bold text-gray-600">${p.plazos}</span></p>
         </div>
 
+        
         ${ (p.adminName && currentUser && p.adminName.trim() === currentUser.trim()) ? `
             <button onclick="abrirModalInvitacionExpress(${p.id})" 
                     class="bg-green-50 hover:bg-green-100 border border-green-200 text-green-700 text-xs font-bold px-3 py-2 rounded-xl flex items-center gap-1 cursor-pointer shadow-3xs">
