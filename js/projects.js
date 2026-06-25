@@ -261,7 +261,6 @@ function verResumenProyectoInmediato(id) {
                 ➕ Invitar Familiar
             </button>`;
     }
-    
         return ``;
     })() }
 
