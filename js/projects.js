@@ -226,12 +226,14 @@ function verResumenProyectoInmediato(id) {
         const historial = p.historialDepositos || {};
         const depositos = historial[name] || [];
         const totalAhorrado = depositos.reduce((acc, d) => acc + (d.monto || 0), 0);
-         console.error('Admin', p.adminName);
+        const admin = p.adminname || p.adminName || "";
+        
+         console.error('Admin', admin);
          console.error('name', name);
         return `
         <div class="bg-gray-50/60 p-3.5 rounded-2xl border border-gray-100 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
             <div>
-                <p class="text-sm font-bold text-gray-800">${name === p.adminName ? '👑' : ''}</p>
+                <p class="text-sm font-bold text-gray-800">${name} ${name === admin ? '👑' : ''}</p>
                 <p class="text-xs text-purple-600 font-semibold mt-0.5">Ahorrado: ${formatearMXN(totalAhorrado)}</p>
             </div>
             <div class="flex items-center gap-2">
