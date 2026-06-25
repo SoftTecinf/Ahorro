@@ -425,9 +425,17 @@ let idProyectoModalActivo = null;
 let nombreIntegranteModalActivo = "";
 
 function abrirModalAbonos(nombre, proyectoId) {
-    const p = proyectos.find(x => x.id == proyectoId);
+    // Depuración: Verifica qué hay en la lista global
+    console.log("Proyectos disponibles:", proyectos);
+    console.log("Buscando ID:", proyectoId, "tipo:", typeof proyectoId);
+
+    // Convertimos ambos a String para asegurar que coincidan sin importar el tipo
+    const p = proyectos.find(x => String(x.id) === String(proyectoId));
+    
     if (!p) {
-        console.error("No se encontró el proyecto con ID:", proyectoId);
+        console.error("ERROR: No se encontró el proyecto con ID:", proyectoId);
+        // Sugerencia visual para el usuario
+        alert("Error: No se pudieron cargar los datos del plan. Intenta recargar la página.");
         return;
     }
 
