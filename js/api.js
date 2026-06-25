@@ -40,6 +40,9 @@ window.cargarDatosGlobales = async function () {
     localStorage.setItem('app_cache_familiares', JSON.stringify(window.familiares));
     localStorage.setItem('app_cache_proyectos', JSON.stringify(window.proyectos));
     localStorage.setItem('app_cache_cuentas', JSON.stringify(window.cuentas));
+
+    // AQUÍ ES LA CLAVE: Llama al renderizado solo cuando los datos ya existen
+    renderizarInicioProyectos();
 };
 
 // 🔥 ¡ESTA LÍNEA ES CLAVE! Ejecuta la función en segundo plano nada más abrir la página
@@ -52,4 +55,6 @@ window.obtenerListaFamiliares = function () {
     // Si la variable global falló o no ha cargado, intentamos leer del caché local
     const cache = JSON.parse(localStorage.getItem('app_cache_familiares')) || [];
     return cache;
+
+
 };
