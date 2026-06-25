@@ -465,18 +465,19 @@ function abrirModalAbonos(nombre, proyectoId) {
     }
 }
 
-function cerrarModalDeposito() {
-    console.log("¡Click detectado! Intentando cerrar...");
+function cerrarModalDeposito(event) {
+    if (event) event.stopPropagation(); // Detiene que el clic se propague
+    console.log("¡Click detectado!");
+    
     const modal = document.getElementById('modal-deposito-familiar');
     if (modal) {
         modal.classList.add('hidden');
-        console.log("Modal ocultado con éxito.");
-    } else {
-        console.error("Error: Modal no encontrado.");
+        modal.style.display = 'none'; // Forzamos el cierre visual
     }
     idProyectoModalActivo = null;
     nombreIntegranteModalActivo = "";
 }
+
 function calcularMontoPorAbonos() {
     const p = proyectos.find(x => x.id == idProyectoModalActivo);
     const tipoAbono = document.getElementById('deposito-cantidad-abonos').value;
