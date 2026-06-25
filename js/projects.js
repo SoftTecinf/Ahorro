@@ -426,7 +426,7 @@ let nombreIntegranteModalActivo = "";
 function abrirModalAbonos(nombre, proyectoId) {
     // 1. Definimos el ID buscado de forma segura y consistente
     const idBuscado = String(proyectoId).trim();
-
+    console.error(proyectoId);
     // 2. Buscamos el proyecto
     const p = proyectos.find(x => String(proyectoId).trim() === idBuscado);
 
