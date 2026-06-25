@@ -166,6 +166,7 @@ async function renderizarInicioProyectos() {
     // 1. Buscamos el contenedor donde quieres que aparezcan las tarjetas
     const contenedor = document.getElementById('inicio-lista-proyectos');
     if (!contenedor) return;
+    
     const proyectosParticipando = proyectos.filter(p => p.participantes && p.participantes.includes(currentUser));
 
     if (proyectosParticipando.length === 0) {
