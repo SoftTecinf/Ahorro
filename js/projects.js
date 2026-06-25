@@ -243,27 +243,26 @@ function verResumenProyectoInmediato(id) {
     `;
     }).join('');
 
-    ${ (() => {
-    // 1. Limpiamos los valores para comparar
-    const admin = p.adminName ? p.adminName.trim().toLowerCase() : "n/a";
-    const user = currentUser ? currentUser.trim().toLowerCase() : "n/a";
+    contenido.innerHTML = `${ (() => {
+    // 1. Verificamos que los datos básicos existan
+    if (!p) return "";
     
-    // 2. Verificamos la coincidencia
-    const esAdmin = (admin === user);
+    // 2. Imprimimos el objeto en consola para que tú veas qué tiene
+    console.log("Datos del proyecto:", p);
     
-    // 3. Log para que veas en consola qué está pasando
-    console.log("Validación Admin:", { admin, user, esAdmin });
+    // 3. Comparamos de forma súper relajada
+    const admin = p.adminName ? String(p.adminName).trim().toLowerCase() : "";
+    const user = currentUser ? String(currentUser).trim().toLowerCase() : "";
     
-    if (esAdmin) {
+    if (admin === user && admin !== "") {
         return `
             <button onclick="abrirModalInvitacionExpress(${p.id})" 
                     class="bg-green-50 hover:bg-green-100 border border-green-200 text-green-700 text-xs font-bold px-3 py-2 rounded-xl flex items-center gap-1 cursor-pointer shadow-3xs">
                 ➕ Invitar Familiar
             </button>`;
-    } else {
-        // Esto no se verá en pantalla, pero nos sirve para depurar
-        return ``;
     }
+    
+    return ``;
 })() }
 
     <div class="grid grid-cols-2 gap-4 mb-6">
