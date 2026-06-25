@@ -426,8 +426,7 @@ let nombreIntegranteModalActivo = "";
 
 function abrirModalAbonos(nombre, proyectoId) {
     // 1. Aseguramos que proyectoId sea un String limpio y comparamos con String(x.id)
-    const idBuscado = String(proyectoId).trim();
-    const p = proyectos.find(x => String(x.id).trim() === idBuscado);
+    const p = proyectos.find(x => String(x.id) === String(proyectoId));
     
     if (!p) {
         console.error("No se encontró el proyecto. ID buscado:", idBuscado);
