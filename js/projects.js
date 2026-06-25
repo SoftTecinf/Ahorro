@@ -221,9 +221,6 @@ function verResumenProyectoInmediato(id) {
     // Usamos el operador || [] para que, si participantes no existe, use un array vacío
     // y así evitamos que el .map falle.
     const listaParticipantes = p.participantes || [];
-    
-    //Asegúrate de obtener el ID del proyecto directamente del objeto p
-    const idProyectoActual = String(p.id).trim();
 
     let htmlParticipantes = listaParticipantes.map(name => {
         const historial = p.historialDepositos || {};
@@ -237,7 +234,7 @@ function verResumenProyectoInmediato(id) {
                 <p class="text-xs text-purple-600 font-semibold mt-0.5">Ahorrado: ${formatearMXN(totalAhorrado)}</p>
             </div>
             <div class="flex items-center gap-2">
-                <button onclick="abrirModalAbonos('${name}', '${idProyectoActual}')" 
+                <button onclick="abrirModalAbonos('${name}', '${p.id}')" 
                         class="text-xs font-bold bg-white border text-gray-700 px-3 py-1.5 rounded-xl shadow-3xs hover:bg-purple-50 cursor-pointer">
                     📊 Historial / Abonar
                 </button>
