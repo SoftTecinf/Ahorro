@@ -261,7 +261,6 @@ function verResumenProyectoInmediato(id) {
         </button>
     ` : '' }
     </div>
-
     <div class="grid grid-cols-2 gap-4 mb-6">
         <div class="bg-purple-50/40 p-3 rounded-xl border border-purple-50">
             <p class="text-[10px] font-bold uppercase text-gray-400">Meta Colectiva</p>
