@@ -111,7 +111,7 @@ window.renderizarGridProyectos = function () {
     tbody.innerHTML = window.proyectos.map(p => {
         // Aseguramos que el monto sea un número
         const montoNumerico = parseFloat(p.monto) || 0;
-        console.error(p.fecha, p.fechaInicio);
+        console.error('fechas',p.fecha, p.fechaInicio);
         return `
         <tr class="hover:bg-purple-50/30 transition-colors">
                     <td class="p-3 font-bold text-gray-900">${p.nombre}</td>
@@ -128,6 +128,7 @@ window.renderizarGridProyectos = function () {
 };
 
 function editarProyecto(id) {
+    console.error(id);
     const p = proyectos.find(x => x.id == id);
     if (!p) return;
 
