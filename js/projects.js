@@ -244,25 +244,23 @@ function verResumenProyectoInmediato(id) {
     }).join('');
 
     contenido.innerHTML = `${ (() => {
-    // 1. Verificamos que los datos básicos existan
-    if (!p) return "";
-    
-    // 2. Imprimimos el objeto en consola para que tú veas qué tiene
-    console.log("Datos del proyecto:", p);
-    
-    // 3. Comparamos de forma súper relajada
-    const admin = p.adminName ? String(p.adminName).trim().toLowerCase() : "";
+    // 1. Normalizamos: usamos 'adminname' (como aparece en tu consola)
+    // y lo convertimos a minúsculas. Hacemos lo mismo con currentUser.
+    const admin = p.adminname ? String(p.adminname).trim().toLowerCase() : "";
     const user = currentUser ? String(currentUser).trim().toLowerCase() : "";
     
-    if (admin === user && admin !== "") {
+    // 2. Comparación segura
+    if (admin && user && admin === user) {
         return `
             <button onclick="abrirModalInvitacionExpress(${p.id})" 
                     class="bg-green-50 hover:bg-green-100 border border-green-200 text-green-700 text-xs font-bold px-3 py-2 rounded-xl flex items-center gap-1 cursor-pointer shadow-3xs">
                 ➕ Invitar Familiar
             </button>`;
     }
-        return ``;
-    })()}
+    
+    // Si llegamos aquí, el botón no debería mostrarse.
+    return ``;
+})() }
 
     <div class="grid grid-cols-2 gap-4 mb-6">
         <div class="bg-purple-50/40 p-3 rounded-xl border border-purple-50">
@@ -285,7 +283,7 @@ function verResumenProyectoInmediato(id) {
     <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">👥 Progreso por Integrante</h4>
     <div class="space-y-2.5">${htmlParticipantes}</div>
     `;
-    
+
     // Opcional: Si está vacío, mostramos un mensaje para no dejar el hueco vacío
     if (listaParticipantes.length === 0) {
         htmlParticipantes = '<p class="text-xs text-gray-400 italic text-center py-2">No hay participantes aún.</p>';
