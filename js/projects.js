@@ -235,11 +235,10 @@ function verResumenProyectoInmediato(id) {
                 <p class="text-xs text-purple-600 font-semibold mt-0.5">Ahorrado: ${formatearMXN(totalAhorrado)}</p>
             </div>
             <div class="flex items-center gap-2">
-                <button type="button" 
-                        onclick="abrirModalAbonos(String('${name}').replace(/'/g, '\\\''), '${p.id}')" 
-                        class="text-xs font-bold bg-white border border-gray-200 text-gray-700 px-3 py-1.5 rounded-xl shadow-3xs hover:bg-purple-50 hover:border-purple-200 transition-all cursor-pointer">
-                    📊 Historial / Abonar
-                </button>
+                <button onclick="abrirModalAbonos('${name}', '${p.id}')" 
+                    class="text-xs font-bold bg-white border text-gray-700 px-3 py-1.5 rounded-xl shadow-3xs hover:bg-purple-50 cursor-pointer">
+                📊 Historial / Abonar
+            </button>
             </div>
         </div>
     `;
@@ -427,28 +426,41 @@ let nombreIntegranteModalActivo = "";
 
 function abrirModalAbonos(nombre, proyectoId) {
     const p = proyectos.find(x => x.id == proyectoId);
-    if (!p) return;
+    if (!p) {
+        console.error("No se encontró el proyecto con ID:", proyectoId);
+        return;
+    }
 
     idProyectoModalActivo = proyectoId;
     nombreIntegranteModalActivo = nombre;
 
-    document.getElementById('modal-titulo-nombre').textContent = `Historial de ${nombre}`;
-    document.getElementById('modal-subtitulo-proyecto').textContent = `Plan: ${p.nombre}`;
-    document.getElementById('modal-cuota-fija-texto').textContent = formatearMXN(p.cuota);
-    document.getElementById('deposito-fecha').value = new Date().toISOString().split('T')[0];
-    document.getElementById('deposito-cantidad-abonos').value = "1";
+    try {
+        document.getElementById('modal-titulo-nombre').textContent = `Historial de ${nombre}`;
+        document.getElementById('modal-subtitulo-proyecto').textContent = `Plan: ${p.nombre}`;
+        document.getElementById('modal-cuota-fija-texto').textContent = formatearMXN(p.cuota);
+        document.getElementById('deposito-fecha').value = new Date().toISOString().split('T')[0];
+        document.getElementById('deposito-cantidad-abonos').value = "1";
 
-    calcularMontoPorAbonos();
-    renderizarListaAbonosModal();
+        calcularMontoPorAbonos();
+        renderizarListaAbonosModal();
 
-    const formAbono = document.getElementById('form-nuevo-deposito');
-    if (nombre !== currentUser) {
-        formAbono.classList.add('hidden');
-    } else {
-        formAbono.classList.remove('hidden');
+        const formAbono = document.getElementById('form-nuevo-deposito');
+        if (nombre !== currentUser) {
+            formAbono.classList.add('hidden');
+        } else {
+            formAbono.classList.remove('hidden');
+        }
+
+        // --- AQUÍ ESTÁ EL PUNTO CRÍTICO ---
+        const modal = document.getElementById('modal-deposito-familiar');
+        if (modal) {
+            modal.classList.remove('hidden');
+        } else {
+            console.error("ERROR: No existe el elemento con ID 'modal-deposito-familiar' en tu HTML.");
+        }
+    } catch (error) {
+        console.error("Error al configurar el modal:", error);
     }
-
-    document.getElementById('modal-deposito-familiar').classList.remove('hidden');
 }
 
 function cerrarModalDeposito() {
