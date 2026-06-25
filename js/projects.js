@@ -173,11 +173,6 @@ async function renderizarInicioProyectos() {
     // 3. Si no hay proyectos, mostramos un mensaje amigable
     if (misProyectos.length === 0) {
         contenedor.innerHTML = '<p class="text-gray-400 p-4 text-center">Aún no tienes proyectos de ahorro activos.</p>';
-        return;
-    }
-
-    if (misProyectos.length === 0) {
-        contenedor.innerHTML = '<p class="text-xs text-gray-400 italic text-center py-4">No estás asignado a ningún proyecto activo actualmente.</p>';
         document.getElementById('inicio-resumen-proyecto').classList.add('hidden');
         return;
     }
