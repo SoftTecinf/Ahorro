@@ -128,6 +128,7 @@ window.renderizarGridProyectos = function () {
 };
 
 function editarProyecto(id) {
+    console.error(id);
     const p = proyectos.find(x => x.id == id);
     if (!p) return;
 
