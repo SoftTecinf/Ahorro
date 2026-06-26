@@ -64,9 +64,6 @@ window.guardarProyecto = async function (event) {
         historialDepositos: {}
     };
     
-     console.log("Actualizando proyecto existente:", idInput);
-
-
     try {
         await fetch('https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec', {
             method: 'POST',
