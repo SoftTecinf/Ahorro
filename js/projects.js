@@ -63,7 +63,7 @@ window.guardarProyecto = async function (event) {
         participantes: [usuarioActual],
         historialDepositos: {}
     };
-
+    
      console.log("Actualizando proyecto existente:", idInput);
 
 
@@ -147,9 +147,8 @@ function editarProyecto(id) {
     document.getElementById('datos-proyecto-id').value = p.id;
     document.getElementById('datos-nombre-proyecto').value = p.nombre || '';
     // Corregimos la propiedad: Nota que es 'fechainicio' (todo minúscula) basado en tu consola
-    
     document.getElementById('datos-fecha-inicio').value = (p.fechainicio || '').split('T')[0];
-    document.getElementById('datos-monto').value = p.montoparseFloat(inputMonto.value.replace(/[^0-9]/g, ''))  || 0;
+    document.getElementById('datos-monto').value = p.monto || 0;
     document.getElementById('datos-plazos').value = p.plazos || 0;
     document.getElementById('datos-frecuencia').value = p.frecuencia || '';
 
