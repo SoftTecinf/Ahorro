@@ -26,6 +26,7 @@ function unirseAProyecto(proyectoId) {
 // ==========================================
 
 window.guardarProyecto = async function (event) {
+    console.error(idInput);
     event.preventDefault();
 
     // 1. CAPTURA: Asegúrate de usar los IDs que tienes en tu HTML
