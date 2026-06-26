@@ -76,7 +76,6 @@ window.guardarProyecto = async function (event) {
             body: JSON.stringify(proyectoData)
         });
 
-        mostrarModal(idOculto ? "¡Proyecto actualizado!" : "¡Proyecto guardado con éxito!");
 
         // 3. LIMPIEZA: Limpiamos también el ID oculto
         document.getElementById('datos-proyecto-id').value = '';
@@ -88,6 +87,8 @@ window.guardarProyecto = async function (event) {
 
         await cargarDatosGlobales();
         window.renderizarGridProyectos();
+        
+        mostrarModal(idOculto ? "¡Proyecto actualizado!" : "¡Proyecto guardado con éxito!");
 
     } catch (error) {
         console.error("Error al guardar:", error);
