@@ -121,7 +121,7 @@ window.renderizarGridProyectos = function () {
                     <td class="p-3 text-center font-medium">${p.plazos}</td>
                     <td class="p-3 text-center space-x-2">
                         <button onclick="editarProyecto('${p.id}')" class="text-xs bg-yellow-100 text-yellow-800 font-bold px-2.5 py-1 rounded-lg hover:bg-yellow-200 cursor-pointer">Editar</button>
-                        <button onclick="eliminarProyectoCompleto(${p.id})" class="text-xs bg-red-50 text-red-600 px-2.5 py-1 rounded-lg hover:bg-red-100 cursor-pointer">Eliminar</button>
+                        <button onclick="eliminarProyectoCompleto('${p.id}')" class="text-xs bg-red-50 text-red-600 px-2.5 py-1 rounded-lg hover:bg-red-100 cursor-pointer">Eliminar</button>
                     </td>
                 </tr>`;
     }).join('');
@@ -149,7 +149,10 @@ function editarProyecto(id) {
     document.getElementById('datos-plazos').value = p.plazos || 0;
     document.getElementById('datos-frecuencia').value = p.frecuencia || '';
     
-    // ... resto de tu lógica de UI ...
+    document.getElementById('titulo-form-proyecto').innerHTML = `<span class="text-yellow-500">✏️</span> Editar Proyecto: ${p.nombre}`;
+    document.getElementById('btn-guardar-proyecto').textContent = "🔄 Actualizar Proyecto";
+    document.getElementById('btn-cancelar-proyecto').classList.remove('hidden');
+    document.getElementById('titulo-form-proyecto').scrollIntoView({ behavior: 'smooth' });
 }
 
 function cancelarEdicionProyecto() {
