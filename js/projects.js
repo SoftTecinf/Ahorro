@@ -49,8 +49,12 @@ window.guardarProyecto = async function (event) {
         alert("⚠️ Faltan datos o no has iniciado sesión correctamente.");
         return;
     }
-
-    const nuevoProyecto = {
+    if (idInput) {
+        console.log("Actualizando proyecto existente:", idInput);
+    } else {
+        console.log("Creando nuevo proyecto");
+    }
+    /*const nuevoProyecto = {
         tipo: "proyecto",
         id: Date.now(),
         nombre: nombre,
@@ -62,7 +66,7 @@ window.guardarProyecto = async function (event) {
         adminName: usuarioActual,
         participantes: [usuarioActual],
         historialDepositos: {}
-    };
+    };*/
 
     try {
         await fetch('https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec', {
@@ -130,7 +134,7 @@ window.renderizarGridProyectos = function () {
 function editarProyecto(id) {
     // Convertimos a string para comparar, ya que a veces vienen como números
     const idBuscado = String(id).trim();
-    
+
     // Buscamos en tu lista global 'proyectos'
     const p = window.proyectos.find(x => String(x.id).trim() === idBuscado);
     if (!p) {
@@ -148,7 +152,7 @@ function editarProyecto(id) {
     document.getElementById('datos-monto').value = p.monto || 0;
     document.getElementById('datos-plazos').value = p.plazos || 0;
     document.getElementById('datos-frecuencia').value = p.frecuencia || '';
-    
+
     document.getElementById('titulo-form-proyecto').innerHTML = `<span class="text-yellow-500">✏️</span> Editar Proyecto: ${p.nombre}`;
     document.getElementById('btn-guardar-proyecto').textContent = "🔄 Actualizar Proyecto";
     document.getElementById('btn-cancelar-proyecto').classList.remove('hidden');
@@ -239,7 +243,7 @@ function verResumenProyectoInmediato(id) {
         const depositos = historial[name] || [];
         const totalAhorrado = depositos.reduce((acc, d) => acc + (d.monto || 0), 0);
         const admin = p.adminname || p.adminName || "";
-        
+
         return `
         <div class="bg-gray-50/60 p-3.5 rounded-2xl border border-gray-100 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
             <div>
@@ -439,7 +443,7 @@ let nombreIntegranteModalActivo = "";
 function abrirModalAbonos(nombre, proyectoId) {
     // 1. Definimos el ID buscado de forma segura y consistente
     const idBuscado = String(proyectoId).trim();
-    
+
     // 2. Buscamos el proyecto
     const p = proyectos.find(x => String(proyectoId).trim() === idBuscado);
 
@@ -481,7 +485,7 @@ function abrirModalAbonos(nombre, proyectoId) {
 function cerrarModalDeposito(event) {
     if (event) event.stopPropagation(); // Detiene que el clic se propague
     console.log("¡Click detectado!");
-    
+
     const modal = document.getElementById('modal-deposito-familiar');
     if (modal) {
         modal.classList.add('hidden');
