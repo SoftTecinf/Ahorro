@@ -106,13 +106,6 @@ window.renderizarGridProyectos = function () {
         return;
     }
 
-    // Definimos el formateador de moneda una sola vez fuera del map
-    const formateador = new Intl.NumberFormat('es-MX', {
-        style: 'currency',
-        currency: 'MXN',
-        minimumFractionDigits: 0
-    });
-
     tbody.innerHTML = window.proyectos.map(p => {
         // Aseguramos que el monto sea un número
         const montoNumerico = parseFloat(p.monto) || 0;
@@ -150,7 +143,7 @@ function editarProyecto(id) {
     document.getElementById('datos-nombre-proyecto').value = p.nombre || '';
     // Corregimos la propiedad: Nota que es 'fechainicio' (todo minúscula) basado en tu consola
     document.getElementById('datos-fecha-inicio').value = (p.fechainicio || '').split('T')[0];
-    document.getElementById('datos-monto').value = parseFloat(p.monto) || 0;
+    document.getElementById('datos-monto').value = formatearMXN(p.monto) || 0;
     document.getElementById('datos-plazos').value = p.plazos || 0;
     document.getElementById('datos-frecuencia').value = p.frecuencia || '';
 
