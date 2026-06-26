@@ -26,7 +26,7 @@ function unirseAProyecto(proyectoId) {
 // ==========================================
 
 window.guardarProyecto = async function (event) {
-    console.error(event, idInput);
+    console.error(idInput);
     event.preventDefault();
 
     // 1. CAPTURA: Asegúrate de usar los IDs que tienes en tu HTML
@@ -146,7 +146,7 @@ function editarProyecto(id) {
     document.getElementById('datos-nombre-proyecto').value = p.nombre || '';
     // Corregimos la propiedad: Nota que es 'fechainicio' (todo minúscula) basado en tu consola
     document.getElementById('datos-fecha-inicio').value = (p.fechainicio || '').split('T')[0];
-    document.getElementById('datos-monto').value = p.monto || 0;
+    document.getElementById('datos-monto').value = parseFloat(inputMonto.value.replace(/[^0-9]/g, '')) || 0;
     document.getElementById('datos-plazos').value = p.plazos || 0;
     document.getElementById('datos-frecuencia').value = p.frecuencia || '';
 
