@@ -27,7 +27,6 @@ function unirseAProyecto(proyectoId) {
 
 window.guardarProyecto = async function (event) {
     event.preventDefault();
-    console.error(idInput);
 
     // 1. CAPTURA: Asegúrate de usar los IDs que tienes en tu HTML
     const inputNombre = document.getElementById('datos-nombre-proyecto');
@@ -51,6 +50,7 @@ window.guardarProyecto = async function (event) {
         return;
     }
    
+    console.error(event);
     const nuevoProyecto = {
         tipo: "proyecto",
         id: Date.now(),
