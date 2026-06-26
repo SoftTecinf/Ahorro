@@ -76,6 +76,8 @@ window.guardarProyecto = async function (event) {
             body: JSON.stringify(proyectoData)
         });
 
+        mostrarModal(idOculto ? "¡Proyecto actualizado!" : "¡Proyecto guardado con éxito!");
+
         // 3. LIMPIEZA: Limpiamos también el ID oculto
         document.getElementById('datos-proyecto-id').value = '';
         inputNombre.value = '';
@@ -84,10 +86,12 @@ window.guardarProyecto = async function (event) {
         inputPlazos.value = '';
         inputFrecuencia.value = 'Quincenal';
 
-        await cargarDatosGlobales();
-        window.renderizarGridProyectos();
-        
-        mostrarModal(idOculto ? "¡Proyecto actualizado!" : "¡Proyecto guardado con éxito!");
+        // 4. PROCESO PESADO EN SEGUNDO PLANO
+        // No usamos 'await' aquí para que el código siga su curso y no bloquee el mensaje
+        cargarDatosGlobales().then(() => {
+            window.renderizarGridProyectos();
+            console.log("Tabla actualizada con nuevos datos.");
+        });
 
     } catch (error) {
         console.error("Error al guardar:", error);
