@@ -76,7 +76,6 @@ window.guardarProyecto = async function (event) {
             body: JSON.stringify(proyectoData)
         });
 
-
         // 3. LIMPIEZA: Limpiamos también el ID oculto
         document.getElementById('datos-proyecto-id').value = '';
         inputNombre.value = '';
