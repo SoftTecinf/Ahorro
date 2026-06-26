@@ -48,11 +48,15 @@ window.guardarProyecto = async function (event) {
         alert("⚠️ Faltan datos o no has iniciado sesión correctamente.");
         return;
     }
-    
-    // 2. LÓGICA DE ID: Si idOculto existe, usamos ese. Si no, generamos uno nuevo.
+
+    // ... dentro de tu función guardarProyecto ...
+
+    // Recuperamos el proyecto original si existe para no perder datos
+    const proyectoExistente = window.proyectos.find(x => String(x.id) === String(idOculto));
+
     const proyectoData = {
         tipo: "proyecto",
-        id: idOculto ? idOculto : Date.now(), // <--- MANTIENE EL ID SI ES EDICIÓN
+        id: idOculto ? idOculto : Date.now(),
         nombre: nombre,
         fechaInicio: fechaInicio,
         frecuencia: frecuencia,
@@ -60,10 +64,10 @@ window.guardarProyecto = async function (event) {
         plazos: parseInt(plazos),
         cuota: montoLimpio / parseInt(plazos),
         adminName: usuarioActual,
-        participantes: [usuarioActual],
-        historialDepositos: {} // ¡CUIDADO! Si es edición, esto podría borrar el historial.
+        participantes: proyectoExistente ? proyectoExistente.participantes : [usuarioActual],
+        historialDepositos: proyectoExistente ? proyectoExistente.historialDepositos : {}
     };
-    
+
     try {
         await fetch('https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec', {
             method: 'POST',
@@ -75,7 +79,7 @@ window.guardarProyecto = async function (event) {
         mostrarModal(idOculto ? "¡Proyecto actualizado!" : "¡Proyecto guardado con éxito!");
 
         // 3. LIMPIEZA: Limpiamos también el ID oculto
-        document.getElementById('datos-proyecto-id').value = ''; 
+        document.getElementById('datos-proyecto-id').value = '';
         inputNombre.value = '';
         inputFecha.value = '';
         inputMonto.value = '';
