@@ -128,13 +128,26 @@ window.renderizarGridProyectos = function () {
 };
 
 function editarProyecto(id) {
-    console.error(id);
-    const p = proyectos.find(x => x.id == id);
-    if (!p) return;
+    // 1. Convertimos el ID recibido a String para comparar sin errores de formato
+    const idBuscado = String(id).trim();
+    
+    // 2. Buscamos el proyecto comparando siempre como Strings
+    const p = proyectos.find(x => String(x.id).trim() === idBuscado);
+    
+    if (!p) {
+        console.error("No se encontró el proyecto. ID recibido:", id);
+        console.log("Lista disponible:", proyectos);
+        alert("Error: No se pudo cargar la información para editar.");
+        return;
+    }
 
+    // 3. Rellenamos los datos (asegurando el uso de fechainicio con minúsculas)
     document.getElementById('datos-proyecto-id').value = p.id;
     document.getElementById('datos-nombre-proyecto').value = p.nombre;
-    document.getElementById('datos-fecha-inicio').value = p.fechaInicio || new Date().toISOString().split('T')[0];
+    
+    // Ojo aquí: usamos fechainicio (minúsculas) como vimos en el objeto
+    document.getElementById('datos-fecha-inicio').value = (p.fechainicio || "").split('T')[0] || new Date().toISOString().split('T')[0];
+    
     document.getElementById('datos-monto').value = p.monto;
     document.getElementById('datos-plazos').value = p.plazos;
     document.getElementById('datos-frecuencia').value = p.frecuencia;
