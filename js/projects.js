@@ -28,7 +28,8 @@ function unirseAProyecto(proyectoId) {
 window.guardarProyecto = async function (event) {
     event.preventDefault();
 
-    // 1. CAPTURA: Asegúrate de usar los IDs que tienes en tu HTML
+    // 1. CAPTURA: Asegúrate de capturar el ID oculto
+    const idOculto = document.getElementById('datos-proyecto-id').value; // <--- NUEVO
     const inputNombre = document.getElementById('datos-nombre-proyecto');
     const inputFecha = document.getElementById('datos-fecha-inicio');
     const inputMonto = document.getElementById('datos-monto');
@@ -41,19 +42,17 @@ window.guardarProyecto = async function (event) {
     const plazos = inputPlazos.value;
     const frecuencia = inputFrecuencia.value;
 
-    // 2. CORRECCIÓN DEL USUARIO: Verifica qué llave usa tu app para el login
-    // Revisa en Application -> Local Storage qué llave guarda el nombre del usuario
     const usuarioActual = window.currentUser || localStorage.getItem('app_currentUser');
 
     if (!nombre || !fechaInicio || !montoLimpio || !plazos || !usuarioActual) {
         alert("⚠️ Faltan datos o no has iniciado sesión correctamente.");
         return;
     }
-   
-    console.error(event);
-    const nuevoProyecto = {
+    
+    // 2. LÓGICA DE ID: Si idOculto existe, usamos ese. Si no, generamos uno nuevo.
+    const proyectoData = {
         tipo: "proyecto",
-        id: Date.now(),
+        id: idOculto ? idOculto : Date.now(), // <--- MANTIENE EL ID SI ES EDICIÓN
         nombre: nombre,
         fechaInicio: fechaInicio,
         frecuencia: frecuencia,
@@ -62,7 +61,7 @@ window.guardarProyecto = async function (event) {
         cuota: montoLimpio / parseInt(plazos),
         adminName: usuarioActual,
         participantes: [usuarioActual],
-        historialDepositos: {}
+        historialDepositos: {} // ¡CUIDADO! Si es edición, esto podría borrar el historial.
     };
     
     try {
@@ -70,17 +69,18 @@ window.guardarProyecto = async function (event) {
             method: 'POST',
             mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(nuevoProyecto)
+            body: JSON.stringify(proyectoData)
         });
 
-        mostrarModal("¡Proyecto guardado con éxito!");
+        mostrarModal(idOculto ? "¡Proyecto actualizado!" : "¡Proyecto guardado con éxito!");
 
-        // 3. LIMPIEZA CORRECTA: Usando los mismos IDs de arriba
+        // 3. LIMPIEZA: Limpiamos también el ID oculto
+        document.getElementById('datos-proyecto-id').value = ''; 
         inputNombre.value = '';
         inputFecha.value = '';
         inputMonto.value = '';
         inputPlazos.value = '';
-        inputFrecuencia.value = 'Quincenal'; // o el valor por defecto
+        inputFrecuencia.value = 'Quincenal';
 
         await cargarDatosGlobales();
         window.renderizarGridProyectos();
@@ -146,7 +146,7 @@ function editarProyecto(id) {
     document.getElementById('datos-nombre-proyecto').value = p.nombre || '';
     // Corregimos la propiedad: Nota que es 'fechainicio' (todo minúscula) basado en tu consola
     document.getElementById('datos-fecha-inicio').value = (p.fechainicio || '').split('T')[0];
-    document.getElementById('datos-monto').value = p.monto || 0;
+    document.getElementById('datos-monto').value = parseFloat(p.monto) || 0;
     document.getElementById('datos-plazos').value = p.plazos || 0;
     document.getElementById('datos-frecuencia').value = p.frecuencia || '';
 
