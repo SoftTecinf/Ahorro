@@ -133,7 +133,8 @@ function editarProyecto(id) {
     
     // 2. Buscamos el proyecto comparando siempre como Strings
     const p = proyectos.find(x => x.id === idBuscado);
-     console.error(p, idBuscado, id);
+     console.error(p.i, idBuscado, id);
+
     if (!p) {
         console.error("No se encontró el proyecto. ID recibido:", id);
         console.log("Lista disponible:", proyectos);
