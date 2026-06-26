@@ -133,7 +133,6 @@ function editarProyecto(id) {
     
     // Buscamos en tu lista global 'proyectos'
     const p = window.proyectos.find(x => String(x.id).trim() === idBuscado);
-
     if (!p) {
         console.error("No se encontró el proyecto. ID buscado:", id);
         console.log("Proyectos disponibles en memoria:", window.proyectos);
