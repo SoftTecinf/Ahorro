@@ -75,6 +75,7 @@ window.guardarProyecto = async function (event) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(proyectoData)
         });
+        
         mostrarModal(idOculto ? "¡Proyecto actualizado!" : "¡Proyecto guardado con éxito!");
 
         // 3. LIMPIEZA: Limpiamos también el ID oculto
