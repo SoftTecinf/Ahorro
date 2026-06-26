@@ -49,12 +49,8 @@ window.guardarProyecto = async function (event) {
         alert("⚠️ Faltan datos o no has iniciado sesión correctamente.");
         return;
     }
-    if (idInput) {
-        console.log("Actualizando proyecto existente:", idInput);
-    } else {
-        console.log("Creando nuevo proyecto");
-    }
-    /*const nuevoProyecto = {
+   
+    const nuevoProyecto = {
         tipo: "proyecto",
         id: Date.now(),
         nombre: nombre,
@@ -66,7 +62,13 @@ window.guardarProyecto = async function (event) {
         adminName: usuarioActual,
         participantes: [usuarioActual],
         historialDepositos: {}
-    };*/
+    };
+
+    if (idInput) {
+        console.log("Actualizando proyecto existente:", idInput);
+    } else {
+        console.log("Creando nuevo proyecto");
+    }
 
     try {
         await fetch('https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec', {
