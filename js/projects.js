@@ -38,32 +38,29 @@ window.guardarProyecto = async function (event) {
 
     const nombre = inputNombre.value.trim();
     const fechaInicio = inputFecha.value;
-    const valorNumerico = parseFloat(inputMonto.value) || 0;
+    const montoLimpio = parseFloat(inputMonto.value) || 0;
     const plazos = inputPlazos.value;
     const frecuencia = inputFrecuencia.value;
 
     const usuarioActual = window.currentUser || localStorage.getItem('app_currentUser');
 
-    if (!nombre || !fechaInicio || valorNumerico <= 0 || !plazos || !usuarioActual) {
+    if (!nombre || !fechaInicio || montoLimpio <= 0 || !plazos || !usuarioActual) {
     alert("⚠️ Faltan datos o el monto es inválido.");
     return;
 }
     // Recuperamos el proyecto original si existe para no perder datos
     const proyectoExistente = window.proyectos.find(x => String(x.id) === String(idOculto));
-    document.getElementById('display-ahorro').innerText = formatearMXN(valorNumerico);
-    // AGREGA ESTO AQUÍ, DENTRO DE LA FUNCIÓN:
-console.log("Valor numérico capturado:", valorNumerico);
-console.log("Formato que debería mostrarse:", formatearMXN(valorNumerico));
-
+    document.getElementById('display-ahorro').innerText = formatearMXN(montoLimpio);
+   
     const proyectoData = {
         tipo: "proyecto",
         id: idOculto ? idOculto : Date.now(),
         nombre: nombre,
         fechaInicio: fechaInicio,
         frecuencia: frecuencia,
-        monto: valorNumerico,
+        monto: formatearMXN(montoLimpio),
         plazos: parseInt(plazos),
-        cuota: montoLimpio / parseInt(plazos),
+        cuota: formatearMXN(montoLimpio) / parseInt(plazos),
         adminName: usuarioActual,
         participantes: proyectoExistente ? proyectoExistente.participantes : [usuarioActual],
         historialDepositos: proyectoExistente ? proyectoExistente.historialDepositos : {}
