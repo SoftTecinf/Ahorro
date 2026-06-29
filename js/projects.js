@@ -24,6 +24,27 @@ function unirseAProyecto(proyectoId) {
 // ==========================================
 // PROYECTOS Y LOGICA DE RENDIMIENTO (DOM)
 // ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    const inputMonto = document.getElementById('datos-monto');
+    
+    inputMonto.addEventListener('input', (e) => {
+        // 1. Quitamos todo lo que no sea número
+        let value = e.target.value.replace(/[^0-9]/g, '');
+        
+        // 2. Si hay valor, lo formateamos
+        if (value) {
+            // Formateamos como moneda MXN sin el símbolo al inicio si prefieres, 
+            // o con el símbolo si lo deseas. Aquí lo ponemos con formato:
+            const numero = parseInt(value, 10);
+            e.target.value = new Intl.NumberFormat('es-MX', {
+                style: 'currency',
+                currency: 'MXN'
+            }).format(numero);
+        } else {
+            e.target.value = '';
+        }
+    });
+});
 
 window.guardarProyecto = async function (event) {
     event.preventDefault();
@@ -40,9 +61,9 @@ window.guardarProyecto = async function (event) {
     const fechaInicio = inputFecha.value;
 
     // LIMPIEZA CRÍTICA: quitamos las comas antes de convertir a número
-    const montoRaw = inputMonto.value.replace(/,/g, ''); 
+    const montoRaw = inputMonto.value.replace(/[^0-9]/g, '');
     const montoLimpio = parseFloat(montoRaw) || 0;
-    
+
     const plazos = inputPlazos.value;
     const frecuencia = inputFrecuencia.value;
 
@@ -98,22 +119,6 @@ window.guardarProyecto = async function (event) {
         console.error("Error al guardar:", error);
     }
 };
-document.addEventListener('DOMContentLoaded', () => {
-    const inputMonto = document.getElementById('datos-monto');
-    if (inputMonto) {
-        inputMonto.addEventListener('input', (e) => {
-            // Limpia todo menos números
-            let valor = e.target.value.replace(/[^0-9]/g, '');
-            if (!valor) {
-                e.target.value = '';
-                return;
-            }
-            // Formatea visualmente
-            e.target.value = new Intl.NumberFormat('es-MX').format(parseInt(valor, 10));
-        });
-    }
-});
-
 
 window.renderizarGridProyectos = function () {
     const tbody = document.getElementById('datos-tabla-proyectos-body');
