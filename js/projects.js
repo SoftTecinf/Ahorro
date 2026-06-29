@@ -25,7 +25,7 @@ function unirseAProyecto(proyectoId) {
 // PROYECTOS Y LOGICA DE RENDIMIENTO (DOM)
 // ==========================================
 // Usamos un observer o un listener más robusto
-document.addEventListener('DOMContentLoaded', () => {
+const inicializarFormateoMonto = () => {
     const inputMonto = document.getElementById('datos-monto');
     
     if (inputMonto) {
@@ -60,7 +60,10 @@ document.addEventListener('DOMContentLoaded', () => {
             e.target.setSelectionRange(cursorPosition + 1, cursorPosition + 1);
         });
     }
-});
+};
+
+// Iniciar la búsqueda del elemento
+inicializarFormateoMonto();
 
 window.guardarProyecto = async function (event) {
     event.preventDefault();
