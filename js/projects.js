@@ -80,7 +80,7 @@ window.guardarProyecto = async function (event) {
 
     // LIMPIEZA CRÍTICA: quitamos las comas antes de convertir a número
     const montoRaw = inputMonto.value.replace(/[^0-9]/g, '');
-    const montoLimpio = parseFloat(montoRaw) || 0;
+    const montoLimpio = parseInt(montoRaw, 10); // Ahora sí obtendrás 12 || 0;
 
     const plazos = inputPlazos.value || 1;
     const frecuencia = inputFrecuencia.value;
