@@ -29,25 +29,37 @@ const inicializarFormateoMonto = () => {
     const inputMonto = document.getElementById('datos-monto');
     
     if (!inputMonto) {
-        // Si el elemento no existe, esperamos 500ms y reintentamos
         setTimeout(inicializarFormateoMonto, 500);
         return;
     }
 
-    // Una vez que el elemento existe, ponemos el evento
     inputMonto.addEventListener('input', (e) => {
-        let value = e.target.value.replace(/[^0-9]/g, '');
-        if (value) {
-            const numero = parseInt(value, 10);
-            e.target.value = new Intl.NumberFormat('es-MX', {
-                style: 'currency',
-                currency: 'MXN'
-            }).format(numero);
-        } else {
+        // 1. Obtenemos el valor actual y quitamos todo lo que no sea número
+        let valorLimpio = e.target.value.replace(/[^0-9]/g, '');
+        
+        // 2. Si está vacío, limpiamos y salimos
+        if (!valorLimpio) {
             e.target.value = '';
+            return;
+        }
+
+        // 3. Convertimos a número usando base 10
+        const numero = parseInt(valorLimpio, 10);
+        
+        // 4. Formateamos
+        const valorFormateado = new Intl.NumberFormat('es-MX', {
+            style: 'currency',
+            currency: 'MXN'
+        }).format(numero);
+
+        // 5. Solo actualizamos si el valor es diferente para evitar bucles
+        if (e.target.value !== valorFormateado) {
+            e.target.value = valorFormateado;
         }
     });
 };
+
+inicializarFormateoMonto();
 
 // Iniciar la búsqueda del elemento
 inicializarFormateoMonto();
