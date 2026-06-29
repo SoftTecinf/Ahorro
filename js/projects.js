@@ -25,44 +25,43 @@ function unirseAProyecto(proyectoId) {
 // PROYECTOS Y LOGICA DE RENDIMIENTO (DOM)
 // ==========================================
 // Usamos un observer o un listener más robusto
-const inicializarFormateoMonto = () => {
+document.addEventListener('DOMContentLoaded', () => {
     const inputMonto = document.getElementById('datos-monto');
+    
+    if (inputMonto) {
+        inputMonto.addEventListener('input', (e) => {
+            // Guardamos la posición del cursor para no perderla
+            let cursorPosition = e.target.selectionStart;
+            
+            // 1. Limpiamos: quitamos todo excepto números
+            let valorLimpio = e.target.value.replace(/[^0-9]/g, '');
+            
+            // 2. Si no hay valor, lo vaciamos
+            if (!valorLimpio) {
+                e.target.value = '';
+                return;
+            }
 
-    if (!inputMonto) {
-        // Si el elemento no existe, esperamos 500ms y reintentamos
-        setTimeout(inicializarFormateoMonto, 500);
-        return;
+            // 3. Convertimos a número
+            let numero = parseInt(valorLimpio, 10);
+            
+            // 4. Formateamos
+            let valorFormateado = new Intl.NumberFormat('es-MX', {
+                style: 'currency',
+                currency: 'MXN',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0 // O usa 2 si quieres centavos
+            }).format(numero);
+
+            // 5. Asignamos el valor formateado
+            e.target.value = valorFormateado;
+            
+            // Ajustamos el cursor para que no salte al final
+            e.target.setSelectionRange(cursorPosition + 1, cursorPosition + 1);
+        });
     }
+});
 
-    // Una vez que el elemento existe, ponemos el evento
-    inputMonto.addEventListener('input', (e) => {
-        let cursorPosition = e.target.selectionStart;
-        let valorLimpio = e.target.value.replace(/[^0-9]/g, '');
-        if (!valorLimpio) {
-            e.target.value = '';
-            return;
-        }
-        // 3. Convertimos a número
-        let numero = parseInt(valorLimpio, 10);
-
-        // 4. Formateamos
-        let valorFormateado = new Intl.NumberFormat('es-MX', {
-            style: 'currency',
-            currency: 'MXN',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0 // O usa 2 si quieres centavos
-        }).format(numero);
-
-        // 5. Asignamos el valor formateado
-        e.target.value = valorFormateado;
-
-        // Ajustamos el cursor para que no salte al final
-        e.target.setSelectionRange(cursorPosition + 1, cursorPosition + 1);
-    });
-};
-
-// Iniciar la búsqueda del elemento
-inicializarFormateoMonto();
 
 window.guardarProyecto = async function (event) {
     event.preventDefault();
