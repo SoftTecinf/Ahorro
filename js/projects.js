@@ -26,14 +26,12 @@ function unirseAProyecto(proyectoId) {
 // ==========================================
 // Usamos un observer o un listener más robusto
 document.addEventListener('DOMContentLoaded', () => {
-    // Buscamos el elemento solo cuando el DOM esté listo
     const inputMonto = document.getElementById('datos-monto');
+    console.log("¿Input encontrado?:", inputMonto); // Si esto dice "null" en la consola, el ID en tu HTML es diferente.
 
-    // Verificamos que realmente existe para evitar errores
     if (inputMonto) {
-        
-        // Evento: al salir (blur) se formatea
         inputMonto.addEventListener('blur', (e) => {
+            console.log("¡Evento blur disparado!"); // Si esto no sale en la consola, el evento no se conecta.
             let valor = e.target.value.replace(/[^0-9]/g, '');
             if (valor) {
                 e.target.value = new Intl.NumberFormat('es-MX', {
@@ -41,11 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     currency: 'MXN'
                 }).format(valor);
             }
-        });
-
-        // Evento: al entrar (focus) se limpia
-        inputMonto.addEventListener('focus', (e) => {
-            e.target.value = e.target.value.replace(/[^0-9]/g, '');
         });
     }
 });
@@ -67,7 +60,11 @@ window.guardarProyecto = async function (event) {
 
     // LIMPIEZA CRÍTICA: quitamos las comas antes de convertir a número
     const montoRaw = inputMonto.value.replace(/[^0-9]/g, '');
-    const montoLimpio = parseFloat(montoRaw) || 0;
+    const montoLimpio = parseFloat(montoRaw);
+    if (isNaN(montoLimpio) || montoLimpio <= 0) {
+    alert("⚠️ El monto no es un número válido. Valor recibido: " + inputMonto.value);
+    return;
+}
 
     const plazos = inputPlazos.value || 1;
     const frecuencia = inputFrecuencia.value;
@@ -84,7 +81,7 @@ window.guardarProyecto = async function (event) {
     console.log("DEBUG: montoRaw es:", montoRaw);
     console.log("DEBUG: montoLimpio es:", montoLimpio);
     console.log("DEBUG: tipo de montoLimpio es:", typeof montoLimpio);
-    
+
     const proyectoData = {
         tipo: "proyecto",
         id: idOculto ? idOculto : Date.now(),
