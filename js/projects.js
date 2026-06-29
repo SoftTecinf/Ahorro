@@ -37,9 +37,8 @@ const inicializarFormateoMonto = () => {
     // Una vez que el elemento existe, ponemos el evento
     inputMonto.addEventListener('input', (e) => {
         let value = e.target.value.replace(/[^0-9]/g, '');
-        
         if (value) {
-            const numero = parseInt(value, 1);
+            const numero = parseInt(value, 10);
             e.target.value = new Intl.NumberFormat('es-MX', {
                 style: 'currency',
                 currency: 'MXN'
