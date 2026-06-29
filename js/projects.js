@@ -28,36 +28,22 @@ function unirseAProyecto(proyectoId) {
 window.guardarProyecto = async function (event) {
     event.preventDefault();
 
-    // 1. CAPTURA: Asegúrate de capturar el ID oculto
-    const idOculto = document.getElementById('datos-proyecto-id').value; // <--- NUEVO
+    // 1. CAPTURA
+    const idOculto = document.getElementById('datos-proyecto-id').value;
     const inputNombre = document.getElementById('datos-nombre-proyecto');
     const inputFecha = document.getElementById('datos-fecha-inicio');
     const inputMonto = document.getElementById('datos-monto');
-    inputMonto.addEventListener('input', (e) => {
-        // 1. Obtenemos el valor actual y eliminamos todo lo que no sea número
-        let valor = e.target.value.replace(/[^0-9]/g, '');
-
-        // 2. Si el valor está vacío, salimos
-        if (!valor) {
-            e.target.value = '';
-            return;
-        }
-
-        // 3. Convertimos a número y aplicamos formato
-        const numero = parseInt(valor, 10);
-        e.target.value = new Intl.NumberFormat('es-MX').format(numero);
-    });
-
     const inputPlazos = document.getElementById('datos-plazos');
     const inputFrecuencia = document.getElementById('datos-frecuencia');
 
     const nombre = inputNombre.value.trim();
     const fechaInicio = inputFecha.value;
-
-    const montoRaw = document.getElementById('datos-monto').value.replace(/,/g, '');
-    const montoLimpio = parseFloat(montoRaw) || 0;
     const plazos = inputPlazos.value;
     const frecuencia = inputFrecuencia.value;
+    
+    // Limpieza: quitamos las comas del formato para obtener el número real
+    const montoRaw = inputMonto.value.replace(/,/g, '');
+    const montoLimpio = parseFloat(montoRaw) || 0;
 
     const usuarioActual = window.currentUser || localStorage.getItem('app_currentUser');
 
@@ -65,7 +51,7 @@ window.guardarProyecto = async function (event) {
         alert("⚠️ Faltan datos o el monto es inválido.");
         return;
     }
-    // Recuperamos el proyecto original si existe para no perder datos
+
     const proyectoExistente = window.proyectos.find(x => String(x.id) === String(idOculto));
 
     const proyectoData = {
@@ -74,7 +60,7 @@ window.guardarProyecto = async function (event) {
         nombre: nombre,
         fechaInicio: fechaInicio,
         frecuencia: frecuencia,
-        monto: montoLimpio,
+        monto: montoLimpio, // Guardamos número puro
         plazos: parseInt(plazos),
         cuota: montoLimpio / parseInt(plazos),
         adminName: usuarioActual,
@@ -92,7 +78,7 @@ window.guardarProyecto = async function (event) {
 
         mostrarModal(idOculto ? "¡Proyecto actualizado!" : "¡Proyecto guardado con éxito!");
 
-        // 3. LIMPIEZA: Limpiamos también el ID oculto
+        // 3. LIMPIEZA
         document.getElementById('datos-proyecto-id').value = '';
         inputNombre.value = '';
         inputFecha.value = '';
@@ -100,11 +86,8 @@ window.guardarProyecto = async function (event) {
         inputPlazos.value = '';
         inputFrecuencia.value = 'Quincenal';
 
-        // 4. PROCESO PESADO EN SEGUNDO PLANO
-        // No usamos 'await' aquí para que el código siga su curso y no bloquee el mensaje
         cargarDatosGlobales().then(() => {
             window.renderizarGridProyectos();
-            console.log("Tabla actualizada con nuevos datos.");
         });
 
     } catch (error) {
