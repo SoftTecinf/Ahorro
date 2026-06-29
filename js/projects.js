@@ -126,6 +126,27 @@ window.guardarProyecto = async function (event) {
     }
 };
 
+// Usamos el 'document' para detectar el evento sin importar cuándo aparezca el input
+document.addEventListener('blur', function(e) {
+    if (e.target && e.target.id === 'datos-monto') {
+        let rawValue = e.target.value.replace(/[^0-9]/g, '');
+        if (rawValue) {
+            // Aplicamos formato
+            e.target.value = new Intl.NumberFormat('es-MX', {
+                style: 'currency',
+                currency: 'MXN'
+            }).format(parseInt(rawValue, 10));
+        }
+    }
+}, true);
+
+document.addEventListener('focus', function(e) {
+    if (e.target && e.target.id === 'datos-monto') {
+        // Al entrar, quitamos el formato para que el usuario pueda editar
+        e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    }
+}, true);
+
 window.renderizarGridProyectos = function () {
     const tbody = document.getElementById('datos-tabla-proyectos-body');
 
