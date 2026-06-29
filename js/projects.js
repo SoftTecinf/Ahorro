@@ -111,6 +111,9 @@ window.guardarProyecto = async function (event) {
         inputMonto.value = '';
         inputPlazos.value = '';
         inputFrecuencia.value = 'Quincenal';
+        // ... después de guardar, limpia ambos campos:
+        document.getElementById('display-monto').value = '';
+        document.getElementById('datos-monto').value = '';
 
         // 4. PROCESO PESADO EN SEGUNDO PLANO
         // No usamos 'await' aquí para que el código siga su curso y no bloquee el mensaje
