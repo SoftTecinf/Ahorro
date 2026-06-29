@@ -50,7 +50,7 @@ window.guardarProyecto = async function (event) {
 }
     // Recuperamos el proyecto original si existe para no perder datos
     const proyectoExistente = window.proyectos.find(x => String(x.id) === String(idOculto));
-    document.getElementById('display-ahorro').innerText = formatearMXN(montoLimpio);
+    //document.getElementById('display-ahorro').innerText = formatearMXN(montoLimpio);
    
     const proyectoData = {
         tipo: "proyecto",
