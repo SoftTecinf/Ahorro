@@ -25,32 +25,42 @@ function unirseAProyecto(proyectoId) {
 // PROYECTOS Y LOGICA DE RENDIMIENTO (DOM)
 // ==========================================
 // Usamos un observer o un listener más robusto
-const inicializarFormateoMonto = () => {
+document.addEventListener('DOMContentLoaded', () => {
     const inputMonto = document.getElementById('datos-monto');
     
-    if (!inputMonto) {
-        // Si el elemento no existe, esperamos 500ms y reintentamos
-        setTimeout(inicializarFormateoMonto, 500);
-        return;
-    }
+    if (inputMonto) {
+        inputMonto.addEventListener('input', (e) => {
+            // Guardamos la posición del cursor para no perderla
+            let cursorPosition = e.target.selectionStart;
+            
+            // 1. Limpiamos: quitamos todo excepto números
+            let valorLimpio = e.target.value.replace(/[^0-9]/g, '');
+            
+            // 2. Si no hay valor, lo vaciamos
+            if (!valorLimpio) {
+                e.target.value = '';
+                return;
+            }
 
-    // Una vez que el elemento existe, ponemos el evento
-    inputMonto.addEventListener('input', (e) => {
-        let value = e.target.value.replace(/[^0-9]/g, '');
-        if (value) {
-            const numero = parseInt(value, 10);
-            e.target.value = new Intl.NumberFormat('es-MX', {
+            // 3. Convertimos a número
+            let numero = parseInt(valorLimpio, 10);
+            
+            // 4. Formateamos
+            let valorFormateado = new Intl.NumberFormat('es-MX', {
                 style: 'currency',
-                currency: 'MXN'
+                currency: 'MXN',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0 // O usa 2 si quieres centavos
             }).format(numero);
-        } else {
-            e.target.value = '';
-        }
-    });
-};
 
-// Iniciar la búsqueda del elemento
-inicializarFormateoMonto();
+            // 5. Asignamos el valor formateado
+            e.target.value = valorFormateado;
+            
+            // Ajustamos el cursor para que no salte al final
+            e.target.setSelectionRange(cursorPosition + 1, cursorPosition + 1);
+        });
+    }
+});
 
 window.guardarProyecto = async function (event) {
     event.preventDefault();
@@ -70,7 +80,7 @@ window.guardarProyecto = async function (event) {
     const montoRaw = inputMonto.value.replace(/[^0-9]/g, '');
     const montoLimpio = parseFloat(montoRaw) || 0;
 
-    const plazos = inputPlazos.value;
+    const plazos = inputPlazos.value || 1;
     const frecuencia = inputFrecuencia.value;
 
     const usuarioActual = window.currentUser || localStorage.getItem('app_currentUser');
