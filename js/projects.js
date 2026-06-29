@@ -38,7 +38,7 @@ window.guardarProyecto = async function (event) {
 
     const nombre = inputNombre.value.trim();
     const fechaInicio = inputFecha.value;
-    const montoLimpio = parseFloat(inputMonto.value.replace(/[^0-9]/g, '')) || 0;
+    const montoLimpio = formatearMXN(inputMonto) || 0;
     const plazos = inputPlazos.value;
     const frecuencia = inputFrecuencia.value;
 
