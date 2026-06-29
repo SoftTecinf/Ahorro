@@ -33,24 +33,41 @@ window.guardarProyecto = async function (event) {
     const inputNombre = document.getElementById('datos-nombre-proyecto');
     const inputFecha = document.getElementById('datos-fecha-inicio');
     const inputMonto = document.getElementById('datos-monto');
+    inputMonto.addEventListener('input', (e) => {
+        // 1. Obtenemos el valor actual y eliminamos todo lo que no sea número
+        let valor = e.target.value.replace(/[^0-9]/g, '');
+
+        // 2. Si el valor está vacío, salimos
+        if (!valor) {
+            e.target.value = '';
+            return;
+        }
+
+        // 3. Convertimos a número y aplicamos formato
+        const numero = parseInt(valor, 10);
+        e.target.value = new Intl.NumberFormat('es-MX').format(numero);
+    });
+
     const inputPlazos = document.getElementById('datos-plazos');
     const inputFrecuencia = document.getElementById('datos-frecuencia');
 
     const nombre = inputNombre.value.trim();
     const fechaInicio = inputFecha.value;
-    const montoLimpio = parseFloat(inputMonto.value) || 0;
+
+    const montoRaw = document.getElementById('datos-monto').value.replace(/,/g, '');
+    const montoLimpio = parseFloat(montoRaw) || 0;
     const plazos = inputPlazos.value;
     const frecuencia = inputFrecuencia.value;
 
     const usuarioActual = window.currentUser || localStorage.getItem('app_currentUser');
 
     if (!nombre || !fechaInicio || montoLimpio <= 0 || !plazos || !usuarioActual) {
-    alert("⚠️ Faltan datos o el monto es inválido.");
-    return;
-}
+        alert("⚠️ Faltan datos o el monto es inválido.");
+        return;
+    }
     // Recuperamos el proyecto original si existe para no perder datos
     const proyectoExistente = window.proyectos.find(x => String(x.id) === String(idOculto));
-   
+
     const proyectoData = {
         tipo: "proyecto",
         id: idOculto ? idOculto : Date.now(),
@@ -72,7 +89,7 @@ window.guardarProyecto = async function (event) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(proyectoData)
         });
-        
+
         mostrarModal(idOculto ? "¡Proyecto actualizado!" : "¡Proyecto guardado con éxito!");
 
         // 3. LIMPIEZA: Limpiamos también el ID oculto
@@ -503,10 +520,10 @@ function calcularMontoPorAbonos() {
         inputMonto.focus();
     } else {
         inputMonto.readOnly = true;
-    const multiplicador = parseInt(tipoAbono) || 1;
-    // Solo mostramos el resultado en el input, NO sobrescribimos p.cuota ni p.monto
-    const montoCalculado = p.cuota * multiplicador;
-    inputMonto.value = montoCalculado.toFixed(2);
+        const multiplicador = parseInt(tipoAbono) || 1;
+        // Solo mostramos el resultado en el input, NO sobrescribimos p.cuota ni p.monto
+        const montoCalculado = p.cuota * multiplicador;
+        inputMonto.value = montoCalculado.toFixed(2);
     }
 }
 
@@ -649,8 +666,8 @@ function enviarInvitacionWhatsApp(event) {
     const baseUri = "https://softtecinf.github.io/Ahorro/";
     const linkCompleto = `${baseUri}?proyecto=${p.id}`;
     const mensaje = `¡Hola! 👋 ${usuarioActual} te invita a nuestra app de 'Ahorro Familiar' para organizar nuestras metas juntos.
-\n\nTe invito especialmente a participar en el proyecto: *${nombreProyecto}*. 💎
-\n\nDa Clic en el siguiente enlace: ${linkCompleto}`;
+    \n\nTe invito especialmente a participar en el proyecto: *${nombreProyecto}*. 💎
+    \n\nDa Clic en el siguiente enlace: ${linkCompleto}`;
 
 
     // CONSTRUIR API WHATSAPP CON EL PREFIJO 52 AUTOMÁTICO
