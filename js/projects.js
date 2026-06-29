@@ -39,7 +39,6 @@ window.guardarProyecto = async function (event) {
     const nombre = inputNombre.value.trim();
     const fechaInicio = inputFecha.value;
     const valorNumerico = parseFloat(inputMonto.value) || 0;
-    //const montoLimpio = formatearMXN(valorNumerico);
     const plazos = inputPlazos.value;
     const frecuencia = inputFrecuencia.value;
 
@@ -52,6 +51,10 @@ window.guardarProyecto = async function (event) {
     // Recuperamos el proyecto original si existe para no perder datos
     const proyectoExistente = window.proyectos.find(x => String(x.id) === String(idOculto));
     document.getElementById('display-ahorro').innerText = formatearMXN(valorNumerico);
+    // AGREGA ESTO AQUÍ, DENTRO DE LA FUNCIÓN:
+console.log("Valor numérico capturado:", valorNumerico);
+console.log("Formato que debería mostrarse:", formatearMXN(valorNumerico));
+
     const proyectoData = {
         tipo: "proyecto",
         id: idOculto ? idOculto : Date.now(),
