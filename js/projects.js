@@ -80,10 +80,11 @@ window.guardarProyecto = async function (event) {
     }
     // Recuperamos el proyecto original si existe para no perder datos
     const proyectoExistente = window.proyectos.find(x => String(x.id) === String(idOculto));
-// ... justo antes de crear el objeto proyectoData
-console.log("DEBUG: montoRaw es:", montoRaw);
-console.log("DEBUG: montoLimpio es:", montoLimpio);
-console.log("DEBUG: tipo de montoLimpio es:", typeof montoLimpio);
+    // ... justo antes de crear el objeto proyectoData
+    console.log("DEBUG: montoRaw es:", montoRaw);
+    console.log("DEBUG: montoLimpio es:", montoLimpio);
+    console.log("DEBUG: tipo de montoLimpio es:", typeof montoLimpio);
+    
     const proyectoData = {
         tipo: "proyecto",
         id: idOculto ? idOculto : Date.now(),
