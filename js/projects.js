@@ -39,29 +39,28 @@ window.guardarProyecto = async function (event) {
     const nombre = inputNombre.value.trim();
     const fechaInicio = inputFecha.value;
     const valorNumerico = parseFloat(inputMonto.value) || 0;
-    const montoLimpio = formatearMXN(valorNumerico);
+    //const montoLimpio = formatearMXN(valorNumerico);
     const plazos = inputPlazos.value;
     const frecuencia = inputFrecuencia.value;
 
     const usuarioActual = window.currentUser || localStorage.getItem('app_currentUser');
 
-    if (!nombre || !fechaInicio || !montoLimpio || !plazos || !usuarioActual) {
-        alert("⚠️ Faltan datos o no has iniciado sesión correctamente.");
-        return;
-    }
-
+    if (!nombre || !fechaInicio || valorNumerico <= 0 || !plazos || !usuarioActual) {
+    alert("⚠️ Faltan datos o el monto es inválido.");
+    return;
+}
     // ... dentro de tu función guardarProyecto ...
 
     // Recuperamos el proyecto original si existe para no perder datos
     const proyectoExistente = window.proyectos.find(x => String(x.id) === String(idOculto));
-
+    document.getElementById('display-ahorro').innerText = formatearMXN(valorNumerico);
     const proyectoData = {
         tipo: "proyecto",
         id: idOculto ? idOculto : Date.now(),
         nombre: nombre,
         fechaInicio: fechaInicio,
         frecuencia: frecuencia,
-        monto: montoLimpio,
+        monto: valorNumerico,
         plazos: parseInt(plazos),
         cuota: montoLimpio / parseInt(plazos),
         adminName: usuarioActual,
