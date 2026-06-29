@@ -26,40 +26,27 @@ function unirseAProyecto(proyectoId) {
 // ==========================================
 // Usamos un observer o un listener más robusto
 document.addEventListener('DOMContentLoaded', () => {
-    const inputMonto = document.getElementById('datos-monto');
-    
-    if (inputMonto) {
-        inputMonto.addEventListener('input', (e) => {
-            // Guardamos la posición del cursor para no perderla
-            let cursorPosition = e.target.selectionStart;
-            
-            // 1. Limpiamos: quitamos todo excepto números
-            let valorLimpio = e.target.value.replace(/[^0-9]/g, '');
-            
-            // 2. Si no hay valor, lo vaciamos
-            if (!valorLimpio) {
-                e.target.value = '';
-                return;
-            }
+    const displayMonto = document.getElementById('display-monto');
+    const hiddenMonto = document.getElementById('datos-monto');
 
-            // 3. Convertimos a número
-            let numero = parseInt(valorLimpio, 10);
-            
-            // 4. Formateamos
-            let valorFormateado = new Intl.NumberFormat('es-MX', {
+    displayMonto.addEventListener('input', (e) => {
+        // 1. Limpiar: obtener solo números
+        let rawValue = e.target.value.replace(/[^0-9]/g, '');
+        
+        // 2. Guardar el número puro en el input oculto
+        hiddenMonto.value = rawValue;
+
+        // 3. Formatear la vista para el usuario
+        if (rawValue) {
+            let numero = parseInt(rawValue, 10);
+            displayMonto.value = new Intl.NumberFormat('es-MX', {
                 style: 'currency',
-                currency: 'MXN',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0 // O usa 2 si quieres centavos
+                currency: 'MXN'
             }).format(numero);
-
-            // 5. Asignamos el valor formateado
-            e.target.value = valorFormateado;
-            
-            // Ajustamos el cursor para que no salte al final
-            e.target.setSelectionRange(cursorPosition + 1, cursorPosition + 1);
-        });
-    }
+        } else {
+            displayMonto.value = '';
+        }
+    });
 });
 
 
