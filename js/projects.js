@@ -35,10 +35,10 @@ window.guardarProyecto = async function (event) {
     const inputMonto = document.getElementById('datos-monto');
     const inputPlazos = document.getElementById('datos-plazos');
     const inputFrecuencia = document.getElementById('datos-frecuencia');
-    const valorNumerico = parseFloat(inputMonto.value) || 0;
 
     const nombre = inputNombre.value.trim();
     const fechaInicio = inputFecha.value;
+    const valorNumerico = parseFloat(inputMonto.value) || 0;
     const montoLimpio = formatearMXN(valorNumerico);
     const plazos = inputPlazos.value;
     const frecuencia = inputFrecuencia.value;
