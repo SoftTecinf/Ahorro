@@ -26,27 +26,28 @@ function unirseAProyecto(proyectoId) {
 // ==========================================
 // Usamos un observer o un listener más robusto
 document.addEventListener('DOMContentLoaded', () => {
-    const displayMonto = document.getElementById('display-monto');
-    const hiddenMonto = document.getElementById('datos-monto');
+    // Buscamos el elemento solo cuando el DOM esté listo
+    const inputMonto = document.getElementById('datos-monto');
 
-    displayMonto.addEventListener('input', (e) => {
-        // 1. Limpiar: obtener solo números
-        let rawValue = e.target.value.replace(/[^0-9]/g, '');
+    // Verificamos que realmente existe para evitar errores
+    if (inputMonto) {
         
-        // 2. Guardar el número puro en el input oculto
-        hiddenMonto.value = rawValue;
+        // Evento: al salir (blur) se formatea
+        inputMonto.addEventListener('blur', (e) => {
+            let valor = e.target.value.replace(/[^0-9]/g, '');
+            if (valor) {
+                e.target.value = new Intl.NumberFormat('es-MX', {
+                    style: 'currency',
+                    currency: 'MXN'
+                }).format(valor);
+            }
+        });
 
-        // 3. Formatear la vista para el usuario
-        if (rawValue) {
-            let numero = parseInt(rawValue, 10);
-            displayMonto.value = new Intl.NumberFormat('es-MX', {
-                style: 'currency',
-                currency: 'MXN'
-            }).format(numero);
-        } else {
-            displayMonto.value = '';
-        }
-    });
+        // Evento: al entrar (focus) se limpia
+        inputMonto.addEventListener('focus', (e) => {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+        });
+    }
 });
 
 
@@ -111,9 +112,6 @@ window.guardarProyecto = async function (event) {
         inputMonto.value = '';
         inputPlazos.value = '';
         inputFrecuencia.value = 'Quincenal';
-        // ... después de guardar, limpia ambos campos:
-        document.getElementById('display-monto').value = '';
-        document.getElementById('datos-monto').value = '';
 
         // 4. PROCESO PESADO EN SEGUNDO PLANO
         // No usamos 'await' aquí para que el código siga su curso y no bloquee el mensaje
