@@ -50,7 +50,6 @@ window.guardarProyecto = async function (event) {
 }
     // Recuperamos el proyecto original si existe para no perder datos
     const proyectoExistente = window.proyectos.find(x => String(x.id) === String(idOculto));
-    //document.getElementById('display-ahorro').innerText = formatearMXN(montoLimpio);
    
     const proyectoData = {
         tipo: "proyecto",
@@ -504,8 +503,10 @@ function calcularMontoPorAbonos() {
         inputMonto.focus();
     } else {
         inputMonto.readOnly = true;
-        const multiplicador = parseInt(tipoAbono) || 1;
-        inputMonto.value = (p.cuota * multiplicador).toFixed(2);
+    const multiplicador = parseInt(tipoAbono) || 1;
+    // Solo mostramos el resultado en el input, NO sobrescribimos p.cuota ni p.monto
+    const montoCalculado = p.cuota * multiplicador;
+    inputMonto.value = montoCalculado.toFixed(2);
     }
 }
 
