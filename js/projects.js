@@ -38,7 +38,7 @@ window.guardarProyecto = async function (event) {
 
     const nombre = inputNombre.value.trim();
     const fechaInicio = inputFecha.value;
-    const montoLimpio = parseFloat(inputMonto.value) || 0;
+    const montoLimpio = formatearMXN(parseFloat(inputMonto)) || 0;
     const plazos = inputPlazos.value;
     const frecuencia = inputFrecuencia.value;
 
@@ -57,9 +57,9 @@ window.guardarProyecto = async function (event) {
         nombre: nombre,
         fechaInicio: fechaInicio,
         frecuencia: frecuencia,
-        monto: formatearMXN(montoLimpio),
+        monto: montoLimpio,
         plazos: parseInt(plazos),
-        cuota: formatearMXN(montoLimpio) / parseInt(plazos),
+        cuota: montoLimpio / parseInt(plazos),
         adminName: usuarioActual,
         participantes: proyectoExistente ? proyectoExistente.participantes : [usuarioActual],
         historialDepositos: proyectoExistente ? proyectoExistente.historialDepositos : {}
