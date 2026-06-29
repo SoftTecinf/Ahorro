@@ -25,24 +25,33 @@ function unirseAProyecto(proyectoId) {
 // PROYECTOS Y LOGICA DE RENDIMIENTO (DOM)
 // ==========================================
 // Usamos un observer o un listener más robusto
-document.addEventListener('DOMContentLoaded', () => {
+const inicializarFormateoMonto = () => {
     const inputMonto = document.getElementById('datos-monto');
-    console.log("¿Input encontrado?:", inputMonto); // Si esto dice "null" en la consola, el ID en tu HTML es diferente.
-
-    if (inputMonto) {
-        inputMonto.addEventListener('blur', (e) => {
-            console.log("¡Evento blur disparado!"); // Si esto no sale en la consola, el evento no se conecta.
-            let valor = e.target.value.replace(/[^0-9]/g, '');
-            if (valor) {
-                e.target.value = new Intl.NumberFormat('es-MX', {
-                    style: 'currency',
-                    currency: 'MXN'
-                }).format(valor);
-            }
-        });
+    
+    if (!inputMonto) {
+        // Si el elemento no existe, esperamos 500ms y reintentamos
+        setTimeout(inicializarFormateoMonto, 500);
+        return;
     }
-});
 
+    // Una vez que el elemento existe, ponemos el evento
+    inputMonto.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/[^0-9]/g, '');
+        
+        if (value) {
+            const numero = parseInt(value, 1);
+            e.target.value = new Intl.NumberFormat('es-MX', {
+                style: 'currency',
+                currency: 'MXN'
+            }).format(numero);
+        } else {
+            e.target.value = '';
+        }
+    });
+};
+
+// Iniciar la búsqueda del elemento
+inicializarFormateoMonto();
 
 window.guardarProyecto = async function (event) {
     event.preventDefault();
@@ -60,11 +69,7 @@ window.guardarProyecto = async function (event) {
 
     // LIMPIEZA CRÍTICA: quitamos las comas antes de convertir a número
     const montoRaw = inputMonto.value.replace(/[^0-9]/g, '');
-    const montoLimpio = parseFloat(montoRaw);
-    if (isNaN(montoLimpio) || montoLimpio <= 0) {
-    alert("⚠️ El monto no es un número válido. Valor recibido: " + inputMonto.value);
-    return;
-}
+    const montoLimpio = parseFloat(montoRaw) || 0;
 
     const plazos = inputPlazos.value || 1;
     const frecuencia = inputFrecuencia.value;
@@ -77,10 +82,6 @@ window.guardarProyecto = async function (event) {
     }
     // Recuperamos el proyecto original si existe para no perder datos
     const proyectoExistente = window.proyectos.find(x => String(x.id) === String(idOculto));
-    // ... justo antes de crear el objeto proyectoData
-    console.log("DEBUG: montoRaw es:", montoRaw);
-    console.log("DEBUG: montoLimpio es:", montoLimpio);
-    console.log("DEBUG: tipo de montoLimpio es:", typeof montoLimpio);
 
     const proyectoData = {
         tipo: "proyecto",
@@ -125,27 +126,6 @@ window.guardarProyecto = async function (event) {
         console.error("Error al guardar:", error);
     }
 };
-
-// Usamos el 'document' para detectar el evento sin importar cuándo aparezca el input
-document.addEventListener('blur', function(e) {
-    if (e.target && e.target.id === 'datos-monto') {
-        let rawValue = e.target.value.replace(/[^0-9]/g, '');
-        if (rawValue) {
-            // Aplicamos formato
-            e.target.value = new Intl.NumberFormat('es-MX', {
-                style: 'currency',
-                currency: 'MXN'
-            }).format(parseInt(rawValue, 10));
-        }
-    }
-}, true);
-
-document.addEventListener('focus', function(e) {
-    if (e.target && e.target.id === 'datos-monto') {
-        // Al entrar, quitamos el formato para que el usuario pueda editar
-        e.target.value = e.target.value.replace(/[^0-9]/g, '');
-    }
-}, true);
 
 window.renderizarGridProyectos = function () {
     const tbody = document.getElementById('datos-tabla-proyectos-body');
