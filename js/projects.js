@@ -24,17 +24,20 @@ function unirseAProyecto(proyectoId) {
 // ==========================================
 // PROYECTOS Y LOGICA DE RENDIMIENTO (DOM)
 // ==========================================
-document.addEventListener('DOMContentLoaded', () => {
+// Usamos un observer o un listener más robusto
+const inicializarFormateoMonto = () => {
     const inputMonto = document.getElementById('datos-monto');
     
+    if (!inputMonto) {
+        // Si el elemento no existe, esperamos 500ms y reintentamos
+        setTimeout(inicializarFormateoMonto, 500);
+        return;
+    }
+
+    // Una vez que el elemento existe, ponemos el evento
     inputMonto.addEventListener('input', (e) => {
-        // 1. Quitamos todo lo que no sea número
         let value = e.target.value.replace(/[^0-9]/g, '');
-        
-        // 2. Si hay valor, lo formateamos
         if (value) {
-            // Formateamos como moneda MXN sin el símbolo al inicio si prefieres, 
-            // o con el símbolo si lo deseas. Aquí lo ponemos con formato:
             const numero = parseInt(value, 10);
             e.target.value = new Intl.NumberFormat('es-MX', {
                 style: 'currency',
@@ -44,7 +47,10 @@ document.addEventListener('DOMContentLoaded', () => {
             e.target.value = '';
         }
     });
-});
+};
+
+// Iniciar la búsqueda del elemento
+inicializarFormateoMonto();
 
 window.guardarProyecto = async function (event) {
     event.preventDefault();
