@@ -49,8 +49,6 @@ window.guardarProyecto = async function (event) {
     alert("⚠️ Faltan datos o el monto es inválido.");
     return;
 }
-    // ... dentro de tu función guardarProyecto ...
-
     // Recuperamos el proyecto original si existe para no perder datos
     const proyectoExistente = window.proyectos.find(x => String(x.id) === String(idOculto));
     document.getElementById('display-ahorro').innerText = formatearMXN(valorNumerico);
