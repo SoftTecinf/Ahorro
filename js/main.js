@@ -151,7 +151,6 @@ window.onload = async function () {
             console.log("❌ [DEBUG] El usuario guardado no coincide.");
         }
     } else {
-        console.log("ℹ️ [DEBUG] No hay usuario guardado.");
         // Aseguramos que el login esté visible y la app oculta
         document.getElementById('app-container').style.display = 'none';
         document.getElementById('modal-identidad').style.display = 'flex';
