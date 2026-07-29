@@ -14,48 +14,61 @@
 
 <body class="min-h-screen pb-16 app-lista">
 
-    <div id="app-container" class="max-w-4xl mx-auto px-4 pt-4">
+    <div id="app-container" class="max-w-6xl mx-auto px-4 pt-4">
 
-        <!-- Cabecera reorganizada -->
-        <header class="mb-6 bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row items-center justify-between gap-4">
+        <!-- Cabecera en línea estilo Control Financiero -->
+        <header class="mb-6 bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between gap-4">
             
-            <!-- Izquierda superior: Título y etiqueta de usuario debajo -->
-            <div class="flex flex-col items-center md:items-start">
-                <h1 class="text-xl md:text-2xl font-extrabold text-gray-950 tracking-wide flex items-center gap-2">
-                    Nuestro <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500">Ahorro</span> 🔮
-                </h1>
-                <div class="flex items-center gap-1.5 mt-1">
-                    <span class="text-[10px] uppercase font-bold text-gray-400">SESIÓN ACTIVA:</span>
-                    <span id="user-label" class="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-md">Cargando...</span>
+            <!-- Izquierda: Título y etiqueta de usuario debajo -->
+            <div class="flex items-center gap-3">
+                <div class="bg-gray-900 text-white p-2.5 rounded-xl flex items-center justify-center font-bold text-lg shadow-sm">
+                    🔮
+                </div>
+                <div>
+                    <h1 class="text-xl font-black text-gray-950 tracking-wide flex items-center gap-1.5">
+                        Nuestro <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500">Ahorro</span>
+                    </h1>
+                    <div class="flex items-center gap-1 mt-0.5">
+                        <span class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">HOLA,</span>
+                        <span id="user-label" class="text-[10px] font-bold text-purple-600 uppercase tracking-wide">Cargando...</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- En medio: Secciones de navegación intactas -->
-            <nav class="w-full md:w-auto">
-                <div class="bg-purple-50/50 p-1.5 rounded-2xl flex justify-between gap-1 border border-purple-100">
-                    <button type="button" onclick="navegarA('inicio')" data-vista="inicio"
-                        class="flex-1 md:flex-initial px-4 py-2 text-xs md:text-sm font-semibold rounded-xl transition-all cursor-pointer bg-gradient-to-r from-purple-600 to-blue-500 text-white shadow-sm">
-                        🔮 Inicio
-                    </button>
-                    <button type="button" onclick="navegarA('datos')" data-vista="datos"
-                        class="flex-1 md:flex-initial px-4 py-2 text-xs md:text-sm font-semibold rounded-xl transition-all cursor-pointer text-gray-500 hover:bg-purple-50/50">
-                        📝 Datos
-                    </button>
-                    <button type="button" onclick="navegarA('config')" data-vista="config"
-                        class="flex-1 md:flex-initial px-4 py-2 text-xs md:text-sm font-semibold rounded-xl transition-all cursor-pointer text-gray-500 hover:bg-purple-50/50">
-                        ⚙️ Configurar
-                    </button>
-                </div>
+            <!-- En medio: Secciones de navegación con tus estilos CSS originales -->
+            <nav class="hidden md:flex items-center gap-1 bg-gray-50/80 p-1.5 rounded-2xl border border-gray-100 shadow-inner">
+                <button type="button" onclick="navegarA('inicio')" data-vista="inicio"
+                    class="nav-btn-active px-4 py-2 text-xs font-semibold rounded-xl transition-all cursor-pointer flex items-center gap-1.5">
+                    🔮 Inicio
+                </button>
+                <button type="button" onclick="navegarA('datos')" data-vista="datos"
+                    class="nav-btn-inactive px-4 py-2 text-xs font-semibold rounded-xl transition-all cursor-pointer flex items-center gap-1.5">
+                    📝 Datos
+                </button>
+                <button type="button" onclick="navegarA('config')" data-vista="config"
+                    class="nav-btn-inactive px-4 py-2 text-xs font-semibold rounded-xl transition-all cursor-pointer flex items-center gap-1.5">
+                    ⚙️ Configurar
+                </button>
             </nav>
 
-            <!-- Derecha superior: Botón de salir -->
+            <!-- Derecha: Botón Salir idéntico al de control financiero -->
             <div>
                 <button onclick="cerrarSesion()"
-                    class="text-xs text-red-700 hover:text-red-800 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-xl font-medium transition-colors cursor-pointer border border-red-100">
-                    Cerrar sesión / Cambiar perfil
+                    class="text-xs text-red-500 hover:text-red-700 font-semibold flex items-center gap-1 px-3 py-2 rounded-xl transition-colors cursor-pointer hover:bg-red-50/50">
+                    <span>[&rarr;]</span> SALIR
                 </button>
             </div>
         </header>
+
+        <!-- Navegación móvil (para pantallas pequeñas) -->
+        <nav class="flex md:hidden items-center justify-around gap-1 bg-white p-2 rounded-2xl border border-gray-100 shadow-sm mb-6">
+            <button type="button" onclick="navegarA('inicio')" data-vista="inicio"
+                class="nav-btn-active flex-1 py-2 text-xs font-semibold rounded-xl text-center">🔮 Inicio</button>
+            <button type="button" onclick="navegarA('datos')" data-vista="datos"
+                class="nav-btn-inactive flex-1 py-2 text-xs font-semibold rounded-xl text-center">📝 Datos</button>
+            <button type="button" onclick="navegarA('config')" data-vista="config"
+                class="nav-btn-inactive flex-1 py-2 text-xs font-semibold rounded-xl text-center">⚙️ Config</button>
+        </nav>
 
         <main id="contenedor-vistas">
             <div id="inicio" class="vista min-h-[400px]"></div>
