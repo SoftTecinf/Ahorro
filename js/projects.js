@@ -25,54 +25,45 @@ function unirseAProyecto(proyectoId) {
 // PROYECTOS Y LOGICA DE RENDIMIENTO (DOM)
 // ==========================================
 // Usamos un observer o un listener más robusto
-const inicializarFormateoMonto = (hiddenId = null) => {
+const inicializarFormateoMonto = () => {
     const inputMonto = document.getElementById('datos-monto');
     
     if (!inputMonto) {
-        setTimeout(() => inicializarFormateoMonto(hiddenId), 500);
+        setTimeout(inicializarFormateoMonto, 500);
         return;
     }
 
-    // Evitar duplicar event listeners si se llama varias veces
     if (inputMonto.dataset.formatoInicializado === 'true') return;
     inputMonto.dataset.formatoInicializado = 'true';
 
     inputMonto.addEventListener('input', (e) => {
-        const input = e.target;
-
-        // 1. Guardar la posición actual del cursor antes de cualquier cambio
+        let input = e.target;
         let cursorPosition = input.selectionStart;
         let oldLength = input.value.length;
 
-        // 2. Extraer estrictamente solo los dígitos numéricos
-        let rawValue = input.value.replace(/\D/g, "");
+        // Limpiar todo excepto números
+        let valorLimpio = input.value.replace(/\D/g, '');
         
-        let numericValue = 0;
-        if (rawValue) {
-            numericValue = parseInt(rawValue, 10) / 100;
+        if (!valorLimpio) {
+            input.value = '';
+            return;
         }
 
-        // 3. Actualizar el input oculto (si se proporcionó un ID)
-        if (hiddenId) {
-            const hiddenInput = document.getElementById(hiddenId);
-            if (hiddenInput) {
-                hiddenInput.value = numericValue;
-            }
-        }
-
-        // 4. Aplicar el formato visual estándar (Moneda MXN)
-        let formattedValue = numericValue.toLocaleString('es-MX', { 
-            style: 'currency', 
-            currency: 'MXN' 
-        });
+        const numero = parseInt(valorLimpio, 10);
         
-        input.value = formattedValue;
+        // Formatear de forma estándar con tus decimales limpios
+        const valorFormateado = new Intl.NumberFormat('es-MX', {
+            style: 'currency',
+            currency: 'MXN',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }).format(numero);
 
-        // 5. Ajuste inteligente del cursor para que no brinque al escribir o borrar
+        input.value = valorFormateado;
+
+        // Mantener la posición del cursor
         let newLength = input.value.length;
         cursorPosition = cursorPosition + (newLength - oldLength);
-        
-        // Evitar que rebase los límites
         if (cursorPosition < 0) cursorPosition = 0;
         if (cursorPosition > input.value.length) cursorPosition = input.value.length;
         
@@ -187,34 +178,22 @@ window.renderizarGridProyectos = function () {
 };
 
 function editarProyecto(id) {
-    // Convertimos a string para comparar, ya que a veces vienen como números
     const idBuscado = String(id).trim();
-
-    // Buscamos en tu lista global 'proyectos'
     const p = window.proyectos.find(x => String(x.id).trim() === idBuscado);
+    
     if (!p) {
         console.error("No se encontró el proyecto. ID buscado:", id);
-        console.log("Proyectos disponibles en memoria:", window.proyectos);
         alert("Error: Este proyecto ya no existe o los datos no han cargado.");
         return;
     }
 
-    // Ahora sí, rellenamos los campos con seguridad
     document.getElementById('datos-proyecto-id').value = p.id;
     document.getElementById('datos-nombre-proyecto').value = p.nombre || '';
-    
-    // Fecha de inicio
     document.getElementById('datos-fecha-inicio').value = (p.fechainicio || '').split('T')[0];
     
-    // Monto formateado correctamente para que aparezca bien al editar
-    const montoNum = parseFloat(p.monto) || 0;
-    document.getElementById('datos-monto').value = new Intl.NumberFormat('es-MX', {
-        style: 'currency',
-        currency: 'MXN',
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    }).format(montoNum);
-
+    // Aquí usamos tu función formatearMXN directamente para que cargue limpio en el input
+    document.getElementById('datos-monto').value = formatearMXN(p.monto) || '';
+    
     document.getElementById('datos-plazos').value = p.plazos || 0;
     document.getElementById('datos-frecuencia').value = p.frecuencia || '';
 
