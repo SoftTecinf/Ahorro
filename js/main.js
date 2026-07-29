@@ -27,46 +27,48 @@ window.appReady = false;
 
 
 window.addEventListener('DOMContentLoaded', async () => {
-    // En tu main.js, dentro del DOMContentLoaded
     const appContainer = document.getElementById('app-container');
     const modalLogin = document.getElementById('modal-identidad');
 
-    // Verificamos si el usuario existe en el localStorage
     const usuarioGuardado = localStorage.getItem('app_currentUser');
-    // Usamos tu función obtenerListaFamiliares() que ya tiene el plan B del caché
-    const lista = window.obtenerListaFamiliares();
+    const lista = window.obtenerListaFamiliares ? window.obtenerListaFamiliares() : [];
     const esValido = usuarioGuardado && lista.some(f => f.nombre === usuarioGuardado);
 
     if (esValido) {
+        if (modalLogin) modalLogin.style.display = 'none';
 
-        // 3. Si encontramos modalLogin, lo ocultamos
-        if (modalLogin) {
-            modalLogin.style.display = 'none';
-        }
-
-        // 4. Actualizamos el nombre
         const label = document.getElementById('user-label');
         if (label) label.textContent = usuarioGuardado;
 
-        // 5. Navegamos al inicio
+        // --- CARGA INMEDIATA DESDE CACHÉ (Para que se vean al instante) ---
+        const cacheProyectos = localStorage.getItem('app_cache_proyectos');
+        if (cacheProyectos) {
+            try {
+                window.proyectos = JSON.parse(cacheProyectos);
+            } catch (e) {
+                console.error("Error al leer caché de proyectos:", e);
+            }
+        }
+
+        // Navegamos al inicio y renderizamos la tabla
         await navegarA('inicio');
-        actualizarLabelUsuario();
+        if (typeof window.renderizarGridProyectos === 'function') {
+            window.renderizarGridProyectos();
+        }
+
+        // --- CARGA FRESCA DESDE GOOGLE SHEETS EN SEGUNDO PLANO ---
+        window.cargarDatosGlobales();
+
     } else {
-
-        // FORZAMOS LA VISIBILIDAD DEL LOGIN
-        const modalLogin = document.getElementById('modal-identidad');
-        const appContainer = document.getElementById('app-container');
-
         if (modalLogin) {
-            modalLogin.style.display = 'flex'; // ¡Forzamos que se vea!
-            modalLogin.classList.add('visible'); // Por si usas clases también
+            modalLogin.style.display = 'flex';
+            modalLogin.classList.add('visible');
         }
         if (appContainer) {
-            appContainer.style.display = 'none'; // Aseguramos que la app esté oculta
+            appContainer.style.display = 'none';
         }
     }
 });
-
 
 // main.js
 async function navegarA(vistaId) {
