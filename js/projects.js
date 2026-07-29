@@ -41,7 +41,7 @@ const inicializarFormateoMonto = () => {
         let cursorPosition = input.selectionStart;
         let oldLength = input.value.length;
 
-        // Limpiar todo excepto números
+        // 1. Extraer estrictamente solo los dígitos numéricos del texto actual
         let valorLimpio = input.value.replace(/\D/g, '');
         
         if (!valorLimpio) {
@@ -49,9 +49,10 @@ const inicializarFormateoMonto = () => {
             return;
         }
 
+        // 2. Convertir a número entero real
         const numero = parseInt(valorLimpio, 10);
         
-        // Formatear de forma estándar con tus decimales limpios
+        // 3. Aplicar formato visual limpio de moneda MXN
         const valorFormateado = new Intl.NumberFormat('es-MX', {
             style: 'currency',
             currency: 'MXN',
@@ -61,7 +62,7 @@ const inicializarFormateoMonto = () => {
 
         input.value = valorFormateado;
 
-        // Mantener la posición del cursor
+        // 4. Reposicionar el cursor de forma inteligente
         let newLength = input.value.length;
         cursorPosition = cursorPosition + (newLength - oldLength);
         if (cursorPosition < 0) cursorPosition = 0;
@@ -75,8 +76,7 @@ const inicializarFormateoMonto = () => {
 window.guardarProyecto = async function (event) {
     event.preventDefault();
 
-    // 1. CAPTURA: Asegúrate de capturar el ID oculto
-    const idOculto = document.getElementById('datos-proyecto-id').value; // <--- NUEVO
+    const idOculto = document.getElementById('datos-proyecto-id').value;
     const inputNombre = document.getElementById('datos-nombre-proyecto');
     const inputFecha = document.getElementById('datos-fecha-inicio');
     const inputMonto = document.getElementById('datos-monto');
@@ -86,9 +86,11 @@ window.guardarProyecto = async function (event) {
     const nombre = inputNombre.value.trim();
     const fechaInicio = inputFecha.value;
 
-    // LIMPIEZA CRÍTICA: quitamos las comas antes de convertir a número
-    const montoRaw = inputMonto.value.replace(/[^0-9]/g, '');
-    const montoLimpio = parseInt(montoRaw, 10); // Ahora sí obtendrás 12 || 0;
+    // --- LIMPIEZA CORREGIDA DEL MONTO ---
+    // Quitamos símbolos de moneda y comas, y convertimos de forma limpia respetando los centavos/decimales
+    const valorSinFormato = inputMonto.value.replace(/[^0-9.]/g, '');
+    const montoLimpio = parseFloat(valorSinFormato) || 0;
+    // -------------------------------------
 
     const plazos = inputPlazos.value || 1;
     const frecuencia = inputFrecuencia.value;
@@ -99,7 +101,7 @@ window.guardarProyecto = async function (event) {
         alert("⚠️ Faltan datos o el monto es inválido.");
         return;
     }
-    // Recuperamos el proyecto original si existe para no perder datos
+
     const proyectoExistente = window.proyectos.find(x => String(x.id) === String(idOculto));
 
     const proyectoData = {
@@ -126,7 +128,6 @@ window.guardarProyecto = async function (event) {
 
         mostrarModal(idOculto ? "¡Proyecto actualizado!" : "¡Proyecto guardado con éxito!");
 
-        // 3. LIMPIEZA: Limpiamos también el ID oculto
         document.getElementById('datos-proyecto-id').value = '';
         inputNombre.value = '';
         inputFecha.value = '';
@@ -134,8 +135,6 @@ window.guardarProyecto = async function (event) {
         inputPlazos.value = '';
         inputFrecuencia.value = 'Quincenal';
 
-        // 4. PROCESO PESADO EN SEGUNDO PLANO
-        // No usamos 'await' aquí para que el código siga su curso y no bloquee el mensaje
         cargarDatosGlobales().then(() => {
             window.renderizarGridProyectos();
             console.log("Tabla actualizada con nuevos datos.");
@@ -145,7 +144,6 @@ window.guardarProyecto = async function (event) {
         console.error("Error al guardar:", error);
     }
 };
-
 window.renderizarGridProyectos = function () {
     const tbody = document.getElementById('datos-tabla-proyectos-body');
 
