@@ -86,11 +86,8 @@ window.guardarProyecto = async function (event) {
     const nombre = inputNombre.value.trim();
     const fechaInicio = inputFecha.value;
 
-    // --- LIMPIEZA CORREGIDA DEL MONTO ---
-    // Quitamos símbolos de moneda y comas, y convertimos de forma limpia respetando los centavos/decimales
     const valorSinFormato = inputMonto.value.replace(/[^0-9.]/g, '');
     const montoLimpio = parseFloat(valorSinFormato) || 0;
-    // -------------------------------------
 
     const plazos = inputPlazos.value || 1;
     const frecuencia = inputFrecuencia.value;
@@ -101,6 +98,15 @@ window.guardarProyecto = async function (event) {
         alert("⚠️ Faltan datos o el monto es inválido.");
         return;
     }
+
+    // 🟢 1. MOSTRAR EL SPINNER INMEDIATAMENTE
+    const spinnerModal = document.getElementById('modal-spinner');
+    const textoSpinner = document.getElementById('texto-spinner');
+    if (textoSpinner) textoSpinner.textContent = idOculto ? "Actualizando proyecto..." : "Guardando proyecto...";
+    if (spinnerModal) spinnerModal.classList.remove('hidden');
+
+    // 🟢 Forzamos un pequeño respiro para que el navegador dibuje el spinner en pantalla
+    await new Promise(resolve => setTimeout(resolve, 50));
 
     const proyectoExistente = window.proyectos.find(x => String(x.id) === String(idOculto));
 
@@ -119,6 +125,7 @@ window.guardarProyecto = async function (event) {
     };
 
     try {
+        // 2. Enviar a Google Sheets
         await fetch('https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec', {
             method: 'POST',
             mode: 'no-cors',
@@ -126,8 +133,7 @@ window.guardarProyecto = async function (event) {
             body: JSON.stringify(proyectoData)
         });
 
-        mostrarModal(idOculto ? "¡Proyecto actualizado!" : "¡Proyecto guardado con éxito!");
-
+        // Limpiar formulario
         document.getElementById('datos-proyecto-id').value = '';
         inputNombre.value = '';
         inputFecha.value = '';
@@ -135,13 +141,21 @@ window.guardarProyecto = async function (event) {
         inputPlazos.value = '';
         inputFrecuencia.value = 'Quincenal';
 
-        cargarDatosGlobales().then(() => {
+        // 3. Sincronizar datos globales y renderizar la tabla
+        await cargarDatosGlobales();
+        if (typeof window.renderizarGridProyectos === 'function') {
             window.renderizarGridProyectos();
-            console.log("Tabla actualizada con nuevos datos.");
-        });
+        }
+
+        // 🟢 4. OCULTAR SPINNER ANTES DE MOSTRAR EL MENSAJE DE ÉXITO
+        if (spinnerModal) spinnerModal.classList.add('hidden');
+        
+        mostrarModal(idOculto ? "¡Proyecto actualizado!" : "¡Proyecto guardado con éxito!");
 
     } catch (error) {
         console.error("Error al guardar:", error);
+        if (spinnerModal) spinnerModal.classList.add('hidden');
+        alert("Ocurrió un error al guardar los cambios.");
     }
 };
 
