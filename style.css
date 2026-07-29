@@ -1,7 +1,6 @@
 body {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-   
 }
 
 /* Solo mostramos cuando todo esté listo */
@@ -45,16 +44,16 @@ body.app-lista {
     width: 100%;
 }
 
-/* Ocultamos el modal */
+/* Ocultamos el modal de identidad */
 #modal-identidad {
     visibility: hidden;
-    position: fixed; /* Asegura que flote sobre todo */
+    position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    display: flex; /* Para centrar contenido si usas flex */
+    display: flex;
     align-items: center;
     justify-content: center;
     transition: opacity 0.01s ease;
-    z-index: 9999; /* Asegura que esté al frente */
+    z-index: 9999;
 }
 
 /* Clase que activaremos con JS */
