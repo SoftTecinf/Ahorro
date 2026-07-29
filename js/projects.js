@@ -144,6 +144,8 @@ window.guardarProyecto = async function (event) {
         console.error("Error al guardar:", error);
     }
 };
+
+
 window.renderizarGridProyectos = function () {
     const tbody = document.getElementById('datos-tabla-proyectos-body');
 
@@ -772,9 +774,16 @@ function rechazarInvitacionInterna(invitacionId) {
 // ==========================================
 // HELPERS TEMPORALES Y MONEDAS
 // ==========================================
-/*function formatearMXN(valor) {
-    return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(valor);
-}*/
+// Asegúrate de que esta función exista en tu archivo JS principal:
+function formatearMXN(valor) {
+    const numero = parseFloat(valor) || 0;
+    return new Intl.NumberFormat('es-MX', { 
+        style: 'currency', 
+        currency: 'MXN',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(numero);
+}
 
 function revertirFechaMX(fechaCadena) {
     if (!fechaCadena) return '---';
