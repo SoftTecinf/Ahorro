@@ -25,44 +25,61 @@ function unirseAProyecto(proyectoId) {
 // PROYECTOS Y LOGICA DE RENDIMIENTO (DOM)
 // ==========================================
 // Usamos un observer o un listener más robusto
-const inicializarFormateoMonto = () => {
+const inicializarFormateoMonto = (hiddenId = null) => {
     const inputMonto = document.getElementById('datos-monto');
     
     if (!inputMonto) {
-        setTimeout(inicializarFormateoMonto, 500);
+        setTimeout(() => inicializarFormateoMonto(hiddenId), 500);
         return;
     }
 
+    // Evitar duplicar event listeners si se llama varias veces
+    if (inputMonto.dataset.formatoInicializado === 'true') return;
+    inputMonto.dataset.formatoInicializado = 'true';
+
     inputMonto.addEventListener('input', (e) => {
-        // 1. Obtenemos el valor actual y quitamos todo lo que no sea número
-        let valorLimpio = e.target.value.replace(/[^0-9]/g, '');
+        const input = e.target;
+
+        // 1. Guardar la posición actual del cursor antes de cualquier cambio
+        let cursorPosition = input.selectionStart;
+        let oldLength = input.value.length;
+
+        // 2. Extraer estrictamente solo los dígitos numéricos
+        let rawValue = input.value.replace(/\D/g, "");
         
-        // 2. Si está vacío, limpiamos y salimos
-        if (!valorLimpio) {
-            e.target.value = '';
-            return;
+        let numericValue = 0;
+        if (rawValue) {
+            numericValue = parseInt(rawValue, 10) / 100;
         }
 
-        // 3. Convertimos a número usando base 10
-        const numero = parseInt(valorLimpio, 10);
-        
-        // 4. Formateamos
-        const valorFormateado = new Intl.NumberFormat('es-MX', {
-            style: 'currency',
-            currency: 'MXN'
-        }).format(numero);
-
-        // 5. Solo actualizamos si el valor es diferente para evitar bucles
-        if (e.target.value !== valorFormateado) {
-            e.target.value = valorFormateado;
+        // 3. Actualizar el input oculto (si se proporcionó un ID)
+        if (hiddenId) {
+            const hiddenInput = document.getElementById(hiddenId);
+            if (hiddenInput) {
+                hiddenInput.value = numericValue;
+            }
         }
+
+        // 4. Aplicar el formato visual estándar (Moneda MXN)
+        let formattedValue = numericValue.toLocaleString('es-MX', { 
+            style: 'currency', 
+            currency: 'MXN' 
+        });
+        
+        input.value = formattedValue;
+
+        // 5. Ajuste inteligente del cursor para que no brinque al escribir o borrar
+        let newLength = input.value.length;
+        cursorPosition = cursorPosition + (newLength - oldLength);
+        
+        // Evitar que rebase los límites
+        if (cursorPosition < 0) cursorPosition = 0;
+        if (cursorPosition > input.value.length) cursorPosition = input.value.length;
+        
+        input.setSelectionRange(cursorPosition, cursorPosition);
     });
 };
 
-inicializarFormateoMonto();
-
-// Iniciar la búsqueda del elemento
-inicializarFormateoMonto();
 
 window.guardarProyecto = async function (event) {
     event.preventDefault();
