@@ -6,55 +6,57 @@ window.familiares = JSON.parse(localStorage.getItem('app_cache_familiares')) || 
 window.cargarDatosGlobales = async function () {
     const url = "https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec";
 
-    const respuesta = await fetch(url);
-    const data = await respuesta.json(); // Ahora 'data' contiene {familiares, proyectos, cuentas}
+    try {
+        const respuesta = await fetch(url);
+        const data = await respuesta.json();
 
-    // 1. Procesar Familiares
-    window.familiares = (data.familiares || []).map(usuario => ({
-        nombre: usuario.nombre ? String(usuario.nombre).trim() : "",
-        password: usuario.password ? String(usuario.password).trim() : "",
-        celular: usuario.celular ? String(usuario.celular).trim() : ""
-    }));
+        // 1. Procesar Familiares
+        window.familiares = (data.familiares || []).map(usuario => ({
+            nombre: usuario.nombre ? String(usuario.nombre).trim() : "",
+            password: usuario.password ? String(usuario.password).trim() : "",
+            celular: usuario.celular ? String(usuario.celular).trim() : ""
+        }));
 
+        // 2. Procesar Proyectos
+        window.proyectos = (data.proyectos || []).map(p => {
+            const norm = Object.keys(p).reduce((acc, key) => {
+                acc[key.toLowerCase()] = p[key];
+                return acc;
+            }, {});
 
-    // 2. Procesar Proyectos (Copia todo y corrige solo lo necesario)
-    window.proyectos = (data.proyectos || []).map(p => {
-        // Convertimos las claves a minúsculas para normalizar
-        // Esto hace que 'Monto', 'monto' o 'MONTO' funcionen igual
-        const norm = Object.keys(p).reduce((acc, key) => {
-            acc[key.toLowerCase()] = p[key];
-            return acc;
-        }, {});
+            return {
+                ...norm,
+                id: norm.id || "",
+                nombre: norm.nombre || "",
+                monto: parseFloat(norm.monto) || 0,
+                plazos: parseInt(norm.plazos) || 0,
+                cuota: parseFloat(norm.cuota) || 0,
+                participantes: typeof norm.participantes === 'string' ? JSON.parse(norm.participantes || '[]') : (norm.participantes || []),
+                historialDepositos: typeof norm.historialdepositos === 'string' ? JSON.parse(norm.historialdepositos || '{}') : (norm.historialdepositos || {})
+            };
+        });
 
-        return {
-            ...norm, // <-- Esto trae TODAS tus columnas de Sheets automáticamente
-            id: norm.id || "",
-            nombre: norm.nombre || "",
-            // Convertimos a números de forma segura
-            monto: parseFloat(norm.monto) || 0,
-            plazos: parseInt(norm.plazos) || 0,
-            cuota: parseFloat(norm.cuota) || 0, // ¡Ahora esto sí existirá!
-            // Procesamos los datos complejos
-            participantes: typeof norm.participantes === 'string' ? JSON.parse(norm.participantes || '[]') : (norm.participantes || []),
-            historialDepositos: typeof norm.historialdepositos === 'string' ? JSON.parse(norm.historialdepositos || '{}') : (norm.historialdepositos || {})
-        };
-    });
+        // 3. Procesar Cuentas
+        window.cuentas = (data.cuentas || []).map(c => ({
+            id: c.id || "",
+            banco: c.banco || "",
+            titular: c.titular || "",
+            clabe: c.clabe || ""
+        }));
 
-    // 3. Procesar Cuentas
-    window.cuentas = (data.cuentas || []).map(c => ({
-        id: c.id || "",
-        banco: c.banco || "",
-        titular: c.titular || "",
-        clabe: c.clabe || ""
-    }));
+        // Guardamos en caché
+        localStorage.setItem('app_cache_familiares', JSON.stringify(window.familiares));
+        localStorage.setItem('app_cache_proyectos', JSON.stringify(window.proyectos));
+        localStorage.setItem('app_cache_cuentas', JSON.stringify(window.cuentas));
 
-    // Guardamos en caché
-    localStorage.setItem('app_cache_familiares', JSON.stringify(window.familiares));
-    localStorage.setItem('app_cache_proyectos', JSON.stringify(window.proyectos));
-    localStorage.setItem('app_cache_cuentas', JSON.stringify(window.cuentas));
+        // NOMBRE CORRECTO DE TU FUNCIÓN:
+        if (typeof window.renderizarGridProyectos === 'function') {
+            window.renderizarGridProyectos();
+        }
 
-    // AQUÍ ES LA CLAVE: Llama al renderizado solo cuando los datos ya existen
-    renderizarInicioProyectos();
+    } catch (error) {
+        console.error("Error al cargar datos globales:", error);
+    }
 };
 
 
