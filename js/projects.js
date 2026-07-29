@@ -202,9 +202,19 @@ function editarProyecto(id) {
     // Ahora sí, rellenamos los campos con seguridad
     document.getElementById('datos-proyecto-id').value = p.id;
     document.getElementById('datos-nombre-proyecto').value = p.nombre || '';
-    // Corregimos la propiedad: Nota que es 'fechainicio' (todo minúscula) basado en tu consola
+    
+    // Fecha de inicio
     document.getElementById('datos-fecha-inicio').value = (p.fechainicio || '').split('T')[0];
-    document.getElementById('datos-monto').value = formatearMXN(p.monto) || 0;
+    
+    // Monto formateado correctamente para que aparezca bien al editar
+    const montoNum = parseFloat(p.monto) || 0;
+    document.getElementById('datos-monto').value = new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        currency: 'MXN',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(montoNum);
+
     document.getElementById('datos-plazos').value = p.plazos || 0;
     document.getElementById('datos-frecuencia').value = p.frecuencia || '';
 
