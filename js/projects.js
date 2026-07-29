@@ -774,9 +774,9 @@ function rechazarInvitacionInterna(invitacionId) {
 // ==========================================
 // HELPERS TEMPORALES Y MONEDAS
 // ==========================================
-function formatearMXN(valor) {
+/*function formatearMXN(valor) {
     return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(valor);
-}
+}*/
 
 function revertirFechaMX(fechaCadena) {
     if (!fechaCadena) return '---';
