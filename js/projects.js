@@ -230,25 +230,55 @@ window.eliminarProyectoCompleto = async function(id) {
 
     const idBuscado = String(id).trim();
 
-    // 1. Filtramos de la variable global (asegurando comparar ambos como texto)
-    window.proyectos = (window.proyectos || []).filter(p => String(p.id).trim() !== idBuscado);
+    // 🟢 1. MOSTRAR EL SPINNER DE CARGA
+    const spinnerModal = document.getElementById('modal-spinner');
+    const textoSpinner = document.getElementById('texto-spinner');
+    if (textoSpinner) textoSpinner.textContent = "Eliminando proyecto...";
+    if (spinnerModal) spinnerModal.classList.remove('hidden');
 
-    // 2. Actualizamos el almacenamiento local con la clave correcta que usa tu app
-    localStorage.setItem('app_cache_proyectos', JSON.stringify(window.proyectos));
+    // Forzamos un pequeño respiro para que el navegador dibuje el spinner
+    await new Promise(resolve => setTimeout(resolve, 50));
 
-    // 3. (Opcional pero recomendado) Si también borras en tu Google Sheets, puedes hacer el fetch de borrado aquí.
+    try {
+        // (Opcional) Si necesitas enviar la petición de eliminación a tu Google Sheets, 
+        // puedes descomentar y ajustar esta sección enviando un parámetro de tipo "eliminar":
+        /*
+        await fetch('https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec', {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tipo: "eliminar_proyecto", id: idBuscado })
+        });
+        */
 
-    // 4. Refrescamos la interfaz visual
-    if (typeof window.renderizarGridProyectos === 'function') {
-        window.renderizarGridProyectos();
+        // 2. Filtramos de la variable global
+        window.proyectos = (window.proyectos || []).filter(p => String(p.id).trim() !== idBuscado);
+
+        // 3. Actualizamos el caché local
+        localStorage.setItem('app_cache_proyectos', JSON.stringify(window.proyectos));
+
+        // 4. Sincronizamos y redibujamos la tabla
+        if (typeof window.cargarDatosGlobales === 'function') {
+            await window.cargarDatosGlobales();
+        }
+        
+        if (typeof window.renderizarGridProyectos === 'function') {
+            window.renderizarGridProyectos();
+        }
+        
+        if (typeof renderizarInicioProyectos === 'function') {
+            renderizarInicioProyectos();
+        }
+
+        // 🟢 5. OCULTAR SPINNER Y MOSTRAR MODAL DE ÉXITO
+        if (spinnerModal) spinnerModal.classList.add('hidden');
+        mostrarModal("¡Proyecto eliminado con éxito!");
+
+    } catch (error) {
+        console.error("Error al eliminar:", error);
+        if (spinnerModal) spinnerModal.classList.add('hidden');
+        alert("Ocurrió un error al intentar eliminar el proyecto.");
     }
-    
-    // Si tienes otra función de inicio, la ejecutas también si existe
-    if (typeof renderizarInicioProyectos === 'function') {
-        renderizarInicioProyectos();
-    }
-
-    console.log("Proyecto eliminado con éxito. ID:", idBuscado);
 };
 
 // ==========================================
