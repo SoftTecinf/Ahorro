@@ -79,28 +79,33 @@ window.guardarProyecto = async function (event) {
     const idOculto = document.getElementById('datos-proyecto-id').value;
     const inputNombre = document.getElementById('datos-nombre-proyecto');
     const inputFecha = document.getElementById('datos-fecha-inicio');
-    const inputMonto = document.getElementById('datos-monto'); // 🟢 Declarado correctamente
+    const inputMonto = document.getElementById('datos-monto');
     const inputPlazos = document.getElementById('datos-plazos');
     const inputFrecuencia = document.getElementById('datos-frecuencia');
 
-    const nombre = inputNombre.value.trim();
-    const fechaInicio = inputFecha.value;
+    const nombre = inputNombre ? inputNombre.value.trim() : "No existe inputNombre";
+    const fechaInicio = inputFecha ? inputFecha.value : "No existe inputFecha";
 
     let montoLimpio = 0;
     if (inputMonto && inputMonto.value) {
-        let valorCrudo = inputMonto.value.replace(/\s/g, '').replace('$', '').replace(/MXN/gi, '').replace(/,/g, '');
+        let valorCrudo = inputMonto.value.replace(/[^0-9.]/g, '');
         montoLimpio = parseFloat(valorCrudo) || 0;
     }
 
-    const plazos = inputPlazos.value || 1;
-    const frecuencia = inputFrecuencia.value;
+    const plazos = inputPlazos ? inputPlazos.value : "No existe inputPlazos";
+    const frecuencia = inputFrecuencia ? inputFrecuencia.value : "No existe inputFrecuencia";
+    const usuarioActual = window.currentUser || localStorage.getItem('app_currentUser') || "No hay usuario";
 
-    const usuarioActual = window.currentUser || localStorage.getItem('app_currentUser');
+    // 🟢 ESTA ALERTA TE MOSTRARÁ QUÉ ESTÁ LLEGANDO VACÍO O EN CERO
+    alert(`DEBUG:\nNombre: "${nombre}"\nFecha: "${fechaInicio}"\nMontoLimpio: ${montoLimpio}\nPlazos: "${plazos}"\nUsuario: "${usuarioActual}"`);
 
     if (!nombre || !fechaInicio || montoLimpio <= 0 || !plazos || !usuarioActual) {
         alert("⚠️ Faltan datos o el monto es inválido.");
         return;
     }
+
+    // El resto de tu código de guardado...
+};
 
     // 1. MOSTRAR EL SPINNER INMEDIATAMENTE
     const spinnerModal = document.getElementById('modal-spinner');
