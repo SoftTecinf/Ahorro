@@ -230,34 +230,33 @@ window.eliminarProyectoCompleto = async function(id) {
 
     const idBuscado = String(id).trim();
 
-    // 🟢 1. MOSTRAR EL SPINNER DE CARGA
+    // 1. MOSTRAR EL SPINNER DE CARGA
     const spinnerModal = document.getElementById('modal-spinner');
     const textoSpinner = document.getElementById('texto-spinner');
     if (textoSpinner) textoSpinner.textContent = "Eliminando proyecto...";
     if (spinnerModal) spinnerModal.classList.remove('hidden');
 
-    // Forzamos un pequeño respiro para que el navegador dibuje el spinner
     await new Promise(resolve => setTimeout(resolve, 50));
 
     try {
-        // (Opcional) Si necesitas enviar la petición de eliminación a tu Google Sheets, 
-        // puedes descomentar y ajustar esta sección enviando un parámetro de tipo "eliminar":
-        /*
+        // 2. ENVIAR PETICIÓN DE ELIMINACIÓN A GOOGLE SHEETS
         await fetch('https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec', {
             method: 'POST',
             mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ tipo: "eliminar_proyecto", id: idBuscado })
         });
-        */
 
-        // 2. Filtramos de la variable global
+        // 🟢 Damos un respiro de 1.5 segundos para que Google Sheets procese el borrado en la nube
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        // 3. Filtramos de la variable global localmente
         window.proyectos = (window.proyectos || []).filter(p => String(p.id).trim() !== idBuscado);
 
-        // 3. Actualizamos el caché local
+        // 4. Actualizamos el caché local
         localStorage.setItem('app_cache_proyectos', JSON.stringify(window.proyectos));
 
-        // 4. Sincronizamos y redibujamos la tabla
+        // 5. Sincronizamos datos globales de nuevo y redibujamos la interfaz
         if (typeof window.cargarDatosGlobales === 'function') {
             await window.cargarDatosGlobales();
         }
@@ -270,7 +269,7 @@ window.eliminarProyectoCompleto = async function(id) {
             renderizarInicioProyectos();
         }
 
-        // 🟢 5. OCULTAR SPINNER Y MOSTRAR MODAL DE ÉXITO
+        // 6. OCULTAR SPINNER Y MOSTRAR MODAL DE ÉXITO
         if (spinnerModal) spinnerModal.classList.add('hidden');
         mostrarModal("¡Proyecto eliminado con éxito!");
 
