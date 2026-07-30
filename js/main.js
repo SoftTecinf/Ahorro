@@ -70,34 +70,6 @@ window.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
-        // 🟢 ACTIVAR FORMATO DE MONEDA FLUIDO EN EL INPUT DE MONTO
-        const inputMonto = document.getElementById('datos-monto');
-
-        if (inputMonto && !inputMonto.dataset.formatoConfigurado) {
-            inputMonto.dataset.formatoConfigurado = "true";
-
-            inputMonto.addEventListener('input', function (e) {
-                // 1. Limpiamos todo lo que no sea número
-                let rawValue = this.value.replace(/\D/g, "");
-
-                if (!rawValue) {
-                    this.value = '';
-                    return;
-                }
-
-                // 2. Convertimos a valor decimal para los centavos
-                let numericValue = parseInt(rawValue, 10) / 100;
-
-                // 3. Aplicamos el formato de moneda mexicano
-                this.value = numericValue.toLocaleString('es-MX', {
-                    style: 'currency',
-                    currency: 'MXN',
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                });
-            });
-        }
-
     } else {
         if (modalLogin) {
             modalLogin.style.display = 'flex';
@@ -108,7 +80,6 @@ window.addEventListener('DOMContentLoaded', async () => {
         }
     }
 });
-
 // main.js
 async function navegarA(vistaId) {
     // 1. Ocultar todas las vistas
