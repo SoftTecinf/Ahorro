@@ -109,6 +109,27 @@ window.guardarProyecto = async function (event) {
         alert("⚠️ Faltan datos o el monto es inválido.");
         return;
     }
+    // Validación detallada para cazar al culpable
+    if (!nombre) {
+        alert("⚠️ Falta el nombre del proyecto.");
+        return;
+    }
+    if (!fechaInicio) {
+        alert("⚠️ Falta la fecha de inicio.");
+        return;
+    }
+    if (montoLimpio <= 0) {
+        alert("⚠️ El monto es inválido o menor a 0 (Detectado: " + montoLimpio + ").");
+        return;
+    }
+    if (!plazos) {
+        alert("⚠️ Faltan los plazos.");
+        return;
+    }
+    if (!usuarioActual) {
+        alert("⚠️ No se encontró el usuario actual.");
+        return;
+    }
 
     // 🟢 1. MOSTRAR EL SPINNER INMEDIATAMENTE
     const spinnerModal = document.getElementById('modal-spinner');
