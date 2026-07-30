@@ -79,18 +79,17 @@ window.guardarProyecto = async function (event) {
     const idOculto = document.getElementById('datos-proyecto-id').value;
     const inputNombre = document.getElementById('datos-nombre-proyecto');
     const inputFecha = document.getElementById('datos-fecha-inicio');
-    const inputMonto = document.getElementById('datos-monto'); // Asegúrate que este sea el ID de tu input en el HTML
     const inputPlazos = document.getElementById('datos-plazos');
     const inputFrecuencia = document.getElementById('datos-frecuencia');
 
     const nombre = inputNombre.value.trim();
     const fechaInicio = inputFecha.value;
 
-    // 🟢 EXTRACCIÓN BLINDADA: Si el input no existe o está vacío, evitamos que truene
+    // 🟢 Obtenemos el input y limpiamos el monto de forma segura sin declarar variables duplicadas
+    const campoMonto = document.getElementById('datos-monto');
     let montoLimpio = 0;
-    if (inputMonto && inputMonto.value) {
-        // Quita símbolos de moneda, comas y espacios, dejando solo números y puntos
-        const valorCrudo = inputMonto.value.replace(/[^0-9.]/g, '');
+    if (campoMonto && campoMonto.value) {
+        let valorCrudo = campoMonto.value.replace(/\s/g, '').replace('$', '').replace(/MXN/gi, '').replace(/,/g, '');
         montoLimpio = parseFloat(valorCrudo) || 0;
     }
 
@@ -110,7 +109,6 @@ window.guardarProyecto = async function (event) {
     if (textoSpinner) textoSpinner.textContent = idOculto ? "Actualizando proyecto..." : "Guardando proyecto...";
     if (spinnerModal) spinnerModal.classList.remove('hidden');
 
-    // 🟢 Forzamos un pequeño respiro para que el navegador dibuje el spinner en pantalla
     await new Promise(resolve => setTimeout(resolve, 50));
 
     const proyectoExistente = window.proyectos.find(x => String(x.id) === String(idOculto));
@@ -142,7 +140,7 @@ window.guardarProyecto = async function (event) {
         document.getElementById('datos-proyecto-id').value = '';
         inputNombre.value = '';
         inputFecha.value = '';
-        inputMonto.value = '';
+        if (campoMonto) campoMonto.value = '';
         inputPlazos.value = '';
         inputFrecuencia.value = 'Quincenal';
 
@@ -163,7 +161,6 @@ window.guardarProyecto = async function (event) {
         alert("Ocurrió un error al guardar los cambios.");
     }
 };
-
 
 window.renderizarGridProyectos = function () {
     const tbody = document.getElementById('datos-tabla-proyectos-body');
@@ -850,7 +847,7 @@ function formatearMXN(valor) {
     }).format(numero);
 }
 
-window.formatCurrency = function (input, hiddenId) {
+/*window.formatCurrency = function (input, hiddenId) {
     // 1. Guardar la posición actual del cursor antes de cualquier cambio
     let cursorPosition = input.selectionStart;
     let oldLength = input.value.length;
@@ -885,7 +882,7 @@ window.formatCurrency = function (input, hiddenId) {
     if (cursorPosition > input.value.length) cursorPosition = input.value.length;
 
     input.setSelectionRange(cursorPosition, cursorPosition);
-};
+};*/
 
 function revertirFechaMX(fechaCadena) {
     if (!fechaCadena) return '---';
