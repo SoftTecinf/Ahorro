@@ -79,15 +79,18 @@ window.guardarProyecto = async function (event) {
     const idOculto = document.getElementById('datos-proyecto-id').value;
     const inputNombre = document.getElementById('datos-nombre-proyecto');
     const inputFecha = document.getElementById('datos-fecha-inicio');
-    const monto = document.getElementById('in-monto-hidden').value;
+    const inputMonto = document.getElementById('datos-monto'); // 🟢 Declarado correctamente
     const inputPlazos = document.getElementById('datos-plazos');
     const inputFrecuencia = document.getElementById('datos-frecuencia');
 
     const nombre = inputNombre.value.trim();
     const fechaInicio = inputFecha.value;
 
-    const valorSinFormato = inputMonto.value.replace(/[^0-9.]/g, '');
-    const montoLimpio = parseFloat(valorSinFormato) || 0;
+    let montoLimpio = 0;
+    if (inputMonto && inputMonto.value) {
+        let valorCrudo = inputMonto.value.replace(/\s/g, '').replace('$', '').replace(/MXN/gi, '').replace(/,/g, '');
+        montoLimpio = parseFloat(valorCrudo) || 0;
+    }
 
     const plazos = inputPlazos.value || 1;
     const frecuencia = inputFrecuencia.value;
@@ -99,13 +102,12 @@ window.guardarProyecto = async function (event) {
         return;
     }
 
-    // 🟢 1. MOSTRAR EL SPINNER INMEDIATAMENTE
+    // 1. MOSTRAR EL SPINNER INMEDIATAMENTE
     const spinnerModal = document.getElementById('modal-spinner');
     const textoSpinner = document.getElementById('texto-spinner');
     if (textoSpinner) textoSpinner.textContent = idOculto ? "Actualizando proyecto..." : "Guardando proyecto...";
     if (spinnerModal) spinnerModal.classList.remove('hidden');
 
-    // 🟢 Forzamos un pequeño respiro para que el navegador dibuje el spinner en pantalla
     await new Promise(resolve => setTimeout(resolve, 50));
 
     const proyectoExistente = window.proyectos.find(x => String(x.id) === String(idOculto));
@@ -133,11 +135,11 @@ window.guardarProyecto = async function (event) {
             body: JSON.stringify(proyectoData)
         });
 
-        // Limpiar formulario
+        // Limpiar formulario de forma segura
         document.getElementById('datos-proyecto-id').value = '';
         inputNombre.value = '';
         inputFecha.value = '';
-        inputMonto.value = '';
+        if (inputMonto) inputMonto.value = '';
         inputPlazos.value = '';
         inputFrecuencia.value = 'Quincenal';
 
@@ -147,7 +149,7 @@ window.guardarProyecto = async function (event) {
             window.renderizarGridProyectos();
         }
 
-        // 🟢 4. OCULTAR SPINNER ANTES DE MOSTRAR EL MENSAJE DE ÉXITO
+        // 4. OCULTAR SPINNER ANTES DE MOSTRAR EL MENSAJE DE ÉXITO
         if (spinnerModal) spinnerModal.classList.add('hidden');
 
         mostrarModal(idOculto ? "¡Proyecto actualizado!" : "¡Proyecto guardado con éxito!");
