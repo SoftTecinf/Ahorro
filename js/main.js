@@ -70,6 +70,37 @@ window.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
+        // 🟢 ACTIVAR FORMATO DE MONEDA FLUIDO EN EL INPUT DE MONTO
+        const inputMonto = document.getElementById('datos-monto');
+        if (inputMonto && !inputMonto.dataset.formatoConfigurado) {
+            inputMonto.dataset.formatoConfigurado = "true";
+
+            inputMonto.addEventListener('input', function (e) {
+                let cursorPosition = this.selectionStart;
+                let oldValue = this.value;
+
+                let digits = this.value.replace(/\D/g, '');
+                if (!digits) {
+                    this.value = '';
+                    return;
+                }
+
+                let number = parseFloat(digits) / 100;
+                let formatted = number.toLocaleString('es-MX', {
+                    style: 'currency',
+                    currency: 'MXN',
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+
+                this.value = formatted;
+
+                let diff = this.value.length - oldValue.length;
+                let newCursorPosition = Math.max(0, cursorPosition + diff);
+                this.setSelectionRange(newCursorPosition, newCursorPosition);
+            });
+        }
+
     } else {
         if (modalLogin) {
             modalLogin.style.display = 'flex';
