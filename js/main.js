@@ -75,25 +75,28 @@ window.addEventListener('DOMContentLoaded', async () => {
         if (inputMonto && !inputMonto.dataset.formatoConfigurado) {
             inputMonto.dataset.formatoConfigurado = "true";
 
+            // Mientras escribes, solo permitimos números y puntos
             inputMonto.addEventListener('input', function (e) {
-                // Obtenemos solo los números limpios
-                let rawValue = this.value.replace(/\D/g, '');
+                this.value = this.value.replace(/[^0-9.]/g, '');
+            });
 
-                if (!rawValue) {
-                    this.value = '';
-                    return;
+            // Cuando sales del campo, se aplica el formato bonito de moneda MXN
+            inputMonto.addEventListener('blur', function (e) {
+                let numericValue = parseFloat(this.value.replace(/[^0-9.]/g, '')) || 0;
+                if (numericValue > 0) {
+                    this.value = numericValue.toLocaleString('es-MX', {
+                        style: 'currency',
+                        currency: 'MXN',
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
                 }
+            });
 
-                // Convertimos a valor decimal para los centavos
-                let numericValue = parseInt(rawValue, 10) / 100;
-
-                // Formateamos como moneda mexicana y asignamos de golpe
-                this.value = numericValue.toLocaleString('es-MX', {
-                    style: 'currency',
-                    currency: 'MXN',
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                });
+            // Al hacer clic para editar, quitamos el formato para que puedas modificarlo fácil
+            inputMonto.addEventListener('focus', function (e) {
+                let numericValue = parseFloat(this.value.replace(/[^0-9.]/g, '')) || '';
+                this.value = numericValue ? numericValue : '';
             });
         }
 
