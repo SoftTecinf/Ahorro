@@ -1,6 +1,7 @@
 // ==========================================
 // LÓGICA DE CONTROL DEL LOGIN / REGISTRO
 // ==========================================
+        const URL_API = 'https://script.google.com/macros/s/AKfycbxTFZLLfvP8cywVA8IzMsVa0BPA9OeLieUV-6Cgg_XNxLZLH6Uxzx_QpfdOzMH3x2wdVQ/exec';
 
 
 
@@ -33,7 +34,6 @@ async function procesarRegistro() {
     }
 
     try {
-        const URL_API = 'https://script.google.com/macros/s/AKfycbxTFZLLfvP8cywVA8IzMsVa0BPA9OeLieUV-6Cgg_XNxLZLH6Uxzx_QpfdOzMH3x2wdVQ/exec';
 
 
         // Quitamos 'mode: 'no-cors'' para poder procesar la respuesta JSON correctamente
