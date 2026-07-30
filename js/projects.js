@@ -87,12 +87,18 @@ window.guardarProyecto = async function (event) {
     const fechaInicio = inputFecha.value;
 
     // 🟢 EXTRACCIÓN BLINDADA: Si el input no existe o está vacío, evitamos que truene
+    const inputMonto = document.getElementById('datos-monto');
+    
     let montoLimpio = 0;
     if (inputMonto && inputMonto.value) {
-        // Quita símbolos de moneda, comas y espacios, dejando solo números y puntos
-        const valorCrudo = inputMonto.value.replace(/[^0-9.]/g, '');
+        // Limpiamos de forma agresiva cualquier cosa que no sea número
+        let valorCrudo = inputMonto.value.replace(/\s/g, '').replace('$', '').replace(/MXN/gi, '').replace(/,/g, '');
         montoLimpio = parseFloat(valorCrudo) || 0;
     }
+
+    // 🟢 DEPURACIÓN: Esto te dirá en la consola exactamente qué detectó
+    console.log("Valor crudo en input:", inputMonto ? inputMonto.value : "No existe el input");
+    console.log("Monto limpio parseado:", montoLimpio);
 
     const plazos = inputPlazos.value || 1;
     const frecuencia = inputFrecuencia.value;
@@ -850,7 +856,7 @@ function formatearMXN(valor) {
     }).format(numero);
 }
 
-window.formatCurrency = function (input, hiddenId) {
+/*window.formatCurrency = function (input, hiddenId) {
     // 1. Guardar la posición actual del cursor antes de cualquier cambio
     let cursorPosition = input.selectionStart;
     let oldLength = input.value.length;
@@ -885,7 +891,7 @@ window.formatCurrency = function (input, hiddenId) {
     if (cursorPosition > input.value.length) cursorPosition = input.value.length;
 
     input.setSelectionRange(cursorPosition, cursorPosition);
-};
+};*/
 
 function revertirFechaMX(fechaCadena) {
     if (!fechaCadena) return '---';
