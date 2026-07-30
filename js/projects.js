@@ -109,7 +109,6 @@ window.guardarProyecto = async function (event) {
         alert("⚠️ Faltan datos o el monto es inválido.");
         return;
     }
-    
 
     // 🟢 1. MOSTRAR EL SPINNER INMEDIATAMENTE
     const spinnerModal = document.getElementById('modal-spinner');
