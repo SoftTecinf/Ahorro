@@ -79,19 +79,15 @@ window.guardarProyecto = async function (event) {
     const idOculto = document.getElementById('datos-proyecto-id').value;
     const inputNombre = document.getElementById('datos-nombre-proyecto');
     const inputFecha = document.getElementById('datos-fecha-inicio');
+    const monto = document.getElementById('in-monto-hidden').value;
     const inputPlazos = document.getElementById('datos-plazos');
     const inputFrecuencia = document.getElementById('datos-frecuencia');
 
     const nombre = inputNombre.value.trim();
     const fechaInicio = inputFecha.value;
 
-    // 🟢 Obtenemos el input y limpiamos el monto de forma segura sin declarar variables duplicadas
-    const campoMonto = document.getElementById('datos-monto');
-    let montoLimpio = 0;
-    if (campoMonto && campoMonto.value) {
-        let valorCrudo = campoMonto.value.replace(/\s/g, '').replace('$', '').replace(/MXN/gi, '').replace(/,/g, '');
-        montoLimpio = parseFloat(valorCrudo) || 0;
-    }
+    const valorSinFormato = inputMonto.value.replace(/[^0-9.]/g, '');
+    const montoLimpio = parseFloat(valorSinFormato) || 0;
 
     const plazos = inputPlazos.value || 1;
     const frecuencia = inputFrecuencia.value;
@@ -109,6 +105,7 @@ window.guardarProyecto = async function (event) {
     if (textoSpinner) textoSpinner.textContent = idOculto ? "Actualizando proyecto..." : "Guardando proyecto...";
     if (spinnerModal) spinnerModal.classList.remove('hidden');
 
+    // 🟢 Forzamos un pequeño respiro para que el navegador dibuje el spinner en pantalla
     await new Promise(resolve => setTimeout(resolve, 50));
 
     const proyectoExistente = window.proyectos.find(x => String(x.id) === String(idOculto));
@@ -140,7 +137,7 @@ window.guardarProyecto = async function (event) {
         document.getElementById('datos-proyecto-id').value = '';
         inputNombre.value = '';
         inputFecha.value = '';
-        if (campoMonto) campoMonto.value = '';
+        inputMonto.value = '';
         inputPlazos.value = '';
         inputFrecuencia.value = 'Quincenal';
 
@@ -161,6 +158,7 @@ window.guardarProyecto = async function (event) {
         alert("Ocurrió un error al guardar los cambios.");
     }
 };
+
 
 window.renderizarGridProyectos = function () {
     const tbody = document.getElementById('datos-tabla-proyectos-body');
@@ -847,7 +845,7 @@ function formatearMXN(valor) {
     }).format(numero);
 }
 
-/*window.formatCurrency = function (input, hiddenId) {
+window.formatCurrency = function (input, hiddenId) {
     // 1. Guardar la posición actual del cursor antes de cualquier cambio
     let cursorPosition = input.selectionStart;
     let oldLength = input.value.length;
@@ -882,7 +880,7 @@ function formatearMXN(valor) {
     if (cursorPosition > input.value.length) cursorPosition = input.value.length;
 
     input.setSelectionRange(cursorPosition, cursorPosition);
-};*/
+};
 
 function revertirFechaMX(fechaCadena) {
     if (!fechaCadena) return '---';
