@@ -79,16 +79,20 @@ window.guardarProyecto = async function (event) {
     const idOculto = document.getElementById('datos-proyecto-id').value;
     const inputNombre = document.getElementById('datos-nombre-proyecto');
     const inputFecha = document.getElementById('datos-fecha-inicio');
-    const inputMonto = document.getElementById('datos-monto'); // 🟢 Referencia corregida
+    const inputMonto = document.getElementById('datos-monto'); // Asegúrate que este sea el ID de tu input en el HTML
     const inputPlazos = document.getElementById('datos-plazos');
     const inputFrecuencia = document.getElementById('datos-frecuencia');
 
     const nombre = inputNombre.value.trim();
     const fechaInicio = inputFecha.value;
 
-    // 🟢 Extracción limpia del monto directamente del input visible
-    const valorSinFormato = inputMonto.value.replace(/[^0-9.]/g, '');
-    const montoLimpio = parseFloat(valorSinFormato) || 0;
+    // 🟢 EXTRACCIÓN BLINDADA: Si el input no existe o está vacío, evitamos que truene
+    let montoLimpio = 0;
+    if (inputMonto && inputMonto.value) {
+        // Quita símbolos de moneda, comas y espacios, dejando solo números y puntos
+        const valorCrudo = inputMonto.value.replace(/[^0-9.]/g, '');
+        montoLimpio = parseFloat(valorCrudo) || 0;
+    }
 
     const plazos = inputPlazos.value || 1;
     const frecuencia = inputFrecuencia.value;
@@ -106,6 +110,7 @@ window.guardarProyecto = async function (event) {
     if (textoSpinner) textoSpinner.textContent = idOculto ? "Actualizando proyecto..." : "Guardando proyecto...";
     if (spinnerModal) spinnerModal.classList.remove('hidden');
 
+    // 🟢 Forzamos un pequeño respiro para que el navegador dibuje el spinner en pantalla
     await new Promise(resolve => setTimeout(resolve, 50));
 
     const proyectoExistente = window.proyectos.find(x => String(x.id) === String(idOculto));
@@ -173,20 +178,21 @@ window.renderizarGridProyectos = function () {
     }
 
     tbody.innerHTML = window.proyectos.map(p => {
+        // Aseguramos que el monto sea un número
         const montoNumerico = parseFloat(p.monto) || 0;
         const fechaAMostrar = p.fecha || p.fechainicio || null;
         return `
         <tr class="hover:bg-purple-50/30 transition-colors">
-            <td class="p-3 font-bold text-gray-900">${p.nombre}</td>
-            <td class="p-3 text-gray-600">${fechaAMostrar ? fechaAMostrar.split('T')[0] : 'Sin fecha'}</td> 
-            <td class="p-3 font-medium text-purple-700">${p.frecuencia}</td>
-            <td class="p-3 font-semibold text-gray-800">${formatearMXN(p.monto)}</td>
-            <td class="p-3 text-center font-medium">${p.plazos}</td>
-            <td class="p-3 text-center space-x-2">
-                <button onclick="editarProyecto('${p.id}')" class="text-xs bg-yellow-100 text-yellow-800 font-bold px-2.5 py-1 rounded-lg hover:bg-yellow-200 cursor-pointer">Editar</button>
-                <button onclick="eliminarProyectoCompleto('${p.id}')" class="text-xs bg-red-50 text-red-600 px-2.5 py-1 rounded-lg hover:bg-red-100 cursor-pointer">Eliminar</button>
-            </td>
-        </tr>`;
+                    <td class="p-3 font-bold text-gray-900">${p.nombre}</td>
+                    <td class="p-3 text-gray-600">${fechaAMostrar ? fechaAMostrar.split('T')[0] : 'Sin fecha'}</td> 
+                    <td class="p-3 font-medium text-purple-700">${p.frecuencia}</td>
+                    <td class="p-3 font-semibold text-gray-800">${formatearMXN(p.monto)}</td>
+                    <td class="p-3 text-center font-medium">${p.plazos}</td>
+                    <td class="p-3 text-center space-x-2">
+                        <button onclick="editarProyecto('${p.id}')" class="text-xs bg-yellow-100 text-yellow-800 font-bold px-2.5 py-1 rounded-lg hover:bg-yellow-200 cursor-pointer">Editar</button>
+                        <button onclick="eliminarProyectoCompleto('${p.id}')" class="text-xs bg-red-50 text-red-600 px-2.5 py-1 rounded-lg hover:bg-red-100 cursor-pointer">Eliminar</button>
+                    </td>
+                </tr>`;
     }).join('');
 };
 
@@ -204,6 +210,7 @@ function editarProyecto(id) {
     document.getElementById('datos-nombre-proyecto').value = p.nombre || '';
     document.getElementById('datos-fecha-inicio').value = (p.fechainicio || '').split('T')[0];
 
+    // Aquí usamos tu función formatearMXN directamente para que cargue limpio en el input
     document.getElementById('datos-monto').value = formatearMXN(p.monto) || '';
 
     document.getElementById('datos-plazos').value = p.plazos || 0;
@@ -228,6 +235,7 @@ window.eliminarProyectoCompleto = async function (id) {
 
     const idBuscado = String(id).trim();
 
+    // 1. MOSTRAR EL SPINNER DE CARGA
     const spinnerModal = document.getElementById('modal-spinner');
     const textoSpinner = document.getElementById('texto-spinner');
     if (textoSpinner) textoSpinner.textContent = "Eliminando proyecto...";
@@ -236,6 +244,7 @@ window.eliminarProyectoCompleto = async function (id) {
     await new Promise(resolve => setTimeout(resolve, 50));
 
     try {
+        // 2. ENVIAR PETICIÓN DE ELIMINACIÓN A GOOGLE SHEETS
         await fetch('https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec', {
             method: 'POST',
             mode: 'no-cors',
@@ -243,11 +252,16 @@ window.eliminarProyectoCompleto = async function (id) {
             body: JSON.stringify({ tipo: "eliminar_proyecto", id: idBuscado })
         });
 
+        // 🟢 Damos un respiro de 1.5 segundos para que Google Sheets procese el borrado en la nube
         await new Promise(resolve => setTimeout(resolve, 1500));
 
+        // 3. Filtramos de la variable global localmente
         window.proyectos = (window.proyectos || []).filter(p => String(p.id).trim() !== idBuscado);
+
+        // 4. Actualizamos el caché local
         localStorage.setItem('app_cache_proyectos', JSON.stringify(window.proyectos));
 
+        // 5. Sincronizamos datos globales de nuevo y redibujamos la interfaz
         if (typeof window.cargarDatosGlobales === 'function') {
             await window.cargarDatosGlobales();
         }
@@ -260,6 +274,7 @@ window.eliminarProyectoCompleto = async function (id) {
             renderizarInicioProyectos();
         }
 
+        // 6. OCULTAR SPINNER Y MOSTRAR MODAL DE ÉXITO
         if (spinnerModal) spinnerModal.classList.add('hidden');
         mostrarModal("¡Proyecto eliminado con éxito!");
 
