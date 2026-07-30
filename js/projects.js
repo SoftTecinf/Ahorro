@@ -79,7 +79,12 @@ window.guardarProyecto = async function (event) {
     const idOculto = document.getElementById('datos-proyecto-id').value;
     const inputNombre = document.getElementById('datos-nombre-proyecto');
     const inputFecha = document.getElementById('datos-fecha-inicio');
-    const inputMonto = document.getElementById('datos-monto');
+    
+    // 🟢 Buscamos el monto probando con los posibles IDs que has usado
+    const inputMonto = document.getElementById('datos-monto') || 
+                       document.getElementById('in-monto-hidden') || 
+                       document.getElementById('monto');
+                       
     const inputPlazos = document.getElementById('datos-plazos');
     const inputFrecuencia = document.getElementById('datos-frecuencia');
 
@@ -96,7 +101,7 @@ window.guardarProyecto = async function (event) {
     const frecuencia = inputFrecuencia ? inputFrecuencia.value : "Quincenal";
     const usuarioActual = window.currentUser || localStorage.getItem('app_currentUser');
 
-    // 🟢 COLOCA EL BLOQUE DETALLADO AQUÍ EXACTAMENTE:
+    // Validación detallada para confirmar que ya lee bien el monto
     if (!nombre) {
         alert("⚠️ Falta el nombre del proyecto.");
         return;
@@ -106,7 +111,7 @@ window.guardarProyecto = async function (event) {
         return;
     }
     if (montoLimpio <= 0) {
-        alert("⚠️ El monto es inválido o menor a 0 (Detectado: " + montoLimpio + ").");
+        alert("⚠️ El monto es inválido o menor a 0 (Detectado: " + montoLimpio + "). Revisa el campo del monto.");
         return;
     }
     if (!plazos) {
