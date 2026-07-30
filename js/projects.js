@@ -850,7 +850,7 @@ function formatearMXN(valor) {
     }).format(numero);
 }
 
-/*window.formatCurrency = function (input, hiddenId) {
+window.formatCurrency = function (input, hiddenId) {
     // 1. Guardar la posición actual del cursor antes de cualquier cambio
     let cursorPosition = input.selectionStart;
     let oldLength = input.value.length;
@@ -885,7 +885,7 @@ function formatearMXN(valor) {
     if (cursorPosition > input.value.length) cursorPosition = input.value.length;
 
     input.setSelectionRange(cursorPosition, cursorPosition);
-};*/
+};
 
 function revertirFechaMX(fechaCadena) {
     if (!fechaCadena) return '---';
