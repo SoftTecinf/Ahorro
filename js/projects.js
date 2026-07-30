@@ -79,7 +79,7 @@ window.guardarProyecto = async function (event) {
     const idOculto = document.getElementById('datos-proyecto-id').value;
     const inputNombre = document.getElementById('datos-nombre-proyecto');
     const inputFecha = document.getElementById('datos-fecha-inicio');
-    const inputMonto = document.getElementById('datos-monto');
+    const monto = document.getElementById('in-monto-hidden').value;
     const inputPlazos = document.getElementById('datos-plazos');
     const inputFrecuencia = document.getElementById('datos-frecuencia');
 
@@ -846,14 +846,14 @@ function formatearMXN(valor) {
     }).format(numero);
 }
 
-window.formatCurrency = function(input, hiddenId) {
+window.formatCurrency = function (input, hiddenId) {
     // 1. Guardar la posición actual del cursor antes de cualquier cambio
     let cursorPosition = input.selectionStart;
     let oldLength = input.value.length;
 
     // 2. Extraer estrictamente solo los dígitos numéricos
     let rawValue = input.value.replace(/\D/g, "");
-    
+
     let numericValue = 0;
     if (rawValue) {
         numericValue = parseInt(rawValue, 10) / 100;
@@ -866,20 +866,20 @@ window.formatCurrency = function(input, hiddenId) {
     }
 
     // 4. Aplicar el formato visual estándar de moneda MXN
-    let formattedValue = numericValue.toLocaleString('es-MX', { 
-        style: 'currency', 
-        currency: 'MXN' 
+    let formattedValue = numericValue.toLocaleString('es-MX', {
+        style: 'currency',
+        currency: 'MXN'
     });
-    
+
     input.value = formattedValue;
 
     // 5. Ajuste inteligente del cursor para que no brinque al final
     let newLength = input.value.length;
     cursorPosition = cursorPosition + (newLength - oldLength);
-    
+
     if (cursorPosition < 0) cursorPosition = 0;
     if (cursorPosition > input.value.length) cursorPosition = input.value.length;
-    
+
     input.setSelectionRange(cursorPosition, cursorPosition);
 };
 
