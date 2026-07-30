@@ -846,6 +846,43 @@ function formatearMXN(valor) {
     }).format(numero);
 }
 
+window.formatCurrency = function(input, hiddenId) {
+    // 1. Guardar la posición actual del cursor antes de cualquier cambio
+    let cursorPosition = input.selectionStart;
+    let oldLength = input.value.length;
+
+    // 2. Extraer estrictamente solo los dígitos numéricos
+    let rawValue = input.value.replace(/\D/g, "");
+    
+    let numericValue = 0;
+    if (rawValue) {
+        numericValue = parseInt(rawValue, 10) / 100;
+    }
+
+    // 3. Actualizar el input oculto con el valor numérico limpio
+    const hiddenInput = document.getElementById(hiddenId);
+    if (hiddenInput) {
+        hiddenInput.value = numericValue;
+    }
+
+    // 4. Aplicar el formato visual estándar de moneda MXN
+    let formattedValue = numericValue.toLocaleString('es-MX', { 
+        style: 'currency', 
+        currency: 'MXN' 
+    });
+    
+    input.value = formattedValue;
+
+    // 5. Ajuste inteligente del cursor para que no brinque al final
+    let newLength = input.value.length;
+    cursorPosition = cursorPosition + (newLength - oldLength);
+    
+    if (cursorPosition < 0) cursorPosition = 0;
+    if (cursorPosition > input.value.length) cursorPosition = input.value.length;
+    
+    input.setSelectionRange(cursorPosition, cursorPosition);
+};
+
 function revertirFechaMX(fechaCadena) {
     if (!fechaCadena) return '---';
     const partes = fechaCadena.split('-');
