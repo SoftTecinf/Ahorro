@@ -40,7 +40,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         const label = document.getElementById('user-label');
         if (label) label.textContent = usuarioGuardado;
 
-        // --- CARGA INMEDIATA DESDE CACHÉ (Para que se vean al instante) ---
+        // --- CARGA INMEDIATA DESDE CACHÉ ---
         const cacheProyectos = localStorage.getItem('app_cache_proyectos');
         if (cacheProyectos) {
             try {
@@ -58,6 +58,25 @@ window.addEventListener('DOMContentLoaded', async () => {
 
         // --- CARGA FRESCA DESDE GOOGLE SHEETS EN SEGUNDO PLANO ---
         window.cargarDatosGlobales();
+
+        // 🟢 NUEVO: Activamos el formato de moneda en tiempo real para el input de montos
+        const inputMonto = document.getElementById('datos-monto');
+        if (inputMonto && !inputMonto.dataset.formatoActivado) {
+            inputMonto.dataset.formatoActivado = "true"; // Evitamos duplicar eventos
+            inputMonto.addEventListener('input', function (e) {
+                let numeros = this.value.replace(/\D/g, '');
+                if (!numeros) {
+                    this.value = '';
+                    return;
+                }
+                let valorNumerico = parseFloat(numeros) / 100;
+                this.value = valorNumerico.toLocaleString('es-MX', {
+                    style: 'currency',
+                    currency: 'MXN',
+                    minimumFractionDigits: 2
+                });
+            });
+        }
 
     } else {
         if (modalLogin) {
