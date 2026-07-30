@@ -868,16 +868,30 @@ function calcularFechaPlazo(fechaInicioStr, numeroPlazo, frecuencia) {
     return date.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
+let temporizadorModalExito = null;
 
+window.mostrarModal = function(mensaje) {
+    const successModal = document.getElementById('success-modal');
+    const successMessage = document.getElementById('success-message');
 
-function mostrarModal(msg) {
-    const m = document.getElementById('success-modal');
-    const txt = document.getElementById('success-message');
-    if (m && txt) {
-        txt.textContent = msg;
-        m.classList.remove('hidden');
+    if (successMessage) {
+        successMessage.textContent = mensaje;
     }
-}
+
+    if (successModal) {
+        successModal.classList.remove('hidden');
+
+        // Limpiamos temporizador previo si existía
+        if (temporizadorModalExito) {
+            clearTimeout(temporizadorModalExito);
+        }
+
+        // Se oculta automáticamente después de 2.5 segundos
+        temporizadorModalExito = setTimeout(() => {
+            successModal.classList.add('hidden');
+        }, 2500);
+    }
+};
 
 function cerrarModal() {
     document.getElementById('success-modal').classList.add('hidden');
