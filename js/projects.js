@@ -283,45 +283,32 @@ window.eliminarProyectoCompleto = async function (id) {
 // ==========================================
 // VISTA PRINCIPAL (TARJETAS LATERALES DE PROYECTO)
 // ==========================================
-window.renderizarGridProyectos = function () {
-    const tbody = document.getElementById('datos-tabla-proyectos-body');
+async function renderizarInicioProyectos() {
+    // 1. Buscamos el contenedor donde quieres que aparezcan las tarjetas
+    const contenedor = document.getElementById('inicio-lista-proyectos');
+    if (!contenedor) return;
 
-    // 1. Verificación de seguridad
-    if (!tbody) return;
+    // 2. Filtramos tus proyectos (asegúrate de que 'proyectos' sea global)
+    const misProyectos = window.proyectos.filter(p => p.adminName === window.currentUser);
 
-    // 2. Manejo de estado vacío
-    if (!window.proyectos || window.proyectos.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-500">No hay proyectos registrados.</td></tr>`;
+    // 3. Si no hay proyectos, mostramos un mensaje amigable
+    if (misProyectos.length === 0) {
+        contenedor.innerHTML = '<p class="text-gray-400 p-4 text-center">Aún no tienes proyectos de ahorro activos.</p>';
+        document.getElementById('inicio-resumen-proyecto').classList.add('hidden');
         return;
     }
 
-    try {
-        tbody.innerHTML = window.proyectos.map(p => {
-            const fechaAMostrar = p.fecha || p.fechainicio || null;
-            const fechaLimpia = fechaAMostrar ? fechaAMostrar.split('T')[0] : 'Sin fecha';
-            
-            // Formateo seguro directamente aquí por si la función externa falla
-            const montoNum = parseFloat(p.monto) || 0;
-            const montoFormateado = montoNum.toLocaleString('es-MX', { style: 'currency', currency: 'MXN', minimumFractionDigits: 2 });
-
-            return `
-                <tr class="hover:bg-purple-50/30 transition-colors">
-                    <td class="p-3 font-bold text-gray-900">${p.nombre || 'Sin nombre'}</td>
-                    <td class="p-3 text-gray-600">${fechaLimpia}</td> 
-                    <td class="p-3 font-medium text-purple-700">${p.frecuencia || 'Quincenal'}</td>
-                    <td class="p-3 font-semibold text-gray-800">${montoFormateado}</td>
-                    <td class="p-3 text-center font-medium">${p.plazos || 0}</td>
-                    <td class="p-3 text-center space-x-2">
-                        <button onclick="editarProyecto('${p.id}')" class="text-xs bg-yellow-100 text-yellow-800 font-bold px-2.5 py-1 rounded-lg hover:bg-yellow-200 cursor-pointer">Editar</button>
-                        <button onclick="eliminarProyectoCompleto('${p.id}')" class="text-xs bg-red-50 text-red-600 px-2.5 py-1 rounded-lg hover:bg-red-100 cursor-pointer">Eliminar</button>
-                    </td>
-                </tr>`;
-        }).join('');
-    } catch (error) {
-        console.error("Error al renderizar la tabla de proyectos:", error);
-        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-red-500">Error al mostrar los proyectos.</td></tr>`;
-    }
-};
+    // 4. Inyectamos las tarjetas usando el HTML que definimos
+    contenedor.innerHTML = misProyectos.map(p => `
+        <button onclick="verResumenProyectoInmediato(${p.id})" class="w-full text-left p-4 rounded-2xl border border-purple-50 hover:border-purple-300 bg-purple-50/10 hover:bg-white transition-all cursor-pointer flex justify-between items-center group">
+        <div>
+            <h4 class="text-lg font-bold text-gray-900">${p.nombre}</h4>
+            <p class="text-sm text-gray-400">Meta: $${parseFloat(p.monto).toLocaleString()}</p>
+        </div>
+        <span class="text-xs font-bold text-purple-600 bg-white shadow-3xs px-2.5 py-1 rounded-lg group-hover:bg-purple-600 group-hover:text-white transition-all">Ver 🔮</span>
+        </button>
+    `).join('');
+}
 
 function verResumenProyectoInmediato(id) {
     // Usamos window.proyectos para asegurar que accedemos a la variable global
