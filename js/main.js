@@ -76,28 +76,24 @@ window.addEventListener('DOMContentLoaded', async () => {
             inputMonto.dataset.formatoConfigurado = "true";
 
             inputMonto.addEventListener('input', function (e) {
-                let cursorPosition = this.selectionStart;
-                let oldValue = this.value;
+                // Obtenemos solo los números limpios
+                let rawValue = this.value.replace(/\D/g, '');
 
-                let digits = this.value.replace(/\D/g, '');
-                if (!digits) {
+                if (!rawValue) {
                     this.value = '';
                     return;
                 }
 
-                let number = parseFloat(digits) / 100;
-                let formatted = number.toLocaleString('es-MX', {
+                // Convertimos a valor decimal para los centavos
+                let numericValue = parseInt(rawValue, 10) / 100;
+
+                // Formateamos como moneda mexicana y asignamos de golpe
+                this.value = numericValue.toLocaleString('es-MX', {
                     style: 'currency',
                     currency: 'MXN',
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2
                 });
-
-                this.value = formatted;
-
-                let diff = this.value.length - oldValue.length;
-                let newCursorPosition = Math.max(0, cursorPosition + diff);
-                this.setSelectionRange(newCursorPosition, newCursorPosition);
             });
         }
 
