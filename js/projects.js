@@ -79,21 +79,26 @@ window.guardarProyecto = async function (event) {
     const idOculto = document.getElementById('datos-proyecto-id').value;
     const inputNombre = document.getElementById('datos-nombre-proyecto');
     const inputFecha = document.getElementById('datos-fecha-inicio');
-    
-    // 🟢 CORRECCIÓN: Quitamos el 'const' porque ya está declarada arriba en el archivo
-    inputMonto = document.getElementById('datos-monto'); 
-    
+    const inputMonto = document.getElementById('datos-monto'); // Asegúrate que este sea el ID de tu input en el HTML
     const inputPlazos = document.getElementById('datos-plazos');
     const inputFrecuencia = document.getElementById('datos-frecuencia');
 
     const nombre = inputNombre.value.trim();
     const fechaInicio = inputFecha.value;
 
+    // 🟢 EXTRACCIÓN BLINDADA: Si el input no existe o está vacío, evitamos que truene
+    const inputMonto = document.getElementById('datos-monto');
+
     let montoLimpio = 0;
     if (inputMonto && inputMonto.value) {
+        // Limpiamos de forma agresiva cualquier cosa que no sea número
         let valorCrudo = inputMonto.value.replace(/\s/g, '').replace('$', '').replace(/MXN/gi, '').replace(/,/g, '');
         montoLimpio = parseFloat(valorCrudo) || 0;
     }
+
+    // 🟢 DEPURACIÓN: Esto te dirá en la consola exactamente qué detectó
+    console.log("Valor crudo en input:", inputMonto ? inputMonto.value : "No existe el input");
+    console.log("Monto limpio parseado:", montoLimpio);
 
     const plazos = inputPlazos.value || 1;
     const frecuencia = inputFrecuencia.value;
@@ -105,11 +110,13 @@ window.guardarProyecto = async function (event) {
         return;
     }
 
+    // 🟢 1. MOSTRAR EL SPINNER INMEDIATAMENTE
     const spinnerModal = document.getElementById('modal-spinner');
     const textoSpinner = document.getElementById('texto-spinner');
     if (textoSpinner) textoSpinner.textContent = idOculto ? "Actualizando proyecto..." : "Guardando proyecto...";
     if (spinnerModal) spinnerModal.classList.remove('hidden');
 
+    // 🟢 Forzamos un pequeño respiro para que el navegador dibuje el spinner en pantalla
     await new Promise(resolve => setTimeout(resolve, 50));
 
     const proyectoExistente = window.proyectos.find(x => String(x.id) === String(idOculto));
@@ -129,6 +136,7 @@ window.guardarProyecto = async function (event) {
     };
 
     try {
+        // 2. Enviar a Google Sheets
         await fetch('https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec', {
             method: 'POST',
             mode: 'no-cors',
@@ -136,6 +144,7 @@ window.guardarProyecto = async function (event) {
             body: JSON.stringify(proyectoData)
         });
 
+        // Limpiar formulario
         document.getElementById('datos-proyecto-id').value = '';
         inputNombre.value = '';
         inputFecha.value = '';
@@ -143,11 +152,13 @@ window.guardarProyecto = async function (event) {
         inputPlazos.value = '';
         inputFrecuencia.value = 'Quincenal';
 
+        // 3. Sincronizar datos globales y renderizar la tabla
         await cargarDatosGlobales();
         if (typeof window.renderizarGridProyectos === 'function') {
             window.renderizarGridProyectos();
         }
 
+        // 🟢 4. OCULTAR SPINNER ANTES DE MOSTRAR EL MENSAJE DE ÉXITO
         if (spinnerModal) spinnerModal.classList.add('hidden');
 
         mostrarModal(idOculto ? "¡Proyecto actualizado!" : "¡Proyecto guardado con éxito!");
@@ -158,6 +169,7 @@ window.guardarProyecto = async function (event) {
         alert("Ocurrió un error al guardar los cambios.");
     }
 };
+
 
 window.renderizarGridProyectos = function () {
     const tbody = document.getElementById('datos-tabla-proyectos-body');
