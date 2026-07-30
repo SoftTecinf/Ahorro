@@ -77,40 +77,27 @@ window.addEventListener('DOMContentLoaded', async () => {
             inputMonto.dataset.formatoConfigurado = "true";
 
             inputMonto.addEventListener('input', function (e) {
-                // 1. Guardar la posición actual del cursor y la longitud previa
-                let cursorPosition = this.selectionStart;
-                let oldLength = this.value.length;
-
-                // 2. Extraer estrictamente solo los dígitos numéricos
+                // 1. Limpiamos todo lo que no sea número
                 let rawValue = this.value.replace(/\D/g, "");
 
-                let numericValue = 0;
-                if (rawValue) {
-                    numericValue = parseInt(rawValue, 10) / 100;
+                if (!rawValue) {
+                    this.value = '';
+                    return;
                 }
 
-                // 3. Aplicar el formato visual de moneda
-                let formattedValue = numericValue.toLocaleString('es-MX', {
+                // 2. Convertimos a valor decimal para los centavos
+                let numericValue = parseInt(rawValue, 10) / 100;
+
+                // 3. Aplicamos el formato de moneda mexicano
+                this.value = numericValue.toLocaleString('es-MX', {
                     style: 'currency',
                     currency: 'MXN',
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2
                 });
-
-                this.value = formattedValue;
-
-                // 4. Ajuste inteligente del cursor para que no brinque
-                let newLength = this.value.length;
-                cursorPosition = cursorPosition + (newLength - oldLength);
-
-                // Evitar que rebase los límites del texto
-                if (cursorPosition < 0) cursorPosition = 0;
-                if (cursorPosition > this.value.length) cursorPosition = this.value.length;
-
-                this.setSelectionRange(cursorPosition, cursorPosition);
             });
         }
-        
+
     } else {
         if (modalLogin) {
             modalLogin.style.display = 'flex';
