@@ -57,7 +57,7 @@
             <!-- Derecha superior: Botón de salir -->
             <div>
                 <button onclick="cerrarSesion()"
-                            class="nav-btn px-3 py-2 rounded-lg flex flex-col md:flex-row items-center gap-1 text-[10px] font-bold opacity-50 hover:opacity-100 uppercase tracking-tighter transition-all text-red-500">
+                    class="nav-btn px-3 py-2 rounded-lg flex flex-col md:flex-row items-center gap-1 text-[10px] font-bold opacity-50 hover:opacity-100 uppercase tracking-tighter transition-all text-red-500">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                         <polyline points="16 17 21 12 16 7"></polyline>
@@ -181,10 +181,8 @@
         class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center hidden z-50">
         <div class="bg-white p-8 rounded-3xl shadow-xl text-center max-w-sm space-y-4 border border-purple-100 mx-4">
             <div class="text-5xl">🔮</div>
-            <p id="success-message" class="text-gray-600 font-light text-sm"></p>
-            <button onclick="cerrarModal()"
-                class="w-full bg-gray-900 hover:bg-gray-700 text-white py-2.5 rounded-xl font-semibold cursor-pointer">¡Entendido!
-                ✨</button>
+            <p id="success-message" class="text-gray-600 font-light text-sm">¡Proyecto eliminado con éxito!</p>
+            <!-- 🔴 ASEGÚRATE DE QUE EL BOTÓN DE "¡Entendido!" ESTÉ ELIMINADO DE AQUÍ -->
         </div>
     </div>
 
@@ -272,7 +270,8 @@
     </div>
 
     <!-- 🟢 NUEVO: SPINNER DE CARGA GLOBAL -->
-    <div id="modal-spinner" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex flex-col items-center justify-center hidden">
+    <div id="modal-spinner"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex flex-col items-center justify-center hidden">
         <div class="bg-white p-6 rounded-2xl shadow-2xl flex flex-col items-center space-y-3">
             <div class="w-12 h-12 border-4 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
             <p id="texto-spinner" class="text-gray-700 font-medium">Guardando cambios...</p>
