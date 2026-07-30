@@ -83,8 +83,8 @@ window.guardarProyecto = async function (event) {
     const inputPlazos = document.getElementById('datos-plazos');
     const inputFrecuencia = document.getElementById('datos-frecuencia');
 
-    const nombre = inputNombre ? inputNombre.value.trim() : "No existe inputNombre";
-    const fechaInicio = inputFecha ? inputFecha.value : "No existe inputFecha";
+    const nombre = inputNombre ? inputNombre.value.trim() : "";
+    const fechaInicio = inputFecha ? inputFecha.value : "";
 
     let montoLimpio = 0;
     if (inputMonto && inputMonto.value) {
@@ -92,20 +92,14 @@ window.guardarProyecto = async function (event) {
         montoLimpio = parseFloat(valorCrudo) || 0;
     }
 
-    const plazos = inputPlazos ? inputPlazos.value : "No existe inputPlazos";
-    const frecuencia = inputFrecuencia ? inputFrecuencia.value : "No existe inputFrecuencia";
-    const usuarioActual = window.currentUser || localStorage.getItem('app_currentUser') || "No hay usuario";
-
-    // 🟢 ESTA ALERTA TE MOSTRARÁ QUÉ ESTÁ LLEGANDO VACÍO O EN CERO
-    alert(`DEBUG:\nNombre: "${nombre}"\nFecha: "${fechaInicio}"\nMontoLimpio: ${montoLimpio}\nPlazos: "${plazos}"\nUsuario: "${usuarioActual}"`);
+    const plazos = inputPlazos ? inputPlazos.value : 1;
+    const frecuencia = inputFrecuencia ? inputFrecuencia.value : "Quincenal";
+    const usuarioActual = window.currentUser || localStorage.getItem('app_currentUser');
 
     if (!nombre || !fechaInicio || montoLimpio <= 0 || !plazos || !usuarioActual) {
         alert("⚠️ Faltan datos o el monto es inválido.");
         return;
     }
-
-    // El resto de tu código de guardado...
-};
 
     // 1. MOSTRAR EL SPINNER INMEDIATAMENTE
     const spinnerModal = document.getElementById('modal-spinner');
@@ -140,13 +134,13 @@ window.guardarProyecto = async function (event) {
             body: JSON.stringify(proyectoData)
         });
 
-        // Limpiar formulario de forma segura
+        // Limpiar formulario
         document.getElementById('datos-proyecto-id').value = '';
-        inputNombre.value = '';
-        inputFecha.value = '';
+        if (inputNombre) inputNombre.value = '';
+        if (inputFecha) inputFecha.value = '';
         if (inputMonto) inputMonto.value = '';
-        inputPlazos.value = '';
-        inputFrecuencia.value = 'Quincenal';
+        if (inputPlazos) inputPlazos.value = '';
+        if (inputFrecuencia) inputFrecuencia.value = 'Quincenal';
 
         // 3. Sincronizar datos globales y renderizar la tabla
         await cargarDatosGlobales();
