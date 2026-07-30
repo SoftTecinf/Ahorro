@@ -755,6 +755,7 @@ function enviarInvitacionWhatsApp(event) {
         localStorage.setItem('app_invitaciones', JSON.stringify(invitacionesPendientes));
     }
 
+
     const baseUri = "https://softtecinf.github.io/Ahorro/";
     const linkCompleto = `${baseUri}?proyecto=${p.id}`;
     const mensaje = `¡Hola! 👋 ${usuarioActual} te invita a nuestra app de 'Ahorro Familiar' para organizar nuestras metas juntos.
