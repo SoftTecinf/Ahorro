@@ -27,7 +27,7 @@ function unirseAProyecto(proyectoId) {
 // Usamos un observer o un listener más robusto
 const inicializarFormateoMonto = () => {
     const inputMonto = document.getElementById('datos-monto');
-    
+
     if (!inputMonto) {
         setTimeout(inicializarFormateoMonto, 500);
         return;
@@ -43,7 +43,7 @@ const inicializarFormateoMonto = () => {
 
         // 1. Extraer estrictamente solo los dígitos numéricos del texto actual
         let valorLimpio = input.value.replace(/\D/g, '');
-        
+
         if (!valorLimpio) {
             input.value = '';
             return;
@@ -51,7 +51,7 @@ const inicializarFormateoMonto = () => {
 
         // 2. Convertir a número entero real
         const numero = parseInt(valorLimpio, 10);
-        
+
         // 3. Aplicar formato visual limpio de moneda MXN
         const valorFormateado = new Intl.NumberFormat('es-MX', {
             style: 'currency',
@@ -67,7 +67,7 @@ const inicializarFormateoMonto = () => {
         cursorPosition = cursorPosition + (newLength - oldLength);
         if (cursorPosition < 0) cursorPosition = 0;
         if (cursorPosition > input.value.length) cursorPosition = input.value.length;
-        
+
         input.setSelectionRange(cursorPosition, cursorPosition);
     });
 };
@@ -149,7 +149,7 @@ window.guardarProyecto = async function (event) {
 
         // 🟢 4. OCULTAR SPINNER ANTES DE MOSTRAR EL MENSAJE DE ÉXITO
         if (spinnerModal) spinnerModal.classList.add('hidden');
-        
+
         mostrarModal(idOculto ? "¡Proyecto actualizado!" : "¡Proyecto guardado con éxito!");
 
     } catch (error) {
@@ -194,7 +194,7 @@ window.renderizarGridProyectos = function () {
 function editarProyecto(id) {
     const idBuscado = String(id).trim();
     const p = window.proyectos.find(x => String(x.id).trim() === idBuscado);
-    
+
     if (!p) {
         console.error("No se encontró el proyecto. ID buscado:", id);
         alert("Error: Este proyecto ya no existe o los datos no han cargado.");
@@ -204,10 +204,10 @@ function editarProyecto(id) {
     document.getElementById('datos-proyecto-id').value = p.id;
     document.getElementById('datos-nombre-proyecto').value = p.nombre || '';
     document.getElementById('datos-fecha-inicio').value = (p.fechainicio || '').split('T')[0];
-    
+
     // Aquí usamos tu función formatearMXN directamente para que cargue limpio en el input
     document.getElementById('datos-monto').value = formatearMXN(p.monto) || '';
-    
+
     document.getElementById('datos-plazos').value = p.plazos || 0;
     document.getElementById('datos-frecuencia').value = p.frecuencia || '';
 
@@ -225,7 +225,7 @@ function cancelarEdicionProyecto() {
     document.getElementById('btn-cancelar-proyecto').classList.add('hidden');
 }
 
-window.eliminarProyectoCompleto = async function(id) {
+window.eliminarProyectoCompleto = async function (id) {
     if (!confirm("¿Deseas eliminar permanentemente este proyecto y todos sus registros vinculados?")) return;
 
     const idBuscado = String(id).trim();
@@ -260,11 +260,11 @@ window.eliminarProyectoCompleto = async function(id) {
         if (typeof window.cargarDatosGlobales === 'function') {
             await window.cargarDatosGlobales();
         }
-        
+
         if (typeof window.renderizarGridProyectos === 'function') {
             window.renderizarGridProyectos();
         }
-        
+
         if (typeof renderizarInicioProyectos === 'function') {
             renderizarInicioProyectos();
         }
@@ -838,8 +838,8 @@ function rechazarInvitacionInterna(invitacionId) {
 // Asegúrate de que esta función exista en tu archivo JS principal:
 function formatearMXN(valor) {
     const numero = parseFloat(valor) || 0;
-    return new Intl.NumberFormat('es-MX', { 
-        style: 'currency', 
+    return new Intl.NumberFormat('es-MX', {
+        style: 'currency',
         currency: 'MXN',
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
@@ -870,7 +870,7 @@ function calcularFechaPlazo(fechaInicioStr, numeroPlazo, frecuencia) {
 
 let temporizadorModalExito = null;
 
-window.mostrarModal = function(mensaje) {
+window.mostrarModal = function (mensaje) {
     const successModal = document.getElementById('success-modal');
     const successMessage = document.getElementById('success-message');
 
