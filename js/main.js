@@ -72,36 +72,45 @@ window.addEventListener('DOMContentLoaded', async () => {
 
         // 🟢 ACTIVAR FORMATO DE MONEDA FLUIDO EN EL INPUT DE MONTO
         const inputMonto = document.getElementById('datos-monto');
+
         if (inputMonto && !inputMonto.dataset.formatoConfigurado) {
             inputMonto.dataset.formatoConfigurado = "true";
 
-            // 1. Mientras escribes, permitimos números y el punto decimal libremente sin alterar el cursor
             inputMonto.addEventListener('input', function (e) {
-                this.value = this.value.replace(/[^0-9.]/g, '');
-            });
+                // 1. Guardar la posición actual del cursor y la longitud previa
+                let cursorPosition = this.selectionStart;
+                let oldLength = this.value.length;
 
-            // 2. Al hacer clic para editar, limpiamos el formato para mostrar solo el número plano
-            inputMonto.addEventListener('focus', function (e) {
-                let limpio = this.value.replace(/[^0-9.]/g, '');
-                this.value = limpio ? limpio : '';
-            });
+                // 2. Extraer estrictamente solo los dígitos numéricos
+                let rawValue = this.value.replace(/\D/g, "");
 
-            // 3. Al salir del campo (hacer clic afuera o cambiar de sección), se aplica el formato MXN bonito
-            inputMonto.addEventListener('blur', function (e) {
-                let numero = parseFloat(this.value.replace(/[^0-9.]/g, '')) || 0;
-                if (numero > 0) {
-                    this.value = numero.toLocaleString('es-MX', {
-                        style: 'currency',
-                        currency: 'MXN',
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                    });
-                } else {
-                    this.value = '';
+                let numericValue = 0;
+                if (rawValue) {
+                    numericValue = parseInt(rawValue, 10) / 100;
                 }
+
+                // 3. Aplicar el formato visual de moneda
+                let formattedValue = numericValue.toLocaleString('es-MX', {
+                    style: 'currency',
+                    currency: 'MXN',
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+
+                this.value = formattedValue;
+
+                // 4. Ajuste inteligente del cursor para que no brinque
+                let newLength = this.value.length;
+                cursorPosition = cursorPosition + (newLength - oldLength);
+
+                // Evitar que rebase los límites del texto
+                if (cursorPosition < 0) cursorPosition = 0;
+                if (cursorPosition > this.value.length) cursorPosition = this.value.length;
+
+                this.setSelectionRange(cursorPosition, cursorPosition);
             });
         }
-
+        
     } else {
         if (modalLogin) {
             modalLogin.style.display = 'flex';
