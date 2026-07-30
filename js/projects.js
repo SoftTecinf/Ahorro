@@ -96,11 +96,7 @@ window.guardarProyecto = async function (event) {
     const frecuencia = inputFrecuencia ? inputFrecuencia.value : "Quincenal";
     const usuarioActual = window.currentUser || localStorage.getItem('app_currentUser');
 
-    if (!nombre || !fechaInicio || montoLimpio <= 0 || !plazos || !usuarioActual) {
-        alert("⚠️ Faltan datos o el monto es inválido.");
-        return;
-    }
-    // Validación detallada para cazar al culpable
+    // 🟢 COLOCA EL BLOQUE DETALLADO AQUÍ EXACTAMENTE:
     if (!nombre) {
         alert("⚠️ Falta el nombre del proyecto.");
         return;
@@ -147,15 +143,13 @@ window.guardarProyecto = async function (event) {
     };
 
     try {
-        // 2. Enviar a Google Sheets
-        await fetch(URL_API, {
+        await fetch('https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec', {
             method: 'POST',
             mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(proyectoData)
         });
 
-        // Limpiar formulario
         document.getElementById('datos-proyecto-id').value = '';
         if (inputNombre) inputNombre.value = '';
         if (inputFecha) inputFecha.value = '';
@@ -163,13 +157,11 @@ window.guardarProyecto = async function (event) {
         if (inputPlazos) inputPlazos.value = '';
         if (inputFrecuencia) inputFrecuencia.value = 'Quincenal';
 
-        // 3. Sincronizar datos globales y renderizar la tabla
         await cargarDatosGlobales();
         if (typeof window.renderizarGridProyectos === 'function') {
             window.renderizarGridProyectos();
         }
 
-        // 4. OCULTAR SPINNER ANTES DE MOSTRAR EL MENSAJE DE ÉXITO
         if (spinnerModal) spinnerModal.classList.add('hidden');
 
         mostrarModal(idOculto ? "¡Proyecto actualizado!" : "¡Proyecto guardado con éxito!");
@@ -180,7 +172,6 @@ window.guardarProyecto = async function (event) {
         alert("Ocurrió un error al guardar los cambios.");
     }
 };
-
 
 window.renderizarGridProyectos = function () {
     const tbody = document.getElementById('datos-tabla-proyectos-body');
