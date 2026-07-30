@@ -225,13 +225,31 @@ function cancelarEdicionProyecto() {
     document.getElementById('btn-cancelar-proyecto').classList.add('hidden');
 }
 
-function eliminarProyectoCompleto(id) {
+window.eliminarProyectoCompleto = async function(id) {
     if (!confirm("¿Deseas eliminar permanentemente este proyecto y todos sus registros vinculados?")) return;
-    proyectos = proyectos.filter(p => p.id !== id);
-    localStorage.setItem('app_proyectos', JSON.stringify(proyectos));
-    renderizarGridProyectos();
-    renderizarInicioProyectos();
-}
+
+    const idBuscado = String(id).trim();
+
+    // 1. Filtramos de la variable global (asegurando comparar ambos como texto)
+    window.proyectos = (window.proyectos || []).filter(p => String(p.id).trim() !== idBuscado);
+
+    // 2. Actualizamos el almacenamiento local con la clave correcta que usa tu app
+    localStorage.setItem('app_cache_proyectos', JSON.stringify(window.proyectos));
+
+    // 3. (Opcional pero recomendado) Si también borras en tu Google Sheets, puedes hacer el fetch de borrado aquí.
+
+    // 4. Refrescamos la interfaz visual
+    if (typeof window.renderizarGridProyectos === 'function') {
+        window.renderizarGridProyectos();
+    }
+    
+    // Si tienes otra función de inicio, la ejecutas también si existe
+    if (typeof renderizarInicioProyectos === 'function') {
+        renderizarInicioProyectos();
+    }
+
+    console.log("Proyecto eliminado con éxito. ID:", idBuscado);
+};
 
 // ==========================================
 // VISTA PRINCIPAL (TARJETAS LATERALES DE PROYECTO)
