@@ -75,28 +75,30 @@ window.addEventListener('DOMContentLoaded', async () => {
         if (inputMonto && !inputMonto.dataset.formatoConfigurado) {
             inputMonto.dataset.formatoConfigurado = "true";
 
-            // Mientras escribes, solo permitimos números y puntos
+            // 1. Mientras escribes, permitimos números y el punto decimal libremente sin alterar el cursor
             inputMonto.addEventListener('input', function (e) {
                 this.value = this.value.replace(/[^0-9.]/g, '');
             });
 
-            // Cuando sales del campo, se aplica el formato bonito de moneda MXN
+            // 2. Al hacer clic para editar, limpiamos el formato para mostrar solo el número plano
+            inputMonto.addEventListener('focus', function (e) {
+                let limpio = this.value.replace(/[^0-9.]/g, '');
+                this.value = limpio ? limpio : '';
+            });
+
+            // 3. Al salir del campo (hacer clic afuera o cambiar de sección), se aplica el formato MXN bonito
             inputMonto.addEventListener('blur', function (e) {
-                let numericValue = parseFloat(this.value.replace(/[^0-9.]/g, '')) || 0;
-                if (numericValue > 0) {
-                    this.value = numericValue.toLocaleString('es-MX', {
+                let numero = parseFloat(this.value.replace(/[^0-9.]/g, '')) || 0;
+                if (numero > 0) {
+                    this.value = numero.toLocaleString('es-MX', {
                         style: 'currency',
                         currency: 'MXN',
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2
                     });
+                } else {
+                    this.value = '';
                 }
-            });
-
-            // Al hacer clic para editar, quitamos el formato para que puedas modificarlo fácil
-            inputMonto.addEventListener('focus', function (e) {
-                let numericValue = parseFloat(this.value.replace(/[^0-9.]/g, '')) || '';
-                this.value = numericValue ? numericValue : '';
             });
         }
 
