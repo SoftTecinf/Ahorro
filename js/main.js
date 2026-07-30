@@ -40,41 +40,33 @@ window.addEventListener('DOMContentLoaded', async () => {
         const label = document.getElementById('user-label');
         if (label) label.textContent = usuarioGuardado;
 
-        // --- CARGA INMEDIATA DESDE CACHÉ ---
+        // --- CARGA INMEDIATA DESDE CACHÉ (BLINDADA) ---
         const cacheProyectos = localStorage.getItem('app_cache_proyectos');
         if (cacheProyectos) {
             try {
-                window.proyectos = JSON.parse(cacheProyectos);
+                window.proyectos = JSON.parse(cacheProyectos) || [];
             } catch (e) {
-                console.error("Error al leer caché de proyectos:", e);
+                console.error("Error al leer caché:", e);
+                window.proyectos = [];
             }
+        } else {
+            window.proyectos = [];
         }
 
-        // Navegamos al inicio y renderizamos la tabla
+        // Navegamos al inicio
         await navegarA('inicio');
+
+        // 🟢 PINTAMOS LA TABLA DE INMEDIATO CON LO QUE HAY EN MEMORIA
         if (typeof window.renderizarGridProyectos === 'function') {
             window.renderizarGridProyectos();
         }
 
         // --- CARGA FRESCA DESDE GOOGLE SHEETS EN SEGUNDO PLANO ---
-        window.cargarDatosGlobales();
-
-        // 🟢 NUEVO: Activamos el formato de moneda en tiempo real para el input de montos
-        const inputMonto = document.getElementById('datos-monto');
-        if (inputMonto && !inputMonto.dataset.formatoActivado) {
-            inputMonto.dataset.formatoActivado = "true"; // Evitamos duplicar eventos
-            inputMonto.addEventListener('input', function (e) {
-                let numeros = this.value.replace(/\D/g, '');
-                if (!numeros) {
-                    this.value = '';
-                    return;
+        if (typeof window.cargarDatosGlobales === 'function') {
+            window.cargarDatosGlobales().then(() => {
+                if (typeof window.renderizarGridProyectos === 'function') {
+                    window.renderizarGridProyectos();
                 }
-                let valorNumerico = parseFloat(numeros) / 100;
-                this.value = valorNumerico.toLocaleString('es-MX', {
-                    style: 'currency',
-                    currency: 'MXN',
-                    minimumFractionDigits: 2
-                });
             });
         }
 
