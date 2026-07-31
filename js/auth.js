@@ -1,7 +1,7 @@
 // ==========================================
 // LÓGICA DE CONTROL DEL LOGIN / REGISTRO
 // ==========================================
-window.URL_API = 'https://script.google.com/macros/s/AKfycbxTFZLLvP8cywVA8IzMsVa0BPA90eLieUV-6Cgg_XNxLZLH6UzxQpfd0zMH3x2wdVQ/exec';
+window.URL_API = 'https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec';
 
 
 function togglePassword(idInput) {
