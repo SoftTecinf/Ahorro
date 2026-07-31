@@ -930,7 +930,7 @@ window.limpiarFormularioProyecto = function () {
     const inputId = document.getElementById('datos-proyecto-id');
     const inputNombre = document.getElementById('datos-nombre-proyecto');
     const inputFecha = document.getElementById('datos-fecha-inicio');
-    //const inputMonto = document.getElementById('datos-monto');
+    const inputMonto = document.getElementById('datos-monto');
     const inputMontoHidden = document.getElementById('in-monto-hidden');
     const inputPlazos = document.getElementById('datos-plazos');
     const inputFrecuencia = document.getElementById('datos-frecuencia');
@@ -939,9 +939,8 @@ window.limpiarFormularioProyecto = function () {
     if (inputNombre) inputNombre.value = '';
     if (inputFecha) inputFecha.value = '';
 
-    // 🟢 Detector de cambios en el input de monto
-    const inputMontoDebug = document.getElementById('datos-monto');
-    inputMonto.value = proyectoActual.monto ?? '';
+    if (inputMonto) inputMonto.value = '';
+    if (inputMontoHidden) inputMontoHidden.value = '';
 
     if (inputPlazos) inputPlazos.value = '';
     if (inputFrecuencia) inputFrecuencia.value = 'Quincenal';
