@@ -4,8 +4,7 @@ window.familiares = JSON.parse(localStorage.getItem('app_cache_familiares')) || 
 
 // 2. Definimos la función de actualización masiva
 window.cargarDatosGlobales = async function () {
-    const url = URL_API;
-
+const url = window.URL_API;
     try {
         const respuesta = await fetch(url);
         const data = await respuesta.json();
