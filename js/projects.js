@@ -188,7 +188,7 @@ window.renderizarGridProyectos = function () {
         const inputMontoVisual = document.getElementById('datos-monto');
         if (inputMontoVisual) inputMontoVisual.value = '';
     }
-};window.renderizarGridProyectos = function () {
+}; window.renderizarGridProyectos = function () {
     const tbody = document.getElementById('datos-tabla-proyectos-body');
 
     // 1. Verificación de seguridad
@@ -234,7 +234,8 @@ function editarProyecto(id) {
     document.getElementById('datos-fecha-inicio').value = (p.fechainicio || '').split('T')[0];
 
     // Aquí usamos tu función formatearMXN directamente para que cargue limpio en el input
-    document.getElementById('datos-monto').value = formatearMXN(p.monto) || '';
+    document.getElementById('in-monto-mask').value = formatearMXN(p.monto) || '';
+    document.getElementById('in-monto-hidden').value = p.monto || '';
 
     document.getElementById('datos-plazos').value = p.plazos || 0;
     document.getElementById('datos-frecuencia').value = p.frecuencia || '';
@@ -966,7 +967,7 @@ window.limpiarFormularioProyecto = function () {
     const inputId = document.getElementById('datos-proyecto-id');
     const inputNombre = document.getElementById('datos-nombre-proyecto');
     const inputFecha = document.getElementById('datos-fecha-inicio');
-    const inputMontoEl = document.getElementById('datos-monto');
+    const inputMontoMask = document.getElementById('in-monto-mask'); // 👈 El ID correcto
     const inputMontoHidden = document.getElementById('in-monto-hidden');
     const inputPlazos = document.getElementById('datos-plazos');
     const inputFrecuencia = document.getElementById('datos-frecuencia');
@@ -975,17 +976,11 @@ window.limpiarFormularioProyecto = function () {
     if (inputNombre) inputNombre.value = '';
     if (inputFecha) inputFecha.value = '';
 
-    // Limpieza y reseteo del monto visible
-    if (inputMontoEl) {
-        inputMontoEl.value = '';
-        inputMontoEl.dataset.formatoInicializado = '';
-        inputMontoEl.dispatchEvent(new Event('input', { bubbles: true }));
+    if (inputMontoMask) {
+        inputMontoMask.value = '';
     }
-
-    // Limpieza profunda del input oculto que guardaba el valor fantasma
     if (inputMontoHidden) {
         inputMontoHidden.value = '';
-        inputMontoHidden.defaultValue = '';
     }
 
     if (inputPlazos) inputPlazos.value = '';
