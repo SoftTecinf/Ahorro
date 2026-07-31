@@ -471,23 +471,25 @@ window.guardarCuentaBancaria = function(event) {
         mostrarModal(`Cuenta bancaria de "${titular}" añadida.`);
     }
 
-    // 1. Guardar de forma local para respaldo inmediato
+    // 1. Guardar localmente
     localStorage.setItem('app_cuentas_bancarias', JSON.stringify(cuentasBancarias));
 
-    // 2. Sincronización automática con Google Sheets / Backend
+    // 2. Sincronización exacta con Google Sheets
     if (typeof URL_WEB_APP !== 'undefined' && URL_WEB_APP) {
         fetch(URL_WEB_APP, {
             method: 'POST',
-            mode: 'no-cors', // O el método que utilices para enviar tus datos a Google Apps Script
+            mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 accion: 'guardarCuenta',
-                ...cuentaObjeto
+                banco: banco,         // Columna A: Banco
+                beneficiario: titular, // Columna B: Beneficiario (mapeado desde titular)
+                cuenta: cuenta         // Columna C: Numero de cuenta
             })
         }).catch(err => console.error("Error al sincronizar con Sheets:", err));
     }
 
-    // 3. Limpieza y actualización de la interfaz
+    // 3. Limpiar y refrescar interfaz
     cancelarEdicionCuenta();
     renderizarGridCuentas();
 };
