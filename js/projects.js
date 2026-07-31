@@ -443,7 +443,7 @@ function verResumenProyectoInmediato(id) {
 // ==========================================
 // CATALOGO DE CUENTAS BANCARIAS
 // ==========================================
-function guardarCuentaBancaria(event) {
+window.guardarCuentaBancaria = function(event) {
     event.preventDefault();
     const usuarioActual = localStorage.getItem('app_currentUser');
     if (!usuarioActual) return alert("Error: No se detectó un usuario activo.");
@@ -453,6 +453,8 @@ function guardarCuentaBancaria(event) {
     const titular = document.getElementById('cuenta-titular').value.trim();
     const cuenta = document.getElementById('cuenta-clabe').value.trim();
 
+    let cuentaObjeto;
+
     if (idInput) {
         const idx = cuentasBancarias.findIndex(c => c.id == idInput);
         if (idx !== -1) {
@@ -460,18 +462,35 @@ function guardarCuentaBancaria(event) {
             cuentasBancarias[idx].titular = titular;
             cuentasBancarias[idx].cuenta = cuenta;
             if (!cuentasBancarias[idx].adminName) cuentasBancarias[idx].adminName = usuarioActual;
+            cuentaObjeto = cuentasBancarias[idx];
         }
         mostrarModal(`Cuenta de "${titular}" modificada exitosamente.`);
     } else {
-        const nuevaCuenta = { id: "cta_" + Date.now(), adminName: usuarioActual, banco, titular, cuenta };
-        cuentasBancarias.push(nuevaCuenta);
+        cuentaObjeto = { id: "cta_" + Date.now(), adminName: usuarioActual, banco, titular, cuenta };
+        cuentasBancarias.push(cuentaObjeto);
         mostrarModal(`Cuenta bancaria de "${titular}" añadida.`);
     }
 
+    // 1. Guardar de forma local para respaldo inmediato
     localStorage.setItem('app_cuentas_bancarias', JSON.stringify(cuentasBancarias));
+
+    // 2. Sincronización automática con Google Sheets / Backend
+    if (typeof URL_WEB_APP !== 'undefined' && URL_WEB_APP) {
+        fetch(URL_WEB_APP, {
+            method: 'POST',
+            mode: 'no-cors', // O el método que utilices para enviar tus datos a Google Apps Script
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                accion: 'guardarCuenta',
+                ...cuentaObjeto
+            })
+        }).catch(err => console.error("Error al sincronizar con Sheets:", err));
+    }
+
+    // 3. Limpieza y actualización de la interfaz
     cancelarEdicionCuenta();
     renderizarGridCuentas();
-}
+};
 
 function renderizarGridCuentas() {
     const tbody = document.getElementById('datos-tabla-cuentas-body');
