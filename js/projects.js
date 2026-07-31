@@ -936,6 +936,7 @@ window.limpiarFormularioProyecto = function () {
     // 🟢 Limpiamos ambos campos de monto explícitamente
     if (inputMonto) inputMonto.value = '';
     if (inputMontoHidden) inputMontoHidden.value = '';
+    console.warn(inputMontoHidden.value);
 
     if (inputPlazos) inputPlazos.value = '';
     if (inputFrecuencia) inputFrecuencia.value = 'Quincenal';
