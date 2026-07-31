@@ -96,28 +96,6 @@ window.guardarProyecto = async function (event) {
     const frecuencia = inputFrecuencia ? inputFrecuencia.value : "Quincenal";
     const usuarioActual = window.currentUser || localStorage.getItem('app_currentUser');
 
-    // Validaciones
-    if (!nombre) {
-        alert("⚠️ Falta el nombre del proyecto.");
-        return;
-    }
-    if (!fechaInicio) {
-        alert("⚠️ Falta la fecha de inicio.");
-        return;
-    }
-    if (montoLimpio <= 0) {
-        alert("⚠️ El monto es inválido o menor a 0.");
-        return;
-    }
-    if (!plazos) {
-        alert("⚠️ Faltan los plazos.");
-        return;
-    }
-    if (!usuarioActual) {
-        alert("⚠️ No se encontró el usuario actual.");
-        return;
-    }
-
     const spinnerModal = document.getElementById('modal-spinner');
     const textoSpinner = document.getElementById('texto-spinner');
     if (textoSpinner) textoSpinner.textContent = idOculto ? "Actualizando proyecto..." : "Guardando proyecto...";
