@@ -939,11 +939,17 @@ window.limpiarFormularioProyecto = function () {
     if (inputNombre) inputNombre.value = '';
     if (inputFecha) inputFecha.value = '';
 
-    const inputMontoEl = document.getElementById('datos-monto');
+    // Limpieza y reseteo del monto visible
     if (inputMontoEl) {
         inputMontoEl.value = '';
-        // Forzamos el disparo de un evento nativo para que cualquier listener detecte que ya está en ceros
+        inputMontoEl.dataset.formatoInicializado = '';
         inputMontoEl.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    // Limpieza profunda del input oculto que guardaba el valor fantasma
+    if (inputMontoHidden) {
+        inputMontoHidden.value = '';
+        inputMontoHidden.defaultValue = '';
     }
 
     if (inputPlazos) inputPlazos.value = '';
