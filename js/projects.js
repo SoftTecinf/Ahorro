@@ -933,10 +933,15 @@ window.limpiarFormularioProyecto = function () {
     if (inputNombre) inputNombre.value = '';
     if (inputFecha) inputFecha.value = '';
 
-    // 🟢 Limpiamos ambos campos de monto explícitamente
-    if (inputMonto) inputMonto.value = '';
-    if (inputMontoHidden) inputMontoHidden.value = '';
-    console.warn(inputMontoHidden.value);
+    // 🟢 Forzamos el vaciado absoluto del elemento visual y oculto
+    if (inputMonto) {
+        inputMonto.value = '';
+        inputMonto.defaultValue = ''; // 👈 Por si tiene un value estático en el HTML
+    }
+    if (inputMontoHidden) {
+        inputMontoHidden.value = '';
+        inputMontoHidden.defaultValue = '';
+    }
 
     if (inputPlazos) inputPlazos.value = '';
     if (inputFrecuencia) inputFrecuencia.value = 'Quincenal';
