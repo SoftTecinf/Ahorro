@@ -924,16 +924,24 @@ window.limpiarFormularioProyecto = function() {
     const inputId = document.getElementById('datos-proyecto-id');
     const inputNombre = document.getElementById('datos-nombre-proyecto');
     const inputFecha = document.getElementById('datos-fecha-inicio');
-    const inputMonto = document.getElementById('datos-monto') || document.getElementById('in-monto-hidden');
+    const inputMonto = document.getElementById('datos-monto');
+    const inputMontoHidden = document.getElementById('in-monto-hidden');
     const inputPlazos = document.getElementById('datos-plazos');
     const inputFrecuencia = document.getElementById('datos-frecuencia');
 
     if (inputId) inputId.value = '';
     if (inputNombre) inputNombre.value = '';
     if (inputFecha) inputFecha.value = '';
-    if (inputMonto) inputMonto.value = '';
+    
+    // 🟢 Limpiamos el monto dejándolo en cero o vacío, y disparando eventos si tu script usa formato
+    if (inputMonto) {
+        inputMonto.value = ''; 
+        // Si tu script formatea automáticamente al escribir, puedes probar con '$0.00' o dejarlo vacío:
+        // inputMonto.value = '$0.00'; 
+    }
+    if (inputMontoHidden) inputMontoHidden.value = '0';
+
     if (inputPlazos) inputPlazos.value = '';
     if (inputFrecuencia) inputFrecuencia.value = 'Quincenal';
 };
-
 
