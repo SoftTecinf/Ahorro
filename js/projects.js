@@ -939,9 +939,21 @@ window.limpiarFormularioProyecto = function () {
     if (inputNombre) inputNombre.value = '';
     if (inputFecha) inputFecha.value = '';
 
-    if (inputMontoEl) inputMontoEl.value = '';
+    if (inputMontoEl) {
+        inputMontoEl.value = '';
+        inputMontoEl.dataset.formatoInicializado = ''; // Resetea el flag para liberar el evento si es necesario
+    }
     if (inputMontoHidden) inputMontoHidden.value = '';
 
     if (inputPlazos) inputPlazos.value = '';
     if (inputFrecuencia) inputFrecuencia.value = 'Quincenal';
+
+    // Restablece también los textos y botones del formulario a modo "Nuevo Proyecto"
+    const tituloForm = document.getElementById('titulo-form-proyecto');
+    const btnGuardar = document.getElementById('btn-guardar-proyecto');
+    const btnCancelar = document.getElementById('btn-cancelar-proyecto');
+
+    if (tituloForm) tituloForm.innerHTML = `✨ 1. Registrar Nuevo Proyecto`;
+    if (btnGuardar) btnGuardar.textContent = "💾 Guardar Proyecto";
+    if (btnCancelar) btnCancelar.classList.add('hidden');
 };
