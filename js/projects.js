@@ -933,16 +933,9 @@ window.limpiarFormularioProyecto = function () {
     if (inputNombre) inputNombre.value = '';
     if (inputFecha) inputFecha.value = '';
 
-    // Si ya arriba decía "const inputMonto = ...", abajo úsala sin declarar:
-    inputMonto = document.getElementById('datos-monto');
-    if (inputMonto) {
-        inputMonto.value = '';
-    }
-
-    const inputMontoHidden = document.getElementById('in-monto-hidden');
-    if (inputMontoHidden) {
-        inputMontoHidden.value = '';
-    }
+    // 🟢 Limpiamos ambos campos de monto explícitamente
+    if (inputMonto) inputMonto.value = '';
+    if (inputMontoHidden) inputMontoHidden.value = '';
 
     if (inputPlazos) inputPlazos.value = '';
     if (inputFrecuencia) inputFrecuencia.value = 'Quincenal';
