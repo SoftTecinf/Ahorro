@@ -79,16 +79,22 @@ window.guardarProyecto = async function (event) {
     const idOculto = document.getElementById('datos-proyecto-id').value;
     const inputNombre = document.getElementById('datos-nombre-proyecto');
     const inputFecha = document.getElementById('datos-fecha-inicio');
-    const inputMonto = document.getElementById('datos-monto') || document.getElementById('in-monto-hidden');
+    const inputMonto = document.getElementById('datos-monto') || document.getElementById('in-monto-hidden'); 
     const inputPlazos = document.getElementById('datos-plazos');
     const inputFrecuencia = document.getElementById('datos-frecuencia');
 
     const nombre = inputNombre ? inputNombre.value.trim() : "";
     const fechaInicio = inputFecha ? inputFecha.value : "";
 
+    // 🔍 Capturamos ambos elementos por separado para asegurar el valor real
+    const inputMontoEl = document.getElementById('datos-monto');
+    const inputMontoHidden = document.getElementById('in-monto-hidden');
+    
     let montoLimpio = 0;
-    if (inputMonto && inputMonto.value) {
-        let valorCrudo = inputMonto.value.replace(/[^0-9.]/g, '');
+    const valorFuente = (inputMontoEl && inputMontoEl.value) ? inputMontoEl.value : (inputMontoHidden ? inputMontoHidden.value : '');
+    
+    if (valorFuente) {
+        let valorCrudo = String(valorFuente).replace(/[^0-9.]/g, '');
         montoLimpio = parseFloat(valorCrudo) || 0;
     }
 
