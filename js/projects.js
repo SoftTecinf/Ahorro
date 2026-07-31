@@ -443,7 +443,7 @@ function verResumenProyectoInmediato(id) {
 // ==========================================
 // CATALOGO DE CUENTAS BANCARIAS
 // ==========================================
-window.guardarCuentaBancaria = function(event) {
+window.guardarCuentaBancaria = async function(event) {
     event.preventDefault();
     const usuarioActual = localStorage.getItem('app_currentUser');
     if (!usuarioActual) return alert("Error: No se detectó un usuario activo.");
@@ -471,26 +471,34 @@ window.guardarCuentaBancaria = function(event) {
         mostrarModal(`Cuenta bancaria de "${titular}" añadida.`);
     }
 
-    // 1. Guardar localmente en el navegador
+    // 1. Guardar localmente
     localStorage.setItem('app_cuentas_bancarias', JSON.stringify(cuentasBancarias));
 
-    // 2. 🚀 Enviar los datos hacia Google Sheets
-    if (typeof URL_WEB_APP !== 'undefined' && URL_WEB_APP) {
-        fetch(URL_WEB_APP, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                tipo: 'guardar_cuenta',
-                id: cuentaObjeto.id,
-                banco: banco,
-                beneficiario: titular,
-                cuenta: cuenta
-            })
-        }).catch(err => console.error("Error al sincronizar con Sheets:", err));
+    // 2. 🚀 Sincronizar con Google Sheets usando tu misma API que sí funciona
+    try {
+        const urlApiReal = window.URL_API || URL_API;
+        if (urlApiReal) {
+            await fetch(urlApiReal, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    tipo: 'guardar_cuenta',
+                    id: cuentaObjeto.id,
+                    banco: banco,
+                    beneficiario: titular,
+                    cuenta: cuenta
+                })
+            });
+            console.log("✅ Cuenta enviada correctamente a Google Sheets");
+        } else {
+            console.warn("⚠️ No se encontró la URL de la API.");
+        }
+    } catch (err) {
+        console.error("❌ Error al sincronizar cuenta con Sheets:", err);
     }
 
-    // 3. Limpiar formulario y refrescar la tabla visual
+    // 3. Limpiar y refrescar interfaz
     cancelarEdicionCuenta();
     renderizarGridCuentas();
 };
