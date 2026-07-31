@@ -5,7 +5,7 @@ window.familiares = JSON.parse(localStorage.getItem('app_cache_familiares')) || 
 // 2. Definimos la función de actualización masiva
 window.cargarDatosGlobales = async function () {
 // 🟢 Respaldo blindado: si window.URL_API no está lista, usa la URL directamente por seguridad
-    const url = window.URL_API || 'https://script.google.com/macros/s/AKfycbxTFZLLvP8cywVA8IzMsVa0BPA90eLieUV-6Cgg_XNxLZLH6UzxQpfd0zMH3x2wdVQ/exec';
+    const url = window.URL_API || 'https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec';
 
     if (!url || url.includes('undefined')) {
         console.error("⚠️ La URL de la API es inválida o no está definida.");
