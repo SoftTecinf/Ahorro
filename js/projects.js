@@ -443,7 +443,7 @@ function verResumenProyectoInmediato(id) {
 // ==========================================
 // CATALOGO DE CUENTAS BANCARIAS
 // ==========================================
-window.guardarCuentaBancaria = function (event) {
+window.guardarCuentaBancaria = function(event) {
     event.preventDefault();
     const usuarioActual = localStorage.getItem('app_currentUser');
     if (!usuarioActual) return alert("Error: No se detectó un usuario activo.");
@@ -471,10 +471,10 @@ window.guardarCuentaBancaria = function (event) {
         mostrarModal(`Cuenta bancaria de "${titular}" añadida.`);
     }
 
-    // 1. Guardar localmente
+    // 1. Guardar localmente en el navegador
     localStorage.setItem('app_cuentas_bancarias', JSON.stringify(cuentasBancarias));
 
-    // 2. Sincronización exacta con Google Sheets
+    // 2. 🚀 Enviar los datos hacia Google Sheets
     if (typeof URL_WEB_APP !== 'undefined' && URL_WEB_APP) {
         fetch(URL_WEB_APP, {
             method: 'POST',
@@ -487,10 +487,10 @@ window.guardarCuentaBancaria = function (event) {
                 beneficiario: titular,
                 cuenta: cuenta
             })
-        }).catch (err => console.error("Error al sincronizar con Sheets:", err));
+        }).catch(err => console.error("Error al sincronizar con Sheets:", err));
     }
 
-    // 3. Limpiar y refrescar interfaz
+    // 3. Limpiar formulario y refrescar la tabla visual
     cancelarEdicionCuenta();
     renderizarGridCuentas();
 };
