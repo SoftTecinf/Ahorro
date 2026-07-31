@@ -95,3 +95,23 @@ select {
     background-size: 1rem;
     padding-right: 2.5rem !important;
 }
+
+/* Altura uniforme para todos los campos */
+input[type="text"],
+input[type="date"],
+input[type="number"],
+select,
+.form-control, 
+.input-field {
+    height: 48px !important;
+    padding: 0 14px !important;
+    box-sizing: border-box !important;
+    border-radius: 0.75rem !important;
+}
+
+/* Solución específica para centrar el contenido del input tipo fecha */
+input[type="date"] {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
