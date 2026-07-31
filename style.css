@@ -96,22 +96,39 @@ select {
     padding-right: 2.5rem !important;
 }
 
-/* Altura uniforme para todos los campos */
+/* ==========================================
+   UNIFICACIÓN EXACTA DE CAJAS DE CAPTURA
+   ========================================== */
 input[type="text"],
 input[type="date"],
 input[type="number"],
 select,
 .form-control, 
 .input-field {
+    width: 100% !important;
     height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
     padding: 0 14px !important;
+    margin: 0 !important;
     box-sizing: border-box !important;
     border-radius: 0.75rem !important;
+    font-size: 1rem !important;
+    line-height: normal !important;
+    vertical-align: middle !important;
 }
 
-/* Solución específica para centrar el contenido del input tipo fecha */
-input[type="date"] {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
+/* Corrección específica para que el calendario interno no expanda la caja */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
 }
