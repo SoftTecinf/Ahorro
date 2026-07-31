@@ -939,12 +939,15 @@ window.limpiarFormularioProyecto = function () {
     if (inputNombre) inputNombre.value = '';
     if (inputFecha) inputFecha.value = '';
 
+    // Limpieza profunda de ambos inputs de monto (visible y oculto)
     if (inputMontoEl) {
         inputMontoEl.value = '';
         inputMontoEl.dataset.formatoInicializado = '';
-        setTimeout(() => { inputMontoEl.value = ''; }, 50); // Doble seguridad contra fantasmas
     }
-    if (inputMontoHidden) inputMontoHidden.value = '';
+    if (inputMontoHidden) {
+        inputMontoHidden.value = '';
+        inputMontoHidden.defaultValue = ''; // Limpia el valor por defecto del HTML
+    }
 
     if (inputPlazos) inputPlazos.value = '';
     if (inputFrecuencia) inputFrecuencia.value = 'Quincenal';
