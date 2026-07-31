@@ -933,12 +933,8 @@ window.limpiarFormularioProyecto = function() {
     if (inputNombre) inputNombre.value = '';
     if (inputFecha) inputFecha.value = '';
     
-    // 🟢 Limpiamos el monto dejándolo en cero o vacío, y disparando eventos si tu script usa formato
-    if (inputMonto) {
-        inputMonto.value = ''; 
-        // Si tu script formatea automáticamente al escribir, puedes probar con '$0.00' o dejarlo vacío:
-        // inputMonto.value = '$0.00'; 
-    }
+    // 🟢 Limpiamos ambos campos de monto explícitamente
+    if (inputMonto) inputMonto.value = '';
     if (inputMontoHidden) inputMontoHidden.value = '0';
 
     if (inputPlazos) inputPlazos.value = '';
