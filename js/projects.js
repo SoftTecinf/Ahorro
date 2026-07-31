@@ -170,6 +170,42 @@ window.renderizarGridProyectos = function () {
         const fechaAMostrar = p.fecha || p.fechainicio || null;
         return `
         <tr class="hover:bg-purple-50/30 transition-colors">
+                <td class="p-3 font-bold text-gray-900">${p.nombre}</td>
+                <td class="p-3 text-gray-600">${fechaAMostrar ? fechaAMostrar.split('T')[0] : 'Sin fecha'}</td> 
+                <td class="p-3 font-medium text-purple-700">${p.frecuencia}</td>
+                <td class="p-3 font-semibold text-gray-800">${formatearMXN(p.monto)}</td>
+                <td class="p-3 text-center font-medium">${p.plazos}</td>
+                <td class="p-3 text-center space-x-2">
+                    <button onclick="editarProyecto('${p.id}')" class="text-xs bg-yellow-100 text-yellow-800 font-bold px-2.5 py-1 rounded-lg hover:bg-yellow-200 cursor-pointer">Editar</button>
+                    <button onclick="eliminarProyectoCompleto('${p.id}')" class="text-xs bg-red-50 text-red-600 px-2.5 py-1 rounded-lg hover:bg-red-100 cursor-pointer">Eliminar</button>
+                </td>
+            </tr>`;
+    }).join('');
+
+    // 🛡️ Blindaje definitivo: Si no estamos editando activamente un proyecto, aseguramos que el input de monto esté limpio
+    const idEnEdicion = document.getElementById('datos-proyecto-id');
+    if (idEnEdicion && !idEnEdicion.value) {
+        const inputMontoVisual = document.getElementById('datos-monto');
+        if (inputMontoVisual) inputMontoVisual.value = '';
+    }
+};window.renderizarGridProyectos = function () {
+    const tbody = document.getElementById('datos-tabla-proyectos-body');
+
+    // 1. Verificación de seguridad
+    if (!tbody) return;
+
+    // 2. Manejo de estado vacío
+    if (!window.proyectos || window.proyectos.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-500">No hay proyectos registrados.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = window.proyectos.map(p => {
+        // Aseguramos que el monto sea un número
+        const montoNumerico = parseFloat(p.monto) || 0;
+        const fechaAMostrar = p.fecha || p.fechainicio || null;
+        return `
+        <tr class="hover:bg-purple-50/30 transition-colors">
                     <td class="p-3 font-bold text-gray-900">${p.nombre}</td>
                     <td class="p-3 text-gray-600">${fechaAMostrar ? fechaAMostrar.split('T')[0] : 'Sin fecha'}</td> 
                     <td class="p-3 font-medium text-purple-700">${p.frecuencia}</td>
