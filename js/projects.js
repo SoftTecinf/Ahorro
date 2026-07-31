@@ -79,12 +79,7 @@ window.guardarProyecto = async function (event) {
     const idOculto = document.getElementById('datos-proyecto-id').value;
     const inputNombre = document.getElementById('datos-nombre-proyecto');
     const inputFecha = document.getElementById('datos-fecha-inicio');
-    
-    // 🟢 Buscamos el monto probando con los posibles IDs que has usado
-    const inputMonto = document.getElementById('datos-monto') || 
-                       document.getElementById('in-monto-hidden') || 
-                       document.getElementById('monto');
-                       
+    const inputMonto = document.getElementById('datos-monto') || document.getElementById('in-monto-hidden');
     const inputPlazos = document.getElementById('datos-plazos');
     const inputFrecuencia = document.getElementById('datos-frecuencia');
 
@@ -101,7 +96,7 @@ window.guardarProyecto = async function (event) {
     const frecuencia = inputFrecuencia ? inputFrecuencia.value : "Quincenal";
     const usuarioActual = window.currentUser || localStorage.getItem('app_currentUser');
 
-    // Validación detallada para confirmar que ya lee bien el monto
+    // Validaciones
     if (!nombre) {
         alert("⚠️ Falta el nombre del proyecto.");
         return;
@@ -111,7 +106,7 @@ window.guardarProyecto = async function (event) {
         return;
     }
     if (montoLimpio <= 0) {
-        alert("⚠️ El monto es inválido o menor a 0 (Detectado: " + montoLimpio + "). Revisa el campo del monto.");
+        alert("⚠️ El monto es inválido o menor a 0.");
         return;
     }
     if (!plazos) {
@@ -123,7 +118,6 @@ window.guardarProyecto = async function (event) {
         return;
     }
 
-    // 1. MOSTRAR EL SPINNER INMEDIATAMENTE
     const spinnerModal = document.getElementById('modal-spinner');
     const textoSpinner = document.getElementById('texto-spinner');
     if (textoSpinner) textoSpinner.textContent = idOculto ? "Actualizando proyecto..." : "Guardando proyecto...";
@@ -155,12 +149,8 @@ window.guardarProyecto = async function (event) {
             body: JSON.stringify(proyectoData)
         });
 
-        document.getElementById('datos-proyecto-id').value = '';
-        if (inputNombre) inputNombre.value = '';
-        if (inputFecha) inputFecha.value = '';
-        if (inputMonto) inputMonto.value = '';
-        if (inputPlazos) inputPlazos.value = '';
-        if (inputFrecuencia) inputFrecuencia.value = 'Quincenal';
+        // 🟢 Llamamos a nuestra función separada para limpiar los campos
+        window.limpiarFormularioProyecto();
 
         await cargarDatosGlobales();
         if (typeof window.renderizarGridProyectos === 'function') {
@@ -951,5 +941,21 @@ window.mostrarModal = function (mensaje) {
 function cerrarModal() {
     document.getElementById('success-modal').classList.add('hidden');
 }
+
+window.limpiarFormularioProyecto = function() {
+    const inputId = document.getElementById('datos-proyecto-id');
+    const inputNombre = document.getElementById('datos-nombre-proyecto');
+    const inputFecha = document.getElementById('datos-fecha-inicio');
+    const inputMonto = document.getElementById('datos-monto') || document.getElementById('in-monto-hidden');
+    const inputPlazos = document.getElementById('datos-plazos');
+    const inputFrecuencia = document.getElementById('datos-frecuencia');
+
+    if (inputId) inputId.value = '';
+    if (inputNombre) inputNombre.value = '';
+    if (inputFecha) inputFecha.value = '';
+    if (inputMonto) inputMonto.value = '';
+    if (inputPlazos) inputPlazos.value = '';
+    if (inputFrecuencia) inputFrecuencia.value = 'Quincenal';
+};
 
 
