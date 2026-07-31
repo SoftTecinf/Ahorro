@@ -443,7 +443,7 @@ function verResumenProyectoInmediato(id) {
 // ==========================================
 // CATALOGO DE CUENTAS BANCARIAS
 // ==========================================
-window.guardarCuentaBancaria = function(event) {
+window.guardarCuentaBancaria = function (event) {
     event.preventDefault();
     const usuarioActual = localStorage.getItem('app_currentUser');
     if (!usuarioActual) return alert("Error: No se detectó un usuario activo.");
@@ -481,12 +481,13 @@ window.guardarCuentaBancaria = function(event) {
             mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                accion: 'guardarCuenta',
-                banco: banco,         // Columna A: Banco
-                beneficiario: titular, // Columna B: Beneficiario (mapeado desde titular)
-                cuenta: cuenta         // Columna C: Numero de cuenta
+                tipo: 'guardar_cuenta',
+                id: cuentaObjeto.id,
+                banco: banco,
+                beneficiario: titular,
+                cuenta: cuenta
             })
-        }).catch(err => console.error("Error al sincronizar con Sheets:", err));
+        }).catch (err => console.error("Error al sincronizar con Sheets:", err));
     }
 
     // 3. Limpiar y refrescar interfaz
