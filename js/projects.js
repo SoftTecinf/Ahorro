@@ -120,7 +120,7 @@ window.guardarProyecto = async function (event) {
     };
 
     try {
-        await fetch('URL_API', {
+        await fetch(window.URL_API || URL_API, {
             method: 'POST',
             mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
@@ -226,7 +226,7 @@ window.eliminarProyectoCompleto = async function (id) {
 
     try {
         // 2. ENVIAR PETICIÓN DE ELIMINACIÓN A GOOGLE SHEETS
-        await fetch('https://script.google.com/macros/s/AKfycbyl9NenydiCUF-XLNXWYnRX_xSRXJ3S00djvjgjUyIT2cBrHJeqbeJ0c5VPGFhvob5eLg/exec', {
+        await fetch(window.URL_API || URL_API, {
             method: 'POST',
             mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
@@ -920,7 +920,7 @@ function cerrarModal() {
     document.getElementById('success-modal').classList.add('hidden');
 }
 
-window.limpiarFormularioProyecto = function() {
+window.limpiarFormularioProyecto = function () {
     const inputId = document.getElementById('datos-proyecto-id');
     const inputNombre = document.getElementById('datos-nombre-proyecto');
     const inputFecha = document.getElementById('datos-fecha-inicio');
@@ -932,7 +932,7 @@ window.limpiarFormularioProyecto = function() {
     if (inputId) inputId.value = '';
     if (inputNombre) inputNombre.value = '';
     if (inputFecha) inputFecha.value = '';
-    
+
     // 🟢 Limpiamos ambos campos de monto explícitamente
     if (inputMonto) inputMonto.value = '';
     if (inputMontoHidden) inputMontoHidden.value = '0';
