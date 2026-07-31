@@ -924,7 +924,7 @@ window.limpiarFormularioProyecto = function () {
     const inputId = document.getElementById('datos-proyecto-id');
     const inputNombre = document.getElementById('datos-nombre-proyecto');
     const inputFecha = document.getElementById('datos-fecha-inicio');
-    const inputMonto = document.getElementById('datos-monto');
+    //const inputMonto = document.getElementById('datos-monto');
     const inputMontoHidden = document.getElementById('in-monto-hidden');
     const inputPlazos = document.getElementById('datos-plazos');
     const inputFrecuencia = document.getElementById('datos-frecuencia');
@@ -933,14 +933,18 @@ window.limpiarFormularioProyecto = function () {
     if (inputNombre) inputNombre.value = '';
     if (inputFecha) inputFecha.value = '';
 
-    // 🟢 Forzamos el vaciado absoluto del elemento visual y oculto
-    if (inputMonto) {
-        inputMonto.value = '';
-        inputMonto.defaultValue = ''; // 👈 Por si tiene un value estático en el HTML
-    }
-    if (inputMontoHidden) {
-        inputMontoHidden.value = '';
-        inputMontoHidden.defaultValue = '';
+    // 🟢 Detector de cambios en el input de monto
+    const inputMontoDebug = document.getElementById('datos-monto');
+    if (inputMontoDebug) {
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'value') {
+                    console.warn("⚠️ ¡Alguien cambió el value del input monto!", inputMontoDebug.value);
+                    console.trace(); // Esto te mostrará la ruta exacta de qué función lo provocó
+                }
+            });
+        });
+        observer.observe(inputMontoDebug, { attributes: true });
     }
 
     if (inputPlazos) inputPlazos.value = '';
