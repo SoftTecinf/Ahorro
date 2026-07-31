@@ -934,8 +934,15 @@ window.limpiarFormularioProyecto = function () {
     if (inputFecha) inputFecha.value = '';
 
     // 🟢 Limpiamos ambos campos de monto explícitamente
-    if (inputMonto) inputMonto.value = '';
-    if (inputMontoHidden) inputMontoHidden.value = '0';
+    const inputMonto = document.getElementById('datos-monto');
+    if (inputMonto) {
+        inputMonto.value = ''; // 🟢 Aseguramos que inicie completamente vacío
+    }
+
+    const inputMontoHidden = document.getElementById('in-monto-hidden');
+    if (inputMontoHidden) {
+        inputMontoHidden.value = '';
+    }
 
     if (inputPlazos) inputPlazos.value = '';
     if (inputFrecuencia) inputFrecuencia.value = 'Quincenal';
