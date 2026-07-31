@@ -941,14 +941,14 @@ window.limpiarFormularioProyecto = function () {
 
     if (inputMontoEl) {
         inputMontoEl.value = '';
-        inputMontoEl.dataset.formatoInicializado = ''; // Resetea el flag para liberar el evento si es necesario
+        inputMontoEl.dataset.formatoInicializado = '';
+        setTimeout(() => { inputMontoEl.value = ''; }, 50); // Doble seguridad contra fantasmas
     }
     if (inputMontoHidden) inputMontoHidden.value = '';
 
     if (inputPlazos) inputPlazos.value = '';
     if (inputFrecuencia) inputFrecuencia.value = 'Quincenal';
 
-    // Restablece también los textos y botones del formulario a modo "Nuevo Proyecto"
     const tituloForm = document.getElementById('titulo-form-proyecto');
     const btnGuardar = document.getElementById('btn-guardar-proyecto');
     const btnCancelar = document.getElementById('btn-cancelar-proyecto');
