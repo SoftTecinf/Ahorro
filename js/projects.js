@@ -935,17 +935,7 @@ window.limpiarFormularioProyecto = function () {
 
     // 🟢 Detector de cambios en el input de monto
     const inputMontoDebug = document.getElementById('datos-monto');
-    if (inputMontoDebug) {
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.type === 'attributes' && mutation.attributeName === 'value') {
-                    console.warn("⚠️ ¡Alguien cambió el value del input monto!", inputMontoDebug.value);
-                    console.trace(); // Esto te mostrará la ruta exacta de qué función lo provocó
-                }
-            });
-        });
-        observer.observe(inputMontoDebug, { attributes: true });
-    }
+    inputMonto.value = proyectoActual.monto ?? '';
 
     if (inputPlazos) inputPlazos.value = '';
     if (inputFrecuencia) inputFrecuencia.value = 'Quincenal';
