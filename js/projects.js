@@ -79,7 +79,7 @@ window.guardarProyecto = async function (event) {
     const idOculto = document.getElementById('datos-proyecto-id').value;
     const inputNombre = document.getElementById('datos-nombre-proyecto');
     const inputFecha = document.getElementById('datos-fecha-inicio');
-    const inputMonto = document.getElementById('datos-monto') || document.getElementById('in-monto-hidden'); 
+    const inputMonto = document.getElementById('datos-monto') || document.getElementById('in-monto-hidden');
     const inputPlazos = document.getElementById('datos-plazos');
     const inputFrecuencia = document.getElementById('datos-frecuencia');
 
@@ -89,10 +89,10 @@ window.guardarProyecto = async function (event) {
     // 🔍 Capturamos ambos elementos por separado para asegurar el valor real
     const inputMontoEl = document.getElementById('datos-monto');
     const inputMontoHidden = document.getElementById('in-monto-hidden');
-    
+
     let montoLimpio = 0;
     const valorFuente = (inputMontoEl && inputMontoEl.value) ? inputMontoEl.value : (inputMontoHidden ? inputMontoHidden.value : '');
-    
+
     if (valorFuente) {
         let valorCrudo = String(valorFuente).replace(/[^0-9.]/g, '');
         montoLimpio = parseFloat(valorCrudo) || 0;
@@ -939,14 +939,11 @@ window.limpiarFormularioProyecto = function () {
     if (inputNombre) inputNombre.value = '';
     if (inputFecha) inputFecha.value = '';
 
-    // Limpieza profunda de ambos inputs de monto (visible y oculto)
+    const inputMontoEl = document.getElementById('datos-monto');
     if (inputMontoEl) {
         inputMontoEl.value = '';
-        inputMontoEl.dataset.formatoInicializado = '';
-    }
-    if (inputMontoHidden) {
-        inputMontoHidden.value = '';
-        inputMontoHidden.defaultValue = ''; // Limpia el valor por defecto del HTML
+        // Forzamos el disparo de un evento nativo para que cualquier listener detecte que ya está en ceros
+        inputMontoEl.dispatchEvent(new Event('input', { bubbles: true }));
     }
 
     if (inputPlazos) inputPlazos.value = '';
