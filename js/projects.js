@@ -933,10 +933,10 @@ window.limpiarFormularioProyecto = function () {
     if (inputNombre) inputNombre.value = '';
     if (inputFecha) inputFecha.value = '';
 
-    // 🟢 Limpiamos ambos campos de monto explícitamente
-    const inputMonto = document.getElementById('datos-monto');
+    // Si ya arriba decía "const inputMonto = ...", abajo úsala sin declarar:
+    inputMonto = document.getElementById('datos-monto');
     if (inputMonto) {
-        inputMonto.value = ''; // 🟢 Aseguramos que inicie completamente vacío
+        inputMonto.value = '';
     }
 
     const inputMontoHidden = document.getElementById('in-monto-hidden');
